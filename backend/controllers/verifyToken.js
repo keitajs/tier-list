@@ -1,0 +1,31 @@
+import jwt from 'jsonwebtoken'
+import users from '../models/user.js'
+
+const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.cookies.accessToken
+    if (!token) return res.sendStatus(401)
+
+    jwt.verify(token, process.env.ACCESS_SECRET, async (err, decoded) => {
+      if (err) return res.sendStatus(403)
+
+      const { id, username } = decoded
+      const user = await users.findOne({ where: { id: id, username: username } })
+      if (!user) return res.sendStatus(403)
+
+      req.id = id
+      req.username = username
+      
+      // Új accessToken létrehozás
+      const accessToken = jwt.sign({ id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
+      res.cookie('accessToken', accessToken, { maxAge: 7*24*60*60*1000, httpOnly: true, sameSite: 'None', secure: true })
+      next()
+    })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.sendStatus(401)
+  }
+}
+
+export { verifyToken }
