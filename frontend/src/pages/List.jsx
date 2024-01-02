@@ -7,8 +7,6 @@ function List(props) {
   const [items, setItems] = useState([])
 
   const getList = async() => {
-    await axios.get('http://localhost:2000/token')
-
     // axios
     setCategories([
       { id: "cat-1", name: 'S', color: '#990000' },
