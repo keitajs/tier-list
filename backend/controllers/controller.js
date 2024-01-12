@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import users from '../models/user.js'
+import rndstr from 'rndstr'
 import { Errors } from '../libs/errors.js'
 
 const Register = async (req, res) => {
@@ -28,7 +29,7 @@ const Register = async (req, res) => {
 
     // Jelszó titkosítás, felhasználó létrehozás
     const hashedPassword = await bcrypt.hash(password, 10)
-    await users.create({ username, email, password: hashedPassword })
+    await users.create({ username, email, password: hashedPassword, verifyToken: rndstr({ length: 54 }) + Date.now().toString().slice(0, 10) })
 
     res.status(200).send({ message: 'Sikeres regisztráció!' })
   } catch (err) {
