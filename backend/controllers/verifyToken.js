@@ -8,11 +8,13 @@ const verifyToken = async (req, res, next) => {
 
     jwt.verify(token, process.env.ACCESS_SECRET, async (err, decoded) => {
       if (err) return res.sendStatus(403)
-
       const { id, username } = decoded
+      
+      // Felhasználó létezésének ellenőrzése
       const user = await users.findOne({ where: { id: id, username: username } })
       if (!user) return res.sendStatus(403)
 
+      // Főbb adatok átadása a későbbi adatlekérésekhez
       req.id = id
       req.username = username
       
