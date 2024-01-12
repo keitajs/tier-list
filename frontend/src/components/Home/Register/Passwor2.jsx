@@ -1,5 +1,5 @@
 import React from 'react'
-import Input from '../Form/Input'
+import Input from '../../Form/Input'
 
 function Passwor2(props) {
   const passwor2Change = (e) => {
@@ -12,7 +12,7 @@ function Passwor2(props) {
   }
 
   return (
-    <Input name='password2' label='Password again' type='password' value={props.passwor2} message={props.passwor2Msg} onChange={passwor2Change} />
+    <Input name='pass2' label='Jelszó újra' type='password' value={props.passwor2} message={props.passwor2Msg} onChange={passwor2Change} reset={props.active} />
   )
 }
 
