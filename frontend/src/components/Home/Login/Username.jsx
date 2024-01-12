@@ -1,5 +1,5 @@
 import React from 'react'
-import Input from '../Form/Input'
+import Input from '../../Form/Input'
 
 function Username(props) {
   const usernameChange = (e) => {
@@ -10,7 +10,7 @@ function Username(props) {
   }
 
   return (
-    <Input name='username' label='Username' type='text' value={props.username} message={props.nameMsg} onChange={usernameChange} />
+    <Input name='username' label='Felhasználónév' type='text' value={props.username} message={props.nameMsg} onChange={usernameChange} />
   )
 }
 

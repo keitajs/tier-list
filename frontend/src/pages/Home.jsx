@@ -15,7 +15,7 @@ function Home(props) {
         <h1 className='w-3/4 text-8xl font-bold tracking-wider'>TIER LIST</h1>
         <p className='w-3/4 ml-9 mt-2 text-xl'>Készítsd el te is a saját Anime Tier Listedet!</p>
 
-        <div className={`flex flex-col mt-5 ${active <= 0 ? 'opacity-0 pointer-events-none translate-y-4' : ''} transition-all`}>
+        <div className={`flex flex-col mt-5 ${active <= 0 ? 'opacity-0 pointer-events-none select-none translate-y-4' : ''} transition-all`}>
           <div className='flex items-center mb-1 ml-auto'>
             <button onClick={() => setActive(-active)} className='flex items-center'><FontAwesomeIcon icon={faHome} className='mr-4 h-6 opacity-60 hover:opacity-75 transition-opacity' /></button>
             <button onClick={() => setActive(active === 1 ? 2 : 1)} className='w-max px-8 py-1.5 text-lg rounded-lg bg-blue-500 hover:bg-blue-400 transition-colors'>{Math.abs(active) === 1 ? 'Regisztráció' : 'Bejelentkezés'}</button>
@@ -25,7 +25,7 @@ function Home(props) {
       </div>
       <div className='relative w-1/2 h-screen flex items-center justify-center'>
         <Index active={active <= 0} setActive={setActive} />
-        <Login active={active === 1} setActive={setActive} />
+        <Login active={active === 1} setActive={setActive} history={props.history} />
         <Register active={active === 2} setActive={setActive} />
       </div>
     </div>

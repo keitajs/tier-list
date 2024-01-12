@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.input-check-anim {
+  animation: inputCheckAnimation 0.3s ease;
+}
+
+.input-error-anim {
+  animation: inputErrorAnimation 0.3s ease;
+}
+
+@keyframes inputCheckAnimation {
+  0% {
+    scale: 0;
+    rotate: 360deg;
+  }
+  100% {
+    scale: 1;
+    rotate: 0deg;
+  }
+}
+
+@keyframes inputErrorAnimation {
+  0% {
+    scale: 0;
+    translate: 0.2rem 0 0;
+  }
+  20% {
+    translate: -0.2rem 0 0;
+  }
+  40% {
+    translate: 0.2rem 0 0;
+  }
+  60% {
+    translate: -0.2rem 0 0;
+  }
+  70% {
+    scale: 1;
+  }
+  80% {
+    translate: 0.2rem 0 0;
+  }
+  100% {
+    translate: 0 0 0;
+  }
+}
