@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import TierList from '../components/List/List'
+import Sidebar from '../components/Sidebar'
+import Navbar from '../components/List/Navbar'
+import Lists from '../components/List/Lists'
+import TierList from '../components/List/TierList'
 
 function List(props) {
+  const [editor, setEditor] = useState(false)
+
   const [categories, setCategories] = useState([])
   const [items, setItems] = useState([])
 
@@ -59,8 +63,13 @@ function List(props) {
   }, [props])
 
   return (
-    <div className='py-5'>
-      <TierList categories={categories} setCategories={setCategories} items={items} setItems={setItems} />
+    <div className='p-6'>
+      <Sidebar />
+
+      <div className='ml-14'>
+        {editor ? <TierList categories={categories} setCategories={setCategories} items={items} setItems={setItems} /> : <Lists />}
+        <Navbar editor={editor} setEditor={setEditor} />
+      </div>
     </div>
   )
 }
