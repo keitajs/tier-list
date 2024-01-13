@@ -77,7 +77,7 @@ function List(props) {
   }
 
   return (
-    <div className='select-none w-11/12 my-4 mx-auto'>
+    <div className='select-none w-full mx-auto'>
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
