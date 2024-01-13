@@ -5,6 +5,7 @@ import Username from './Register/Username'
 import Email from './Register/Email'
 import Password from './Register/Password'
 import Passwor2 from './Register/Passwor2'
+import SuccessMsg from '../Form/SuccessMsg'
 
 function Register(props) {
   const [msg, setMsg] = useState('')
@@ -26,7 +27,7 @@ function Register(props) {
 
     axios.post('http://localhost:2000/register', { username, password, email, }).then(res => {
       setMsg(res.data.message)
-      setTimeout(() => props.setActive(1), 3000)
+      setTimeout(() => props.setActive(1), 2500)
     }).catch(err => {
       const { errors } = err.response.data
 
@@ -44,8 +45,6 @@ function Register(props) {
     <div className={`absolute flex flex-col items-center mr-12 px-12 py-16 rounded-3xl bg-neutral-900 bg-opacity-50 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
       <h3 className='text-center text-3xl font-bold tracking-wide w-72 pb-2 mb-10 border-b-[3px] border-blue-500'>REGISZTRÁCIÓ</h3>
 
-      {msg === '' ? <></> : <div>{msg}</div>}
-
       <div className="form flex flex-col items-center">
         <Username username={username} setUsername={setUsername} nameMsg={nameMsg} setNameMsg={setNameMsg} />
         <Email email={email} setEmail={setEmail} emailMsg={emailMsg} setEmailMsg={setEmailMsg} />
@@ -54,6 +53,8 @@ function Register(props) {
 
         <button className={`w-full mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${nameMsg === '' && emailMsg === '' && passwordMsg === '' && passwor2Msg === '' ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={Register}>Regisztráció</button>
       </div>
+      
+      {msg === '' ? <></> : <SuccessMsg msg={msg} text={'Másodperceken belül átirányítunk a bejelentkezéshez'} />}
     </div>
   )
 }
