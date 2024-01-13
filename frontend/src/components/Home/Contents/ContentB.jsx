@@ -7,8 +7,12 @@ function ContentB(props) {
       <p className='my-1 leading-5 text-lg'>A listák beállításaiban jogosultságokat adhatsz barátaidnak, amivel engedélyezheted számukra a megtekintését vagy akár a közös szerkesztését is!</p>
       <p className='my-1 leading-5 text-lg'>Azonnal láthatod a mások által végrehajtott újításokat, ezzel hatékonyabbá téve a csapatmunkát!</p>
       
+      {props.logged ?
+      <button onClick={() => props.history('/list')} className='w-max mt-4 mb-1 ml-auto px-8 py-1.5 text-lg rounded-lg bg-blue-500 hover:bg-blue-400 transition-colors'>Listák</button>
+      : <>
       <button onClick={() => props.setActive(2)} className='w-max mt-4 mb-1 ml-auto px-8 py-1.5 text-lg rounded-lg bg-blue-500 hover:bg-blue-400 transition-colors'>Regisztráció</button>
       <button onClick={() => props.setActive(1)} className='ml-auto text-sm opacity-60 hover:opacity-75 transition-opacity'>Már van felhasználód? Jelentkezz be itt.</button>
+      </>}
     </div>
   )
 }

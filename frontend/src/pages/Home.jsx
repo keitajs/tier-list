@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import Index from '../components/Home/Index'
 import Login from '../components/Home/Login'
 import Register from '../components/Home/Register'
@@ -7,6 +8,20 @@ import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 function Home(props) {
   const [active, setActive] = useState(0)
+  const [logged, setLogged] = useState(false)
+
+  const getLogged = async () => {
+    const { data } = await axios.get('http://localhost:2000/logged')
+    setLogged(data)
+  }
+
+  useEffect(() => {
+    getLogged().catch(err => { alert('Server error'); console.log(err) })
+  }, [])
+
+  useEffect(() => {
+    if (logged) return setActive(0)
+  }, [active, logged])
 
   return (
     <div className='w-screen h-screen flex overflow-hidden'>
@@ -24,7 +39,7 @@ function Home(props) {
         </div>
       </div>
       <div className='relative w-1/2 h-screen flex items-center justify-center'>
-        <Index active={active <= 0} setActive={setActive} />
+        <Index active={active <= 0} setActive={setActive} history={props.history} logged={logged} />
         <Login active={active === 1} setActive={setActive} history={props.history} />
         <Register active={active === 2} setActive={setActive} />
       </div>
