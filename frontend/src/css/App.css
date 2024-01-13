@@ -45,3 +45,67 @@
     translate: 0 0 0;
   }
 }
+
+.success-box-anim {
+  animation: successBoxAnim 0.3s ease;
+}
+
+.success-check-anim {
+  animation: successCheckAnim 0.5s ease;
+}
+
+.success-msg-anim {
+  animation: successMsgAnim 0.75s ease;
+}
+.success-msg2-anim {
+  animation: successMsg2Anim 1.25s ease;
+}
+
+@keyframes successBoxAnim {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes successCheckAnim {
+  0% {
+    scale: 0;
+    rotate: 360deg;
+  }
+  75% {
+    scale: 1.1;
+  }
+  100% {
+    scale: 1;
+    rotate: 0deg;
+  }
+}
+
+@keyframes successMsgAnim {
+  0% {
+    margin-top: -3.5rem;
+    opacity: 0;
+  }
+  25% {
+    margin-top: -3.5rem;
+  }
+  100% {
+    margin-top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes successMsg2Anim {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
