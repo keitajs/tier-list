@@ -1,32 +1,11 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import users from '../models/user.js'
+import lists from '../models/list.js'
 import rndstr from 'rndstr'
 import { Errors } from '../libs/errors.js'
 
-const Logged = async (req, res) => {
-  try {
-    const token = req.cookies.accessToken
-    if (!token) return res.send(false)
-
-    jwt.verify(token, process.env.ACCESS_SECRET, async (err, decoded) => {
-      if (err) return res.send(false)
-      const { id, username } = decoded
-      
-      // Felhasználó létezésének ellenőrzése
-      const user = await users.findOne({ where: { id: id, username: username } })
-      if (!user) return res.send(false)
-
-      res.send(true)
-    })
-  } catch (err) {
-    if (!err) return
-    console.log(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
-  }
-}
-
-const Register = async (req, res) => {
+export const Register = async (req, res) => {
   try {
     const { username, email, password } = req.body
     const errors = new Errors()
@@ -61,7 +40,7 @@ const Register = async (req, res) => {
   }
 }
 
-const Login = async (req, res) => {
+export const Login = async (req, res) => {
   try {
     const { username, password } = req.body
     const errors = new Errors()
@@ -90,7 +69,7 @@ const Login = async (req, res) => {
   }
 }
 
-const Logout = async (req, res) => {
+export const Logout = async (req, res) => {
   try {
     const accessToken = req.cookies.accessToken
     if (!accessToken) return res.status(400).send({ message: 'Nem vagy bejelentkezve!' })
@@ -104,4 +83,46 @@ const Logout = async (req, res) => {
   }
 }
 
-export { Logged, Register, Login, Logout }
+export const Logged = async (req, res) => {
+  try {
+    const token = req.cookies.accessToken
+    if (!token) return res.send(false)
+
+    jwt.verify(token, process.env.ACCESS_SECRET, async (err, decoded) => {
+      if (err) return res.send(false)
+      const { id, username } = decoded
+      
+      // Felhasználó létezésének ellenőrzése
+      const user = await users.findOne({ where: { id: id, username: username } })
+      if (!user) return res.send(false)
+
+      res.send(true)
+    })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const getUserLists = async (req, res) => {
+  try {
+    const results = await lists.findAll({ where: { userId: req.id } })
+    res.send(results)
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const getPublicLists = async (req, res) => {
+  try {
+    const results = await lists.findAll({ where: { private: false } })
+    res.send(results)
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
