@@ -2,10 +2,10 @@ import React from 'react'
 
 import Sidebar from '../components/Sidebar'
 
-function Profile() {
+function Profile(props) {
   return (
     <div>
-      <Sidebar />
+      <Sidebar history={props.history} />
     </div>
   )
 }
