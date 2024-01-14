@@ -4,9 +4,9 @@ import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { useSensors, useSensor, MouseSensor, TouchSensor, KeyboardSensor, DndContext, DragOverlay } from "@dnd-kit/core"
 import { restrictToWindowEdges, restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import Category from './Category'
-import Characters from './Characters'
-import Item from './Item'
+import Category from './TierList/Category'
+import Characters from './TierList/Characters'
+import Item from './TierList/Item'
 
 function List(props) {
   const [activeItem, setActiveItem] = useState(null)
