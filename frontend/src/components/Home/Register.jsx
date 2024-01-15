@@ -42,7 +42,7 @@ function Register(props) {
   }
 
   return (
-    <div className={`absolute flex flex-col items-center mr-12 px-12 py-16 rounded-3xl bg-neutral-900 bg-opacity-50 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
+    <div className={`absolute flex flex-col items-center mr-12 px-12 py-16 rounded-3xl bg-neutral-900/50 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
       <h3 className='text-center text-3xl font-bold tracking-wide w-72 pb-2 mb-10 border-b-[3px] border-blue-500'>REGISZTRÁCIÓ</h3>
 
       <div className="form flex flex-col items-center">

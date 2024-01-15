@@ -27,7 +27,7 @@ function Item(props) {
       <div {...attributes} {...listeners} onClick={() => openItem('onclick')} onContextMenu={() => openItem('context')} className={`flex items-center justify-center lg:h-32 md:h-28 h-24 aspect-[3/4] ml-0.5 overflow-hidden relative after:content-[""] after:absolute after:inset-0 after:rounded-2xl after:border-2 after:border-transparent hover:after:border-neutral-400 after:transition-all ${isDragging ? 'cursor-grabbing opacity-50' : 'cursor-grab'} ${opened || isDragging ? 'hover:after:border-transparent rounded-s-2xl' : 'rounded-2xl'} transition-all`}>
         <img src={props.character.img} alt="" className='w-full h-full object-cover' />
       </div>
-      <div className={`relative select-text ${opened ? 'w-64 px-2' : 'w-0 px-0'} lg:h-32 md:h-28 h-24 py-1 bg-neutral-700 bg-opacity-60 rounded-e-2xl transition-all overflow-hidden`}>
+      <div className={`relative select-text ${opened ? 'w-64 px-2' : 'w-0 px-0'} lg:h-32 md:h-28 h-24 py-1 bg-neutral-700/60 rounded-e-2xl transition-all overflow-hidden`}>
         <p className='flex justify-between whitespace-nowrap truncate text-xl'>
           {props.character.name}
           <FontAwesomeIcon icon={faClose} onClick={() => setOpened(false)} className='h-6 text-red-500 opacity-75 hover:opacity-100 cursor-pointer transition-opacity' />

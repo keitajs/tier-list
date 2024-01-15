@@ -12,7 +12,7 @@ function Sidebar(props) {
 
   return (
     <div className='group absolute left-0 top-0 bottom-0 w-max rounded-e-3xl bg-neutral-800 shadow-lg overflow-hidden z-50'>
-      <div className='relative w-14 group-hover:w-60 h-full p-4 bg-neutral-900 bg-opacity-85 overflow-hidden whitespace-nowrap transition-all'>
+      <div className='relative w-14 group-hover:w-60 h-full p-4 bg-neutral-900/85 overflow-hidden whitespace-nowrap transition-all'>
         <div className='flex flex-col w-52 h-12 text-lg font-medium tracking-widest'>
           <div className='flex items-center gap-4 mb-3'>
             <FontAwesomeIcon icon={faBars} className='w-6' />
