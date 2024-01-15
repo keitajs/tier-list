@@ -32,7 +32,7 @@ function Lists(props) {
           {lists.map(list => <ListItem key={list.id} list={list} activeList={activeList} onClick={() => setActiveList(list)} />)}
           <button onClick={() => setActiveList(null)} className='group flex items-center justify-center mx-2 mt-2 py-2.5 rounded-xl bg-neutral-950/30 hover:bg-neutral-950/20 transition-all'>
             <FontAwesomeIcon icon={faPlus} className='mx-2' />
-            <span className='text-xl w-0 max-w-max group-hover:w-32 text-nowrap overflow-hidden transition-[width]'>Új lista</span>
+            <span className='text-xl w-0 max-w-max group-hover:w-32 text-nowrap whitespace-nowrap overflow-hidden transition-[width]'>Új lista</span>
           </button>
         </div>
       </div>
