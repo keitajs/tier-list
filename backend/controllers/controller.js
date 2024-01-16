@@ -126,3 +126,38 @@ export const getPublicLists = async (req, res) => {
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
+
+export const createList = async (req, res) => {
+  try {
+    const { name, description, status, visible } = req.body
+    const result = await lists.create({ name, description, status, private: !visible, userId: req.id })
+    res.send(result)
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updateList = async (req, res) => {
+  try {
+    const { name, description, status, visible } = req.body
+    await lists.update({ name, description, status, private: !visible }, { where: { id: req.params.id, userId: req.id } })
+    res.send({ message: 'Sikeresen frissítetted a listát!' })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const removeList = async (req, res) => {
+  try {
+    await lists.destroy({ where: { id: req.params.id, userId: req.id } })
+    res.send({ message: 'Sikeresen törölted a listát!' })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
