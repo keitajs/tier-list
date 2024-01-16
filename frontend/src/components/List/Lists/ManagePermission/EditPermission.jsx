@@ -6,8 +6,16 @@ function EditPermission(props) {
   const [name, setName] = useState('')
   const [permission, setPermission] = useState(1)
 
+  const createPermission = () => {
+    alert('create')
+  }
+
+  const updatePermission = () => {
+    alert('update')
+  }
+
   useEffect(() =>{
-    if (typeof props.active === 'object') {
+    if (props.active.edit) {
       setName(props.active.user.username)
       setPermission(props.active.permission)
     } else {
@@ -18,7 +26,7 @@ function EditPermission(props) {
 
   return (
     <div className='flex flex-col h-max'>
-      <div className='mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>{typeof props.active === 'object' ? 'Jogosultság kezelése' : 'Felhasználó hozzáadása'}</div>
+      <div className='mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>{props.active.edit ? 'Felhasználó kezelése' : 'Felhasználó hozzáadása'}</div>
 
       <label className='mb-0.5 ml-1.5' htmlFor="name">Felhasználó</label>
       <input type='text' name="name" id="name" value={name} onChange={e => setName(e.target.value)} className='px-2.5 py-1.5 rounded-lg bg-neutral-700/50 outline-none resize-none mb-3' />
@@ -31,8 +39,8 @@ function EditPermission(props) {
       </div>
 
       <div className='flex gap-2 justify-center mt-2'>
-        <button className='w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>Hozzáadás</button>
-        <button onClick={() => props.setActive(false)} className='w-1/5 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+        <button onClick={() => props.active.edit ? updatePermission() : createPermission()} className='w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>{props.active.edit ? 'Módosítás' : 'Hozzáadás'}</button>
+        <button onClick={() => props.setActive(null)} className='w-1/5 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
       </div>
     </div>
   )

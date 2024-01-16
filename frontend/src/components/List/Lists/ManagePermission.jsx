@@ -5,14 +5,14 @@ import EditPermission from './ManagePermission/EditPermission'
 import PermissionItem from './ManagePermission/PermissionItem'
 
 function ManagePermission() {
-  const [active, setActive] = useState(false)
+  const [active, setActive] = useState(null)
 
   return (
     <>
       <div className='flex flex-col grow max-h-min overflow-hidden'>
         <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
           Jogosultságok
-          <button onClick={() => setActive(true)}><FontAwesomeIcon icon={faUserPlus} /></button>
+          <button onClick={() => setActive({ new: true })}><FontAwesomeIcon icon={faUserPlus} /></button>
         </div>
 
         <div className='flex flex-col grow gap-2.5 min-h-0 overflow-auto'>
