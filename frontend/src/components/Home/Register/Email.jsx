@@ -7,7 +7,7 @@ function Email(props) {
     props.setEmail(value)
 
     if (value === '') return props.setEmailMsg('Adj meg egy emailt!')
-    if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(value)) return props.setEmailMsg('Az email cím nem megfelelő!')
+    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(value)) return props.setEmailMsg('Az email cím nem megfelelő!')
     props.setEmailMsg('')
   }
 
