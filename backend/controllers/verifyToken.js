@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import users from '../models/user.js'
 
-const verifyToken = async (req, res, next) => {
+export const verifyToken = async (req, res, next) => {
   try {
     const token = req.cookies.accessToken
     if (!token) return res.sendStatus(401)
@@ -29,5 +29,3 @@ const verifyToken = async (req, res, next) => {
     res.sendStatus(500)
   }
 }
-
-export { verifyToken }
