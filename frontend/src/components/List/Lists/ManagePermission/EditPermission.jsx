@@ -12,7 +12,10 @@ function EditPermission(props) {
     try {
       const { data } = await axios.post(`http://localhost:2000/lists/${props.activeList.id}/permissions/create`, { username: name, permission })
       
+      // A jelenleg aktív szerkesztési folyamatot null-ra (nincsre) állítja
       props.setActive(null)
+
+      // Hozzáadja az activeListához a jogosultságot, majd lementi a listákban is
       props.activeList.permissions.push(data)
       props.setActiveList({...props.activeList})
       props.setLists(lists => {
@@ -21,6 +24,7 @@ function EditPermission(props) {
         return [...lists]
       })
     } catch (error) {
+      // Megjeleníti a felhasználónévnél a hibaüzenetet
       setNameMsg(error.response.data.message)
     }
   }
@@ -28,10 +32,11 @@ function EditPermission(props) {
   const updatePermission = async () => {
     try {
       await axios.patch(`http://localhost:2000/lists/${props.activeList.id}/permissions/update/${props.active.user.id}`, { value: permission })
-      
-      console.log(props.active)
 
+      // A jelenleg aktív szerkesztési folyamatot null-ra (nincsre) állítja
       props.setActive(null)
+
+      // Módosítja az activeListában a jogosultságot, majd átírja a listákban is
       const _ = props.activeList.permissions.find(permission => permission.id === props.active.id)
       _.value = permission
       props.setActiveList({...props.activeList})
@@ -47,7 +52,10 @@ function EditPermission(props) {
     try {
       await axios.delete(`http://localhost:2000/lists/${props.activeList.id}/permissions/remove/${props.active.user.id}`)
       
+      // A jelenleg aktív szerkesztési folyamatot null-ra (nincsre) állítja
       props.setActive(null)
+
+      // Kiveszi a jogosultságot és átírja a listákban is
       props.activeList.permissions.splice(props.activeList.permissions.find(permission => permission.id === props.active.id), 1)
       props.setActiveList({...props.activeList})
       props.setLists(lists => {
@@ -59,6 +67,7 @@ function EditPermission(props) {
   }
 
   useEffect(() =>{
+    // Beállítja a megfelelő értékeket az alapján, hogy épp szerkeszt vagy új jogosultságot ad hozzá
     if (props.active.edit) {
       setName(props.active.user.username)
       setPermission(props.active.value)
@@ -69,6 +78,7 @@ function EditPermission(props) {
   }, [props.active])
 
   useEffect(() => {
+    // Felhasználónév mező üresség ellenőrzés
     if (name === '') setNameMsg('Írj be egy felhasználónevet!')
     else setNameMsg('')
   }, [name])

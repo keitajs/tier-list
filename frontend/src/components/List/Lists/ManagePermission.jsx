@@ -8,6 +8,7 @@ function ManagePermission(props) {
   const [active, setActive] = useState(null)
 
   useEffect(() => {
+    // Bezárja a módosítást / hozzáadást, ha vált a listák között
     setActive(null)
   }, [props.activeList])
 
