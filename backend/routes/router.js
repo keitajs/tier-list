@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { Register, Login, Logout, Logged, getUserLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission } from '../controllers/controller.js'
+import { isAdmin } from '../controllers/checkPermission.js'
 import { verifyToken } from '../controllers/verifyToken.js'
 const router = Router()
 
@@ -13,12 +14,12 @@ router.delete('/logout', Logout)
 router.get('/user/lists', verifyToken, getUserLists)
 
 router.post('/lists/create', verifyToken, createList)
-router.patch('/lists/update/:id', verifyToken, updateList)
-router.delete('/lists/remove/:id', verifyToken, removeList)
+router.patch('/lists/update/:id', verifyToken, isAdmin, updateList)
+router.delete('/lists/remove/:id', verifyToken, isAdmin, removeList)
 
-router.post('/lists/:id/permissions/create', verifyToken, createPermission)
-router.patch('/lists/:id/permissions/update/:userId', verifyToken, updatePermission)
-router.delete('/lists/:id/permissions/remove/:userId', verifyToken, removePermission)
+router.post('/lists/:id/permissions/create', verifyToken, isAdmin, createPermission)
+router.patch('/lists/:id/permissions/update/:userId', verifyToken, isAdmin, updatePermission)
+router.delete('/lists/:id/permissions/remove/:userId', verifyToken, isAdmin, removePermission)
 
 router.get('/lists/public', verifyToken, getPublicLists)
 
