@@ -12,8 +12,8 @@ function ManageList(props) {
   const createList = async () => {
     try {
       const { data } = await axios.post('http://localhost:2000/lists/create', { name, description, status, visible })
-      props.setLists(lists => { return [...lists, data] })
-      props.setActiveList(data)
+      props.setLists(lists => { return [...lists, { ...data, permissions: [] }] })
+      props.setActiveList({ ...data, permissions: [] })
     } catch (err) { alert('Server error'); console.log(err) }
   }
 
