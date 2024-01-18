@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import users from '../models/user.js'
 import lists from '../models/list.js'
+import permissions from '../models/permission.js'
 import rndstr from 'rndstr'
 import { Errors } from '../libs/errors.js'
 
@@ -107,7 +108,7 @@ export const Logged = async (req, res) => {
 
 export const getUserLists = async (req, res) => {
   try {
-    const results = await lists.findAll({ where: { userId: req.id } })
+    const results = await lists.findAll({ where: { userId: req.id }, include: { model: permissions, required: false, include: { model: users, required: true, attributes: ['id', 'username', 'avatar'] } } })
     res.send(results)
   } catch (err) {
     if (!err) return
@@ -155,6 +156,52 @@ export const removeList = async (req, res) => {
   try {
     await lists.destroy({ where: { id: req.params.id, userId: req.id } })
     res.send({ message: 'Sikeresen törölted a listát!' })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const createPermission = async (req, res) => {
+  try {
+    const { username, permission } = req.body
+    if (username === req.username) return res.status(400).send({ message: 'Saját magadnak nem adhatsz jogosultságot!' })
+
+    const user = await users.findOne({ where: { username }, attributes: ['id', 'username', 'avatar'] })
+    if (!user) return res.status(400).send({ message: 'Nem található felhasználó!' })
+
+    const checkPermission = await permissions.findOne({ where: { userId: user.id, listId: req.params.id }})
+    if (checkPermission) return res.status(400).send({ message: 'A felhasználó már rendelkezik jogosultsággal!' })
+
+    const result = await permissions.create({ value: permission, userId: user.id, listId: req.params.id })
+    res.send({ ...result.dataValues, user })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updatePermission = async (req, res) => {
+  try {
+    const { id: listId, userId } = req.params
+    const { value } = req.body
+
+    await permissions.update({ value }, { where: { userId, listId } })
+    res.send({ message: 'Sikeresen frissítetted a jogosultságot!' })
+  } catch (err) {
+    if (!err) return
+    console.log(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const removePermission = async (req, res) => {
+  try {
+    const { id: listId, userId } = req.params
+    await permissions.destroy({ where: { userId, listId } })
+    res.send({ message: 'Sikeresen törölted a jogosultságot!' })
   } catch (err) {
     if (!err) return
     console.log(err)
