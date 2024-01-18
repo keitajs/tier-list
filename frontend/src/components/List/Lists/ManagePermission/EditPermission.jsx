@@ -1,35 +1,90 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faArrowsUpDownLeftRight, faPen } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faArrowsUpDownLeftRight, faPen, faXmark, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 function EditPermission(props) {
   const [name, setName] = useState('')
+  const [nameMsg, setNameMsg] = useState('Írj be egy felhasználónevet!')
   const [permission, setPermission] = useState(1)
 
-  const createPermission = () => {
-    alert('create')
+  const createPermission = async () => {
+    try {
+      const { data } = await axios.post(`http://localhost:2000/lists/${props.activeList.id}/permissions/create`, { username: name, permission })
+      
+      props.setActive(null)
+      props.activeList.permissions.push(data)
+      props.setActiveList({...props.activeList})
+      props.setLists(lists => {
+        const list = lists.find(list => list.id === props.activeList.id)
+        list.permissions = props.activeList.permissions
+        return [...lists]
+      })
+    } catch (error) {
+      setNameMsg(error.response.data.message)
+    }
   }
 
-  const updatePermission = () => {
-    alert('update')
+  const updatePermission = async () => {
+    try {
+      await axios.patch(`http://localhost:2000/lists/${props.activeList.id}/permissions/update/${props.active.user.id}`, { value: permission })
+      
+      console.log(props.active)
+
+      props.setActive(null)
+      const _ = props.activeList.permissions.find(permission => permission.id === props.active.id)
+      _.value = permission
+      props.setActiveList({...props.activeList})
+      props.setLists(lists => {
+        const list = lists.find(list => list.id === props.activeList.id)
+        list.permissions = props.activeList.permissions
+        return [...lists]
+      })
+    } catch (error) { alert('Server error'); console.log(error) }
+  }
+
+  const removePermission = async () => {
+    try {
+      await axios.delete(`http://localhost:2000/lists/${props.activeList.id}/permissions/remove/${props.active.user.id}`)
+      
+      props.setActive(null)
+      props.activeList.permissions.splice(props.activeList.permissions.find(permission => permission.id === props.active.id), 1)
+      props.setActiveList({...props.activeList})
+      props.setLists(lists => {
+        const list = lists.find(list => list.id === props.activeList.id)
+        list.permissions = props.activeList.permissions
+        return [...lists]
+      })
+    } catch (error) { alert('Server error'); console.log(error) }
   }
 
   useEffect(() =>{
     if (props.active.edit) {
       setName(props.active.user.username)
-      setPermission(props.active.permission)
+      setPermission(props.active.value)
     } else {
       setName('')
       setPermission(1)
     }
   }, [props.active])
 
+  useEffect(() => {
+    if (name === '') setNameMsg('Írj be egy felhasználónevet!')
+    else setNameMsg('')
+  }, [name])
+
   return (
     <div className='flex flex-col h-max'>
-      <div className='mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>{props.active.edit ? 'Felhasználó kezelése' : 'Felhasználó hozzáadása'}</div>
+      <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
+        {props.active.edit ? 'Felhasználó kezelése' : 'Felhasználó hozzáadása'}
+        {props.active.edit ? <button onClick={removePermission} className='flex items-center gap-2 group text-sm text-rose-600 hover:text-rose-500 ml-0 hover:ml-2 transition-all'><div className='w-0 group-hover:w-32 max-w-max overflow-hidden transition-all'>Törlés</div><FontAwesomeIcon icon={faTrash} /></button> : <></>}
+      </div>
 
-      <label className='mb-0.5 ml-1.5' htmlFor="name">Felhasználó</label>
-      <input type='text' name="name" id="name" value={name} onChange={e => setName(e.target.value)} className='px-2.5 py-1.5 rounded-lg bg-neutral-700/50 outline-none resize-none mb-3' />
+      <label className='mb-0.5 ml-1.5' htmlFor="name">Felhasználó {nameMsg ? <span className='ml-0.5 text-sm text-rose-600'>{nameMsg}</span> : <></>}</label>
+      <div className='relative w-full mb-3'>
+        <input type='text' name="name" id="name" value={name} onChange={e => setName(e.target.value)} disabled={props.active.edit} className='w-full pl-2.5 pr-10 py-1.5 rounded-lg bg-neutral-700/50 outline-none resize-none' />
+        {nameMsg ? <div className='absolute top-1/2 right-3 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' /></div> : <></>}
+      </div>
 
       <label className='mb-0.5 ml-1.5'>Jogosultság</label>
       <div className='flex gap-2 justify-around mb-3'>
@@ -39,7 +94,7 @@ function EditPermission(props) {
       </div>
 
       <div className='flex gap-2 justify-center mt-2'>
-        <button onClick={() => props.active.edit ? updatePermission() : createPermission()} className='w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>{props.active.edit ? 'Módosítás' : 'Hozzáadás'}</button>
+        <button onClick={() => props.active.edit ? updatePermission() : createPermission()} className='w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors' disabled={nameMsg !== ''}>{props.active.edit ? 'Módosítás' : 'Hozzáadás'}</button>
         <button onClick={() => props.setActive(null)} className='w-1/5 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
       </div>
     </div>

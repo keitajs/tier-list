@@ -37,7 +37,7 @@ function Lists(props) {
           <ManageList setLists={setLists} activeList={activeList} setActiveList={setActiveList} />
         </div>
         <div className='flex flex-col flex-nowrap grow gap-5 min-h-0 p-5 rounded-3xl bg-neutral-900/85'>
-          {activeList ? <ManagePermission /> : <PublicLists />}
+          {activeList ? <ManagePermission setLists={setLists} activeList={activeList} setActiveList={setActiveList} /> : <PublicLists />}
         </div>
       </div>
     </div>

@@ -1,29 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import EditPermission from './ManagePermission/EditPermission'
 import PermissionItem from './ManagePermission/PermissionItem'
 
-function ManagePermission() {
+function ManagePermission(props) {
   const [active, setActive] = useState(null)
+
+  useEffect(() => {
+    setActive(null)
+  }, [props.activeList])
 
   return (
     <>
       <div className='flex flex-col grow max-h-min overflow-hidden'>
         <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
           Jogosultságok
-          <button onClick={() => setActive({ new: true })}><FontAwesomeIcon icon={faUserPlus} /></button>
+          <button onClick={() => setActive(active => active?.new ? null : { new: true })}><FontAwesomeIcon icon={faUserPlus} /></button>
         </div>
 
         <div className='flex flex-col grow gap-2.5 min-h-0 overflow-auto'>
-          <PermissionItem user={{ id: 1, username: 'User 1' }} permission={1} setActive={setActive} />
-          <PermissionItem user={{ id: 2, username: 'User 2' }} permission={2} setActive={setActive} />
-          <PermissionItem user={{ id: 3, username: 'User 3' }} permission={3} setActive={setActive} />
-          <PermissionItem user={{ id: 4, username: 'User 4' }} permission={1} setActive={setActive} />
+          {props.activeList.permissions.length > 0 ? props.activeList.permissions.map(permission => <PermissionItem key={permission.id} user={permission.user} permission={permission} active={active} setActive={setActive} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található jogosultság.</div>}
         </div>
       </div>
 
-      {active ? <EditPermission active={active} setActive={setActive} /> : <></>}
+      {active ? <EditPermission activeList={props.activeList} setActiveList={props.setActiveList} setLists={props.setLists} active={active} setActive={setActive} /> : <></>}
     </>
   )
 }
