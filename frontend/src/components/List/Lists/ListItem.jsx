@@ -4,7 +4,7 @@ import { faCheck, faEllipsis, faDumpsterFire, faChevronRight } from '@fortawesom
 
 function ListItem(props) {
   return (
-    <button onClick={props.onClick} className='flex items-center justify-between px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all'>
+    <button onClick={props.onClick} onDoubleClick={props.onDoubleClick} className='flex items-center justify-between px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all'>
       <div className='flex items-center text-xl'>
         <span className='mr-3'>{props.list.name}</span>
         {[<FontAwesomeIcon icon={faEllipsis} className='text-white' />, <FontAwesomeIcon icon={faCheck} className='text-emerald-500' />, <FontAwesomeIcon icon={faDumpsterFire} className='text-red-500' />][props.list.status - 1]}

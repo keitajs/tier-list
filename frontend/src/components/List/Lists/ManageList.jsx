@@ -73,7 +73,7 @@ function ManageList(props) {
         </div>
         {props.activeList ? 
         <div className='flex items-center gap-3 text-sm'>
-          <button className='flex items-center gap-2 opacity-75 hover:opacity-90 transition-opacity'>Megnyitás<FontAwesomeIcon icon={faUpRightFromSquare} /></button>
+          <button onClick={() => {props.setSelectedList(props.activeList.id); props.history('/list/editor')}} className='flex items-center gap-2 opacity-75 hover:opacity-90 transition-opacity'>Megnyitás<FontAwesomeIcon icon={faUpRightFromSquare} /></button>
           <button onClick={removeList} className='flex items-center gap-2 group text-rose-600 hover:text-rose-500 ml-0 hover:ml-2 transition-all'><div className='w-0 group-hover:w-32 max-w-max overflow-hidden transition-all'>Törlés</div><FontAwesomeIcon icon={faTrash} /></button>
         </div>
         : <></>}
