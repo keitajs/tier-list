@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { useSensors, useSensor, MouseSensor, TouchSensor, KeyboardSensor, DndContext, DragOverlay } from "@dnd-kit/core"
@@ -9,9 +9,12 @@ import Characters from '../../components/List/TierList/Characters'
 import Item from '../../components/List/TierList/Item'
 
 function List(props) {
+  const [items, setItems] = useState([])
+  const [categories, setCategories] = useState([])
+
   const [activeItem, setActiveItem] = useState(null)
   const [activeCategory, setActiveCategory] = useState(null)
-  const categoryIds = useMemo(() => props.categories.map(category => category.id), [props.categories])
+  const categoryIds = useMemo(() => categories.map(category => category.id), [categories])
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
@@ -29,7 +32,7 @@ function List(props) {
     if (active.data.current?.type !== "Item") return
 
     if (over.data.current?.type === "Item") {
-      return props.setItems((items) => {
+      return setItems((items) => {
         const activeIndex = items.findIndex((t) => t.id === active.id)
         const overIndex = items.findIndex((t) => t.id === over.id)
 
@@ -41,7 +44,7 @@ function List(props) {
       })
     } else
     if (over.data.current?.type === "Category") {
-      return props.setItems((items) => {
+      return setItems((items) => {
         const activeIndex = items.findIndex((t) => t.id === active.id)
         items[activeIndex].categoryId = over.id
         return arrayMove(items, activeIndex, items.length)
@@ -64,7 +67,7 @@ function List(props) {
       
       // AXIOS MENTÉS
       console.log('category drag end')
-      props.setCategories((categories) => {
+      setCategories((categories) => {
         const activeIndex = categories.findIndex(category => category.id === active.id)
         const overIndex = categories.findIndex(category => category.id === over.id)
         return arrayMove(categories, activeIndex, overIndex)
@@ -73,27 +76,31 @@ function List(props) {
   }
 
   const createCategory = () => {
-    props.setCategories(categories => { return [...categories, { id: `cat-${categories.length + 1}`, name: 'TEST', color: '#ffb6c1' }] })
+    setCategories(categories => { return [...categories, { id: `cat-${categories.length + 1}`, name: 'TEST', color: '#ffb6c1' }] })
   }
+
+  useEffect(() => {
+    if (props.selectedList === null) return props.history('/list')
+  }, [props, props.selectedList])
 
   return (
     <div className='select-none w-full mx-auto'>
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
-            {props.categories.map(category => <Category items={props.items.filter(item => item.categoryId === category.id)} key={category.id} id={category.id} name={category.name} color={category.color} />)}
+            {categories.map(category => <Category items={items.filter(item => item.categoryId === category.id)} key={category.id} id={category.id} name={category.name} color={category.color} />)}
           </div>
           <button onClick={createCategory} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
             <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
           </button>
           <div className='mt-8 rounded-2xl'>
-            {<Characters items={props.items.filter(item => item.categoryId === 'characters')} setItems={props.setItems} key={'characters'} id={'characters'} />}
+            {<Characters items={items.filter(item => item.categoryId === 'characters')} setItems={setItems} key={'characters'} id={'characters'} />}
           </div>
         </SortableContext>
 
         <DragOverlay modifiers={activeCategory ? [restrictToParentElement, restrictToVerticalAxis] : []}>
           {activeItem ? <Item key={activeItem.id} id={activeItem.id} character={activeItem.character} anime={activeItem.anime} /> : <></>}
-          {activeCategory ? <Category items={props.items.filter(item => item.categoryId === activeCategory.id)} key={activeCategory.id} id={activeCategory.id} name={activeCategory.name} color={activeCategory.color} /> : <></>}
+          {activeCategory ? <Category items={items.filter(item => item.categoryId === activeCategory.id)} key={activeCategory.id} id={activeCategory.id} name={activeCategory.name} color={activeCategory.color} /> : <></>}
         </DragOverlay>
       </DndContext>
     </div>

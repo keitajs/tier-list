@@ -6,8 +6,7 @@ import Lists from './List/Lists'
 import TierList from './List/TierList'
 
 function List(props) {
-  const [categories, setCategories] = useState([])
-  const [items, setItems] = useState([])
+  const [selectedList, setSelectedList] = useState(null)
 
   return (
     <div className='h-screen p-6'>
@@ -15,11 +14,11 @@ function List(props) {
 
       <div className='h-full ml-14'>
         <Routes>
-          <Route path='/' element={<Lists history={props.history} />} />
-          <Route path='/editor' element={<TierList history={props.history} categories={categories} setCategories={setCategories} items={items} setItems={setItems} />} />
+          <Route path='/' element={<Lists history={props.history} setSelectedList={setSelectedList} />} />
+          <Route path='/editor' element={<TierList history={props.history} selectedList={selectedList} />} />
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
-        <Navbar />
+        <Navbar selectedList={selectedList} />
       </div>
     </div>
   )
