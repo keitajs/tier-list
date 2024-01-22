@@ -1,9 +1,10 @@
 import { DataTypes } from "sequelize"
 import { db } from '../libs/database.js'
 
-const permissions = db.define('permissions', {
+const animes = db.define('animes', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  value: { type: DataTypes.INTEGER(1), allowNull: false, defaultValue: 1 }
+  title: { type: DataTypes.STRING(256), allowNull: false },
+  url: { type: DataTypes.STRING(512), allowNull: true }
 }, { createdAt: false, updatedAt: false });
 
-export default permissions
+export default animes
