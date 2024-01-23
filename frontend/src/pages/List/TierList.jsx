@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { useSensors, useSensor, MouseSensor, TouchSensor, KeyboardSensor, DndContext, DragOverlay } from "@dnd-kit/core"
@@ -9,6 +10,7 @@ import Characters from '../../components/List/TierList/Characters'
 import Item from '../../components/List/TierList/Item'
 
 function List(props) {
+  const [title, setTitle] = useState('Betöltés...')
   const [items, setItems] = useState([])
   const [categories, setCategories] = useState([])
 
@@ -79,12 +81,24 @@ function List(props) {
     setCategories(categories => { return [...categories, { id: `cat-${categories.length + 1}`, name: 'TEST', color: '#ffb6c1' }] })
   }
 
+  const getTierList = async (id) => {
+    const { data: list } = await axios.get(`http://localhost:2000/user/lists/${id}`)
+
+    setTitle(list.name)
+    setCategories(list.categories.map(category => { return { id: `${category.id}c`, name: category.name, color: category.color } }))
+    setItems([].concat(...list.categories.map(category => category.characters.map(character => { return { ...character, categoryId: `${category.id}c`, } }))))
+  }
+
   useEffect(() => {
     if (props.selectedList === null) return props.history('/list')
+
+    getTierList(props.selectedList).catch(err => console.log(err))
   }, [props, props.selectedList])
 
   return (
     <div className='select-none w-full mx-auto'>
+      <h1 className='mb-8 px-3 pb-2 text-2xl border-b-2 border-blue-500'>{title}</h1>
+
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
@@ -94,7 +108,7 @@ function List(props) {
             <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
           </button>
           <div className='mt-8 rounded-2xl'>
-            {<Characters items={items.filter(item => item.categoryId === 'characters')} setItems={setItems} key={'characters'} id={'characters'} />}
+            <Characters items={items.filter(item => item.categoryId === 'characters')} setItems={setItems} key={'characters'} id={'characters'} />
           </div>
         </SortableContext>
 

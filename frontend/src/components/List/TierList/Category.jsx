@@ -22,7 +22,7 @@ function Category(props) {
       </div>
       <div className='flex flex-wrap w-full lg:min-h-32 md:min-h-28 min-h-24'>
         <SortableContext items={itemIds} strategy={horizontalListSortingStrategy}>
-          {props.items.map(item => <Item key={item.id} id={item.id} character={{ name: item.name, url: item.url, img: item.img }} anime={{ id: item.anime.id, name: item.anime.name, url: item.anime.url }} />)}
+          {props.items.map(item => <Item key={item.id} id={item.id} character={{ name: item.name, url: item.url, img: item.image }} anime={{ id: item.anime.id, title: item.anime.title, url: item.anime.url }} />)}
         </SortableContext>
       </div>
     </div>
