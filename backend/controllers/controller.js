@@ -1,9 +1,13 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import rndstr from 'rndstr'
+import logger from '../libs/logger.js'
 import users from '../models/user.js'
 import lists from '../models/list.js'
 import permissions from '../models/permission.js'
-import rndstr from 'rndstr'
+import categories from '../models/category.js'
+import characters from '../models/character.js'
+import animes from '../models/anime.js'
 import { Errors } from '../libs/errors.js'
 
 export const Register = async (req, res) => {
@@ -36,7 +40,7 @@ export const Register = async (req, res) => {
     res.send({ message: 'Sikeres regisztráció!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -65,7 +69,7 @@ export const Login = async (req, res) => {
     res.send({ message: 'Sikeres bejelentkezés!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -79,7 +83,7 @@ export const Logout = async (req, res) => {
     return res.send({ message: 'Sikeres kijelentkezés!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -101,8 +105,34 @@ export const Logged = async (req, res) => {
     })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const getUserList = async(req, res) => {
+  try {
+    const { id } = req.params
+
+    const result = await lists.findOne({
+      where: { id },
+      include: {
+        model: categories,  required: false,
+        include: {
+          model: characters, required: false,
+          include: { model: animes, required: false }
+        }
+      },
+      order: [
+        [categories, 'position', 'asc'],
+        [categories, characters, 'position', 'asc']
+      ]
+    })
+    res.send(result)
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -112,7 +142,7 @@ export const getUserLists = async (req, res) => {
     res.send(results)
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -123,7 +153,7 @@ export const getPublicLists = async (req, res) => {
     res.send(results)
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -135,7 +165,7 @@ export const createList = async (req, res) => {
     res.send(result)
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -147,7 +177,7 @@ export const updateList = async (req, res) => {
     res.send({ message: 'Sikeresen frissítetted a listát!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -158,7 +188,7 @@ export const removeList = async (req, res) => {
     res.send({ message: 'Sikeresen törölted a listát!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -178,7 +208,7 @@ export const createPermission = async (req, res) => {
     res.send({ ...result.dataValues, user })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -192,7 +222,7 @@ export const updatePermission = async (req, res) => {
     res.send({ message: 'Sikeresen frissítetted a jogosultságot!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
@@ -204,7 +234,7 @@ export const removePermission = async (req, res) => {
     res.send({ message: 'Sikeresen törölted a jogosultságot!' })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }

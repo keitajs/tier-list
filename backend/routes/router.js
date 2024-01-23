@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { Register, Login, Logout, Logged, getUserLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission } from '../controllers/controller.js'
-import { isAdmin } from '../controllers/checkPermission.js'
+import { Register, Login, Logout, Logged, getUserList, getUserLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission } from '../controllers/controller.js'
+import { hasAnyPermission, isAdmin } from '../controllers/checkPermission.js'
 import { verifyToken } from '../controllers/verifyToken.js'
 const router = Router()
 
@@ -12,7 +12,7 @@ router.post('/login', Login)
 router.delete('/logout', Logout)
 
 router.get('/user/lists', verifyToken, getUserLists)
-
+router.get('/user/lists/:id', verifyToken, hasAnyPermission, getUserList)
 router.post('/lists/create', verifyToken, createList)
 router.patch('/lists/update/:id', verifyToken, isAdmin, updateList)
 router.delete('/lists/remove/:id', verifyToken, isAdmin, removeList)
