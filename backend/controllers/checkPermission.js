@@ -1,5 +1,7 @@
 import lists from '../models/list.js'
 import permissions from '../models/permission.js'
+import categories from '../models/category.js'
+import characters from '../models/character.js'
 
 export const isAdmin = async (req, res, next) => {
   try {
@@ -36,4 +38,23 @@ const hasMinLevel = async (req, res, next, level) => {
     console.log(err)
     res.sendStatus(500)
   }
+}
+
+export const isInList = async (req, res, next) => {
+  const { id: listId, categoryId, characterId } = req.params
+  
+  if (categoryId) {
+    const category = await categories.findOne({ where: { id: categoryId, listId } })
+    if (!category) return res.status(400).send({ message: 'Nem található kategória ehhez a listához!' })
+  }
+
+  if (characterId) {
+    const character = await characters.findOne({ where: { id: characterId } })
+    if (!character) return res.status(400).send({ message: 'Nem található karakter!' })
+
+    const category = await categories.findOne({ where: { id: character.categoryId, listId } })
+    if (!category) return res.status(400).send({ message: 'Nem található karakter ehhez a listához!' })
+  }
+
+  next()
 }

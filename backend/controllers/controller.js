@@ -8,6 +8,7 @@ import permissions from '../models/permission.js'
 import categories from '../models/category.js'
 import characters from '../models/character.js'
 import animes from '../models/anime.js'
+import { Op } from 'sequelize'
 import { Errors } from '../libs/errors.js'
 
 export const Register = async (req, res) => {
@@ -161,8 +162,15 @@ export const getPublicLists = async (req, res) => {
 export const createList = async (req, res) => {
   try {
     const { name, description, status, visible } = req.body
-    const result = await lists.create({ name, description, status, private: !visible, userId: req.id })
-    res.send(result)
+    const list = await lists.create({ name, description, status, private: !visible, userId: req.id })
+    await categories.bulkCreate([
+      { name: 'A', position: 1, color: '#880000', listId: list.id },
+      { name: 'B', position: 2, color: '#888800', listId: list.id },
+      { name: 'C', position: 3, color: '#008800', listId: list.id },
+      { listId: list.id }
+    ])
+
+    res.send(list)
   } catch (err) {
     if (!err) return
     logger.error(err)
@@ -174,7 +182,7 @@ export const updateList = async (req, res) => {
   try {
     const { name, description, status, visible } = req.body
     await lists.update({ name, description, status, private: !visible }, { where: { id: req.params.id, userId: req.id } })
-    res.send({ message: 'Sikeresen frissítetted a listát!' })
+    res.send({ message: 'Sikeresen módosítottad a listát!' })
   } catch (err) {
     if (!err) return
     logger.error(err)
@@ -219,7 +227,7 @@ export const updatePermission = async (req, res) => {
     const { value } = req.body
 
     await permissions.update({ value }, { where: { userId, listId } })
-    res.send({ message: 'Sikeresen frissítetted a jogosultságot!' })
+    res.send({ message: 'Sikeresen módosítottad a jogosultságot!' })
   } catch (err) {
     if (!err) return
     logger.error(err)
@@ -232,6 +240,96 @@ export const removePermission = async (req, res) => {
     const { id: listId, userId } = req.params
     await permissions.destroy({ where: { userId, listId } })
     res.send({ message: 'Sikeresen törölted a jogosultságot!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const createCategory = async (req, res) => {
+
+}
+
+export const moveCategory = async (req, res) => {
+
+}
+
+export const updateCategory = async (req, res) => {
+
+}
+
+export const removeCategory = async (req, res) => {
+  
+}
+
+// id	name	position	url	image	categoryId	animeId	
+export const createCharacter = async (req, res) => {
+  try {
+    const { id: listId } = req.params
+    const { name, url: characterUrl, image } = req.body.character
+    const { title, url: animeUrl } = req.body.anime
+
+    const category = await categories.findOne({ where: { position: null, listId } })
+    const position = (await characters.findAndCountAll({ where: { categoryId: category.id } })).count + 1
+    const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
+    const character = await characters.create({ name, position, url: characterUrl, image, categoryId: category.id, animeId: anime[0].id })
+    const result = await characters.findOne({ where: { id: character.id }, include: { model: animes, required: false } })
+
+    res.send(result)
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const moveCharacter = async (req, res) => {
+  try {
+    const { id: listId, characterId } = req.params
+    const { position, categoryId } = req.body
+
+    const category = categories.findOne({ where: { id: categoryId, listId } })
+    if (!category) return res.status(400).send({ message: 'Nem található kategória!' })
+
+    const character = await characters.findOne({ where: { id: characterId } })
+    if (!character) return res.status(400).send({ message: 'Nem található karakter!' })
+
+    if (character.categoryId === category.id) {
+      await characters.increment({ position: 1 }, { where: { categoryId: category.id, position: { [Op.between]: [position, character.position - 1] } } })
+    } else {
+      await characters.increment({ position: -1 }, { where: { categoryId: character.categoryId, position: { [Op.gt]: character.position } } })
+      await characters.increment({ position: 1 }, { where: { categoryId, position: { [Op.gte]: position } } })
+    }
+
+    await characters.update({ position, categoryId }, { where: { id: characterId } })
+    res.send({ message: 'Sikeresen áthelyezted a karaktert!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updateCharacter = async (req, res) => {
+  try {
+    const { characterId } = req.params
+    const { name, url, image } = req.body
+
+    await characters.update({ name, url, image }, { where: { id: characterId } })
+    res.send({ message: 'Sikeresen módosítottad a karaktert!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const removeCharacter = async (req, res) => {
+  try {
+    const { characterId } = req.params
+    await characters.destroy({ where: { id: characterId } })
+    res.send({ message: 'Sikeresen törölted a karaktert!' })
   } catch (err) {
     if (!err) return
     logger.error(err)
