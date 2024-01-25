@@ -21,7 +21,7 @@ function ManageList(props) {
 
   const updateList = async () => {
     try {
-      await axios.patch(`http://localhost:2000/lists/update/${props.activeList.id}`, { name, description, status, visible })
+      await axios.patch(`http://localhost:2000/lists/${props.activeList.id}/update`, { name, description, status, visible })
 
       // Módosítja az adatokat a változókban
       props.setLists(lists => {
@@ -38,7 +38,7 @@ function ManageList(props) {
 
   const removeList = async () => {
     try {
-      await axios.delete(`http://localhost:2000/lists/remove/${props.activeList.id}`)
+      await axios.delete(`http://localhost:2000/lists/${props.activeList.id}/remove`)
 
       // Törli a listát a többi közül
       props.setLists(lists => {
