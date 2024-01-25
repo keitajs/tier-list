@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { isMobile } from 'react-device-detect'
 import { useSortable } from "@dnd-kit/sortable"
@@ -22,6 +23,21 @@ function Item(props) {
     if (!isDragging && ((e === 'context' && !isMobile) || (e === 'onclick' && isMobile))) return setOpened(!opened)
   }
 
+  const removeCharacter = async () => {
+    try {
+      await axios.delete(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(props.id)}/remove`)
+
+      props.setItems(items => {
+        items.splice(items.findIndex(item => item.id === props.id), 1)
+        return items.slice()
+      })
+    } catch (err) {
+      if (err.response.data.message) return alert(err.response.data.message)
+      alert('Server error')
+      console.log(err)
+    }
+  }
+
   return (
     <div ref={setNodeRef} className='flex rounded-2xl overflow-hidden' style={style}>
       <div {...attributes} {...listeners} onClick={() => openItem('onclick')} onContextMenu={() => openItem('context')} className={`flex items-center justify-center lg:h-32 md:h-28 h-24 aspect-[3/4] ml-0.5 overflow-hidden relative after:content-[""] after:absolute after:inset-0 after:rounded-2xl after:border-2 after:border-transparent hover:after:border-neutral-400 after:transition-all ${isDragging ? 'cursor-grabbing opacity-50' : 'cursor-grab'} ${opened || isDragging ? 'hover:after:border-transparent rounded-s-2xl' : 'rounded-2xl'} transition-all`}>
@@ -42,7 +58,7 @@ function Item(props) {
 
         <div className='flex justify-end gap-1.5'>
           <button className='text-emerald-500 opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faEdit} /></button>
-          <button className='text-red-500 opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faTrash} /></button>
+          <button onClick={removeCharacter} className='text-red-500 opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faTrash} /></button>
         </div>
       </div>
     </div>

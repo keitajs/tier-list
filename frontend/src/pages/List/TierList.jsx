@@ -60,10 +60,12 @@ function List(props) {
 
     if (!over) return
     if (active.data.current?.type === "Item") {
-
-      // AXIOS MENTÉS
-      console.log('item drag end')
-    } else
+      const activeItem = items.find(item => item.id === active.id)
+      const firstItem = items.find(item => activeItem.categoryId === item.categoryId)
+      const position = items.findIndex(item => item.id === activeItem.id) - items.findIndex(item => item.id === firstItem.id) + 1
+      axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId: parseInt(activeItem.categoryId) })
+    }
+    else
     if (active.data.current?.type === "Category") {
       if (active.id === over.id) return
       
@@ -85,8 +87,8 @@ function List(props) {
     const { data: list } = await axios.get(`http://localhost:2000/user/lists/${id}`)
 
     setTitle(list.name)
-    setCategories(list.categories.map(category => { return { id: `${category.id}c`, name: category.name, color: category.color } }))
-    setItems([].concat(...list.categories.map(category => category.characters.map(character => { return { ...character, categoryId: `${category.id}c`, } }))))
+    setCategories(list.categories.filter(category => category.position).map(category => { return { id: `${category.id}cat`, name: category.name, color: category.color } }))
+    setItems([].concat(...list.categories.map(category => category.characters.map(character => { return { ...character, categoryId: `${category.id}${category.position ? 'cat' : 'characters'}`, } }))))
   }
 
   useEffect(() => {
@@ -102,13 +104,13 @@ function List(props) {
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
-            {categories.map(category => <Category items={items.filter(item => item.categoryId === category.id)} key={category.id} id={category.id} name={category.name} color={category.color} />)}
+            {categories.map(category => <Category items={items.filter(item => item.categoryId === category.id)} setItems={setItems} key={category.id} id={category.id} name={category.name} color={category.color} selectedList={props.selectedList} />)}
           </div>
           <button onClick={createCategory} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
             <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
           </button>
           <div className='mt-8 rounded-2xl'>
-            <Characters items={items.filter(item => item.categoryId === 'characters')} setItems={setItems} key={'characters'} id={'characters'} />
+            <Characters items={items.filter(item => item.categoryId.endsWith('characters'))} setItems={setItems} key={'characters'} id={items.find(item => item.categoryId.endsWith('characters'))?.categoryId} selectedList={props.selectedList} />
           </div>
         </SortableContext>
 
