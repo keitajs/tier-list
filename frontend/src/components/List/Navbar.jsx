@@ -5,7 +5,7 @@ import { faPen, faGears } from '@fortawesome/free-solid-svg-icons'
 
 function Navbar(props) {
   return (
-    <div className='absolute right-5 bottom-5 p-1.5 rounded-2xl bg-neutral-900/85 z-50'>
+    <div className='fixed right-5 bottom-5 p-1.5 rounded-2xl bg-neutral-900/85 z-50'>
       <div className='relative flex rounded-xl bg-neutral-800/50'>
         <div className={`z-0 absolute h-16 w-16 rounded-xl bg-blue-500 ${window.location.pathname === '/list/editor' ? 'left-0' : 'left-16'} transition-all`}></div>
         <Link to={'/list/editor'} className={`z-10 flex items-center justify-center h-16 w-16 rounded-xl ${window.location.pathname === '/list/editor' ? '' : 'hover:bg-neutral-800 transition-colors'} ${props.selectedList === null ? 'pointer-events-none cursor-not-allowed' : ''}`}>
