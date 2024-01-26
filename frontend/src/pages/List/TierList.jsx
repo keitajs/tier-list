@@ -70,17 +70,28 @@ function List(props) {
       if (active.id === over.id) return
       
       // AXIOS MENTÉS
-      console.log('category drag end')
       setCategories((categories) => {
         const activeIndex = categories.findIndex(category => category.id === active.id)
         const overIndex = categories.findIndex(category => category.id === over.id)
+        axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex + 1 })
         return arrayMove(categories, activeIndex, overIndex)
       })
     }
   }
 
-  const createCategory = () => {
-    setCategories(categories => { return [...categories, { id: `cat-${categories.length + 1}`, name: 'TEST', color: '#ffb6c1' }] })
+  const createCategory = async () => {
+    try {
+      const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/categories/create`, {
+        name: 'TEST',
+        color: '#ffb6c1'
+      })
+
+      setCategories(categories => { return [...categories, data] })
+    } catch (err) {
+      if (err.response.data.message) return alert(err.response.data.message)
+      alert('Server error')
+      console.log(err)
+    }
   }
 
   const getTierList = async (id) => {
@@ -104,13 +115,13 @@ function List(props) {
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
-            {categories.map(category => <Category items={items.filter(item => item.categoryId === category.id)} setItems={setItems} key={category.id} id={category.id} name={category.name} color={category.color} selectedList={props.selectedList} />)}
+            {categories.map(category => <Category items={items.filter(item => item.categoryId === category.id)} setItems={setItems} setCategories={setCategories} key={category.id} id={category.id} name={category.name} color={category.color} selectedList={props.selectedList} />)}
           </div>
           <button onClick={createCategory} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
             <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
           </button>
           <div className='mt-8 rounded-2xl'>
-            <Characters items={items.filter(item => item.categoryId.endsWith('characters'))} setItems={setItems} key={'characters'} id={items.find(item => item.categoryId.endsWith('characters'))?.categoryId} selectedList={props.selectedList} />
+            <Characters items={items.filter(item => item.categoryId?.endsWith('characters'))} setItems={setItems} key={'characters'} id={items.find(item => item.categoryId?.endsWith('characters'))?.categoryId} selectedList={props.selectedList} />
           </div>
         </SortableContext>
 
