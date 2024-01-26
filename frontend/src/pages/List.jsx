@@ -9,7 +9,7 @@ function List(props) {
   const [selectedList, setSelectedList] = useState(null)
 
   return (
-    <div className='h-screen p-6'>
+    <div className='min-h-screen p-6'>
       <Sidebar history={props.history} />
 
       <div className='h-full ml-14'>

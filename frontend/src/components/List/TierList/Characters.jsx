@@ -28,7 +28,6 @@ function Characters(props) {
       })
 
       data.categoryId = props.id
-      console.log(data)
       props.setItems(items => { return [...items, data] })
     } catch (err) {
       if (err.response.data.message) return alert(err.response.data.message)
