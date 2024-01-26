@@ -248,22 +248,70 @@ export const removePermission = async (req, res) => {
 }
 
 export const createCategory = async (req, res) => {
+  try {
+    const { id: listId } = req.params
+    const { name, color } = req.body
 
+    const position = (await categories.findAndCountAll({ where: { listId, position: { [Op.not]: null } } })).count + 1
+    const result = await categories.create({ name, position, color, listId })
+
+    res.send(result)
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
 }
 
 export const moveCategory = async (req, res) => {
+  try {
+    const { id: listId, categoryId } = req.params
+    const { position } = req.body
 
+    const category = await categories.findOne({ where: { id: categoryId, listId } })
+    if (!category) return res.status(400).send({ message: 'Nem található kategória!' })
+
+    if (position === category.position) return res.sendStatus(200)
+
+    if (position < category.position) await categories.increment({ position: 1 }, { where: { listId, position: { [Op.between]: [position, category.position - 1] } } })
+    else await categories.increment({ position: -1 }, { where: { listId, position: { [Op.between]: [category.position + 1, position] } } })
+
+    await categories.update({ position }, { where: { id: categoryId } })
+    res.send({ message: 'Sikeresen áthelyezted a kategóriát!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
 }
 
 export const updateCategory = async (req, res) => {
+  try {
+    const { id: listId, categoryId } = req.params
+    const { name, color } = req.body
 
+    await categories.update({ name, color }, { where: { id: categoryId, listId } })
+
+    res.send({ message: 'Sikeresen módosítottad a kategóriát!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
 }
 
 export const removeCategory = async (req, res) => {
-  
+  try {
+    const { id: listId, categoryId } = req.params
+    await categories.destroy({ where: { id: categoryId, listId } })
+    res.send({ message: 'Sikeresen törölted a kategóriát!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
 }
 
-// id	name	position	url	image	categoryId	animeId	
 export const createCharacter = async (req, res) => {
   try {
     const { id: listId } = req.params
@@ -289,14 +337,17 @@ export const moveCharacter = async (req, res) => {
     const { id: listId, characterId } = req.params
     const { position, categoryId } = req.body
 
-    const category = categories.findOne({ where: { id: categoryId, listId } })
+    const category = await categories.findOne({ where: { id: categoryId, listId } })
     if (!category) return res.status(400).send({ message: 'Nem található kategória!' })
 
     const character = await characters.findOne({ where: { id: characterId } })
     if (!character) return res.status(400).send({ message: 'Nem található karakter!' })
 
     if (character.categoryId === category.id) {
-      await characters.increment({ position: 1 }, { where: { categoryId: category.id, position: { [Op.between]: [position, character.position - 1] } } })
+      if (position === character.position) return res.sendStatus(200)
+
+      if (position < character.position) await characters.increment({ position: 1 }, { where: { categoryId: category.id, position: { [Op.between]: [position, character.position - 1] } } })
+      else await characters.increment({ position: -1 }, { where: { categoryId: category.id, position: { [Op.between]: [character.position + 1, position] } } })
     } else {
       await characters.increment({ position: -1 }, { where: { categoryId: character.categoryId, position: { [Op.gt]: character.position } } })
       await characters.increment({ position: 1 }, { where: { categoryId, position: { [Op.gte]: position } } })
