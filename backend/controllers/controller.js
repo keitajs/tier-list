@@ -148,6 +148,17 @@ export const getUserLists = async (req, res) => {
   }
 }
 
+export const getSharedLists = async (req, res) => {
+  try {
+    const results = await lists.findAll({ include: { model: permissions, where: { userId: req.id } } })
+    return res.send(results)
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
 export const getPublicLists = async (req, res) => {
   try {
     const results = await lists.findAll({ where: { private: false } })

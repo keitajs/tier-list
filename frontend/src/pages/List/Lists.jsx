@@ -3,7 +3,7 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import ListItem from '../../components/List/Lists/ListItem'
-import PublicLists from '../../components/List/Lists/PublicLists'
+import OtherLists from '../../components/List/Lists/OtherLists'
 import ManageList from '../../components/List/Lists/ManageList'
 import ManagePermission from '../../components/List/Lists/ManagePermission'
 
@@ -37,7 +37,7 @@ function Lists(props) {
           <ManageList history={props.history} setSelectedList={props.setSelectedList} setLists={setLists} activeList={activeList} setActiveList={setActiveList} />
         </div>
         <div className='flex flex-col flex-nowrap grow gap-5 min-h-0 p-5 rounded-3xl bg-neutral-900/85'>
-          {activeList ? <ManagePermission setLists={setLists} activeList={activeList} setActiveList={setActiveList} /> : <PublicLists />}
+          {activeList ? <ManagePermission setLists={setLists} activeList={activeList} setActiveList={setActiveList} /> : <OtherLists history={props.history} setSelectedList={props.setSelectedList} />}
         </div>
       </div>
     </div>

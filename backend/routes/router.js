@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { Register, Login, Logout, Logged, getUserList, getUserLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { Register, Login, Logout, Logged, getUserList, getUserLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken } from '../controllers/verifyToken.js'
 const router = Router()
@@ -14,6 +14,7 @@ router.delete('/logout', Logout)
 router.get('/user/lists', verifyToken, getUserLists)
 router.get('/user/lists/:id', verifyToken, hasAnyPermission, getUserList)
 
+router.get('/lists/shared', verifyToken, getSharedLists)
 router.get('/lists/public', verifyToken, getPublicLists)
 router.post('/lists/create', verifyToken, createList)
 router.patch('/lists/:id/update', verifyToken, isAdmin, updateList)
