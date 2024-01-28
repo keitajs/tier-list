@@ -13,6 +13,7 @@ function List(props) {
   const [title, setTitle] = useState('Betöltés...')
   const [items, setItems] = useState([])
   const [categories, setCategories] = useState([])
+  const [permission, setPermission] = useState({ move: true, edit: true, admin: true })
 
   const [activeItem, setActiveItem] = useState(null)
   const [activeCategory, setActiveCategory] = useState(null)
@@ -24,11 +25,13 @@ function List(props) {
   )
 
   const onDragStart = ({ active }) => {
+    if (!permission.move) return
     if (active.data.current?.type === "Item") return setActiveItem(active.data.current.item)
     if (active.data.current?.type === "Category") return setActiveCategory(active.data.current.category)
   }
 
   const onDragOver = ({ active, over }) => {
+    if (!permission.move) return
     if (!over) return
     if (active.id === over.id) return
     if (active.data.current?.type !== "Item") return
@@ -55,6 +58,7 @@ function List(props) {
   }
 
   const onDragEnd = ({ active, over }) => {
+    if (!permission.move) return
     setActiveItem(null)
     setActiveCategory(null)
 
@@ -69,11 +73,10 @@ function List(props) {
     if (active.data.current?.type === "Category") {
       if (active.id === over.id) return
       
-      // AXIOS MENTÉS
       setCategories((categories) => {
         const activeIndex = categories.findIndex(category => category.id === active.id)
         const overIndex = categories.findIndex(category => category.id === over.id)
-        axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex + 1 })
+        axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex })
         return arrayMove(categories, activeIndex, overIndex)
       })
     }
@@ -95,11 +98,13 @@ function List(props) {
   }
 
   const getTierList = async (id) => {
-    const { data: list } = await axios.get(`http://localhost:2000/user/lists/${id}`)
+    const { data: { list, permission } } = await axios.get(`http://localhost:2000/user/lists/${id}`)
 
     setTitle(list.name)
     setCategories(list.categories.map(category => { return { id: `${category.id}cat`, name: category.name, color: category.color } }))
     setItems([].concat(...list.categories.map(category => category.characters.map(character => { return { ...character, categoryId: `${category.id}cat`, } }))))
+
+    if (permission) setPermission({ move: permission.value >= 2, edit: permission.value === 3, admin: false })
   }
 
   useEffect(() => {
@@ -115,20 +120,26 @@ function List(props) {
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
-            {categories.filter(category => category.name).map(category => <Category key={category.id} id={category.id} name={category.name} color={category.color} items={items.filter(item => item.categoryId === category.id)} setItems={setItems} setCategories={setCategories} selectedList={props.selectedList} />)}
+            {categories.filter(category => category.name).map(category => <Category key={category.id} permission={permission} id={category.id} name={category.name} color={category.color} items={items.filter(item => item.categoryId === category.id)} setItems={setItems} setCategories={setCategories} selectedList={props.selectedList} />)}
           </div>
-          <button onClick={createCategory} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
-            <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
-          </button>
+
+          {permission.edit ?
+            <button onClick={createCategory} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
+              <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
+            </button>
+          : <></>}
+
           <div className='mt-8 rounded-2xl'>
-            <Characters key={'characters'} id={categories.find(category => category.name === null)?.id} items={items.filter(item => item.categoryId === categories.find(category => category.name === null)?.id)} setItems={setItems} selectedList={props.selectedList} />
+            <Characters key={'characters'} permission={permission} id={categories.find(category => category.name === null)?.id} items={items.filter(item => item.categoryId === categories.find(category => category.name === null)?.id)} setItems={setItems} selectedList={props.selectedList} />
           </div>
         </SortableContext>
 
-        <DragOverlay modifiers={activeCategory ? [restrictToParentElement, restrictToVerticalAxis] : []}>
-          {activeItem ? <Item key={activeItem.id} id={activeItem.id} character={activeItem.character} anime={activeItem.anime} /> : <></>}
-          {activeCategory ? <Category items={items.filter(item => item.categoryId === activeCategory.id)} key={activeCategory.id} id={activeCategory.id} name={activeCategory.name} color={activeCategory.color} /> : <></>}
-        </DragOverlay>
+        {permission.move ?
+          <DragOverlay modifiers={activeCategory ? [restrictToParentElement, restrictToVerticalAxis] : []}>
+            {activeItem ? <Item key={activeItem.id} id={activeItem.id} character={activeItem.character} anime={activeItem.anime} /> : <></>}
+            {activeCategory ? <Category items={items.filter(item => item.categoryId === activeCategory.id)} key={activeCategory.id} id={activeCategory.id} name={activeCategory.name} color={activeCategory.color} /> : <></>}
+          </DragOverlay>
+        : <></>}
       </DndContext>
     </div>
   )
