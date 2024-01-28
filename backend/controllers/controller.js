@@ -115,10 +115,10 @@ export const getUserList = async(req, res) => {
   try {
     const { id } = req.params
 
-    const result = await lists.findOne({
+    const list = await lists.findOne({
       where: { id },
       include: {
-        model: categories,  required: false,
+        model: categories, required: false,
         include: {
           model: characters, required: false,
           include: { model: animes, required: false }
@@ -129,7 +129,8 @@ export const getUserList = async(req, res) => {
         [categories, characters, 'position', 'asc']
       ]
     })
-    res.send(result)
+    const permission = await permissions.findOne({ where: { userId: req.id, listId: id } })
+    res.send({ list, permission })
   } catch (err) {
     if (!err) return
     logger.error(err)
@@ -283,7 +284,6 @@ export const moveCategory = async (req, res) => {
     if (!category) return res.status(400).send({ message: 'Nem található kategória!' })
 
     if (position === category.position) return res.sendStatus(200)
-
     if (position < category.position) await categories.increment({ position: 1 }, { where: { listId, position: { [Op.between]: [position, category.position - 1] } } })
     else await categories.increment({ position: -1 }, { where: { listId, position: { [Op.between]: [category.position + 1, position] } } })
 
