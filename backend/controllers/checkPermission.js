@@ -30,7 +30,7 @@ const hasMinLevel = async (req, res, next, level) => {
 
     const list = await lists.findOne({ where: { id: listId } })
     const permission = await permissions.findOne({ where: { id: listId, userId } })
-    if (!(list.userId === userId || (!list.private && level === 1) || (list.private && permission?.value >= level))) return res.status(403).send({ message: 'Nincs jogosultságod!' })
+    if (!list || !(list.userId === userId || (!list.private && level === 1) || (list.private && permission?.value >= level))) return res.status(403).send({ message: 'Nincs jogosultságod!' })
     
     next()
   } catch (err) {
