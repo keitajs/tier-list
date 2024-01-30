@@ -8,12 +8,14 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSo
 import Category from '../../components/List/TierList/Category'
 import Characters from '../../components/List/TierList/Characters'
 import Item from '../../components/List/TierList/Item'
+import NewCategory from '../../components/List/TierList/NewCategory'
 
 function List(props) {
   const [title, setTitle] = useState('Betöltés...')
   const [items, setItems] = useState([])
   const [categories, setCategories] = useState([])
   const [permission, setPermission] = useState({ move: true, edit: true, admin: true })
+  const [create, setCreate] = useState(false)
 
   const [activeItem, setActiveItem] = useState(null)
   const [activeCategory, setActiveCategory] = useState(null)
@@ -82,21 +84,6 @@ function List(props) {
     }
   }
 
-  const createCategory = async () => {
-    try {
-      const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/categories/create`, {
-        name: 'TEST',
-        color: '#ffb6c1'
-      })
-
-      setCategories(categories => [...categories, data])
-    } catch (err) {
-      if (err.response.data.message) return alert(err.response.data.message)
-      alert('Server error')
-      console.log(err)
-    }
-  }
-
   const getTierList = async (id) => {
     const { data: { list, permission } } = await axios.get(`http://localhost:2000/user/lists/${id}`)
 
@@ -124,7 +111,7 @@ function List(props) {
           </div>
 
           {permission.edit ?
-            <button onClick={createCategory} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
+            <button onClick={() => setCreate(true)} className='lg:text-base text-sm lg:mx-8 mx-6 my-1 px-4 py-2 rounded-2xl bg-neutral-950 hover:bg-neutral-900 transition-colors'>
               <FontAwesomeIcon icon={faPlusCircle} className='mr-1' /> Kategória hozzáadás
             </button>
           : <></>}
@@ -141,6 +128,8 @@ function List(props) {
           </DragOverlay>
         : <></>}
       </DndContext>
+
+      <NewCategory show={create} setShow={setCreate} setCategories={setCategories} selectedList={props.selectedList} />
     </div>
   )
 }

@@ -108,7 +108,7 @@ function NewCharacter(props) {
 
         <div className='flex gap-4'>
           <div className='flex flex-col justify-between'>
-            <div className='flex items-center justify-center h-48 aspect-[3/4] rounded-xl bg-neutral-700/50 overflow-hidden'>
+            <div className='flex items-center justify-center w-36 aspect-[3/4] rounded-xl bg-neutral-700/50 overflow-hidden'>
               {isCorrect(image, { image: true }) ? <img src={image} alt="" className='w-full h-full object-cover' /> : <div className='m-2 text-center text-sm opacity-50'>Tölts fel egy képet vagy illeszd be linkként!</div>}
             </div>
             <div className='flex flex-col gap-2'>
