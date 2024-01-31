@@ -10,7 +10,7 @@ import Characters from '../../components/List/TierList/Characters'
 import Item from '../../components/List/TierList/Item'
 import NewCategory from '../../components/List/TierList/NewCategory'
 
-function List(props) {
+function TierList(props) {
   const [title, setTitle] = useState('Betöltés...')
   const [items, setItems] = useState([])
   const [categories, setCategories] = useState([])
@@ -97,7 +97,7 @@ function List(props) {
   useEffect(() => {
     if (props.selectedList === null) return props.history('/list')
 
-    getTierList(props.selectedList).catch(err => console.log(err))
+    getTierList(props.selectedList).catch(err => props.history('/list'))
   }, [props, props.selectedList])
 
   return (
@@ -134,4 +134,4 @@ function List(props) {
   )
 }
 
-export default List
+export default TierList
