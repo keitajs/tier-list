@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -8,6 +9,7 @@ import ManageList from '../../components/List/Lists/ManageList'
 import ManagePermission from '../../components/List/Lists/ManagePermission'
 
 function Lists(props) {
+  const [searchParams] = useSearchParams()
   const [lists, setLists] = useState([])
   const [activeList, setActiveList] = useState(null)
 
@@ -19,6 +21,14 @@ function Lists(props) {
   useEffect(() => {
     getUserLists().catch(() => props.history('/'))
   }, [props])
+
+  useEffect(() => {
+    const listId = searchParams.get('id')
+    if (listId) {
+      props.setSelectedList(listId)
+      props.history('/list/editor')
+    }
+  }, [props, searchParams])
 
   return (
     <div className='flex xl:flex-row flex-col h-[calc(100vh-3rem)] gap-6'>
