@@ -130,7 +130,7 @@ export const getUserList = async(req, res) => {
       ]
     })
     const permission = await permissions.findOne({ where: { userId: req.id, listId: id } })
-    res.send({ list, permission })
+    res.send({ list, permission: !permission && list.userId !== req.id ? { value: 1 } : permission })
   } catch (err) {
     if (!err) return
     logger.error(err)
