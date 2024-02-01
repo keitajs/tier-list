@@ -19,7 +19,7 @@ function UpdateCategory(props) {
         return categories.slice()
       })
     } catch (err) {
-      if (err.response.data.message) return alert(err.response.data.message)
+      if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')
       console.log(err)
     }
@@ -34,7 +34,7 @@ function UpdateCategory(props) {
         return categories.slice()
       })
     } catch (err) {
-      if (err.response.data.message) return alert(err.response.data.message)
+      if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')
       console.log(err)
     }
