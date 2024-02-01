@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { useDebounce } from 'use-debounce'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faFileArrowUp, faCheck, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faFileArrowUp, faFileExcel, faCheck, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 function NewCharacter(props) {
   const [name, setName] = useState('')
@@ -10,6 +10,8 @@ function NewCharacter(props) {
   const [image, setImage] = useState('')
   const [title, setTitle] = useState('')
   const [animeUrl, setAnimeUrl] = useState('')
+  const [file, setFile] = useState('')
+  const fileInput = useRef(null)
 
   const [query, setQuery] = useState('')
   const [queryValue] = useDebounce(query, 500)
@@ -23,16 +25,18 @@ function NewCharacter(props) {
     if (!isCorrect(animeUrl, { url: true })) return
 
     try {
-      const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/characters/create`, {
-        character: { name, url, image },
-        anime: { title, url: animeUrl }
-      })
+      const formData = new FormData()
+      formData.append('character', JSON.stringify({ name, url }))
+      formData.append('anime', JSON.stringify({ title, url: animeUrl }))
+      formData.append('image', image)
+
+      const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/characters/create`, formData)
 
       data.categoryId = props.id
       props.setItems(items => [...items, data])
       props.setShow(false)
     } catch (err) {
-      if (err.response.data.message) return alert(err.response.data.message)
+      if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')
       console.log(err)
     }
@@ -54,6 +58,7 @@ function NewCharacter(props) {
     if (options.url) try { new URL(value) } catch { return options.message ? 'Nem megfelelő URL formátum!' : false }
     if (options.max) if (value.length > options.max) return options.message ? 'Túl hosszú szöveg!' : false
     if (options.image) {
+      if (file) return true
       try { new URL(value) } catch { return options.message ? 'Nem megfelelő kép URL formátum!' : false }
       if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(value)) return options.message ? 'Nem megfelelő kép URL formátum!' : false
     }
@@ -68,6 +73,15 @@ function NewCharacter(props) {
       if (data) setResults(data)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const fileUpload = () => {
+    if (file) {
+      setImage('')
+      setFile('')
+    } else {
+      fileInput.current.click()
     }
   }
 
@@ -109,7 +123,7 @@ function NewCharacter(props) {
         <div className='flex gap-4'>
           <div className='flex flex-col justify-between'>
             <div className='flex items-center justify-center w-36 aspect-[3/4] rounded-xl bg-neutral-700/50 overflow-hidden'>
-              {isCorrect(image, { image: true }) ? <img src={image} alt="" className='w-full h-full object-cover' /> : <div className='m-2 text-center text-sm opacity-50'>Tölts fel egy képet vagy illeszd be linkként!</div>}
+              {isCorrect(image, { image: true }) ? <img src={file ? URL.createObjectURL(image) : image} alt="" className='w-full h-full object-cover' /> : <div className='m-2 text-center text-sm opacity-50'>Tölts fel egy képet vagy illeszd be linkként!</div>}
             </div>
             <div className='flex flex-col gap-2'>
               <button onClick={createItem} className='py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>Létrehozás</button>
@@ -138,9 +152,10 @@ function NewCharacter(props) {
               <div className='flex flex-col'>
                 <label htmlFor="image" className='ml-1'>Kép <span className='text-base ml-0.5 text-rose-600'>{isCorrect(image, { image: true, message: true })}</span></label>
                 <div className='relative flex items-center'>
-                  <input type="text" value={image} onChange={e => setImage(e.target.value)} name='image' id='image' className='w-72 px-2 py-1 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <button className='absolute right-0 h-full aspect-square flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
-                    <FontAwesomeIcon icon={faFileArrowUp} />
+                  <input type="text" value={file ? image.name : image} onChange={e => setImage(e.target.value)} disabled={file} name='image' id='image' className='w-72 px-2 py-1 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+                  <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
+                  <button onClick={fileUpload} className='absolute right-0 h-full aspect-square flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
+                    {file ? <FontAwesomeIcon icon={faFileExcel} /> : <FontAwesomeIcon icon={faFileArrowUp} />}
                   </button>
                 </div>
               </div>

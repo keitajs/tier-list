@@ -8,8 +8,13 @@ import permissions from '../models/permission.js'
 import categories from '../models/category.js'
 import characters from '../models/character.js'
 import animes from '../models/anime.js'
+import path from 'path'
 import { Op } from 'sequelize'
 import { Errors } from '../libs/errors.js'
+
+export const getCharacterImage = async (req, res) => {
+  res.sendFile(`${path.resolve()}/images/characters/${req.params.filename}`)
+}
 
 export const Register = async (req, res) => {
   try {
@@ -326,13 +331,14 @@ export const removeCategory = async (req, res) => {
 export const createCharacter = async (req, res) => {
   try {
     const { id: listId } = req.params
-    const { name, url: characterUrl, image } = req.body.character
-    const { title, url: animeUrl } = req.body.anime
+    const { name, url: characterUrl } = JSON.parse(req.body.character)
+    const { title, url: animeUrl } = JSON.parse(req.body.anime)
+    const image = req.file || req.body.image
 
     const category = await categories.findOne({ where: { position: null, listId } })
     const position = (await characters.findAndCountAll({ where: { categoryId: category.id } })).count + 1
     const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
-    const character = await characters.create({ name, position, url: characterUrl, image, categoryId: category.id, animeId: anime[0].id })
+    const character = await characters.create({ name, position, url: characterUrl, image: image?.filename || image, categoryId: category.id, animeId: anime[0].id })
     const result = await characters.findOne({ where: { id: character.id }, include: { model: animes, required: false } })
 
     res.send(result)
@@ -376,10 +382,14 @@ export const moveCharacter = async (req, res) => {
 export const updateCharacter = async (req, res) => {
   try {
     const { characterId } = req.params
-    const { name, url, image } = req.body
+    const { name, url: characterUrl } = JSON.parse(req.body.character)
+    const { title, url: animeUrl } = JSON.parse(req.body.anime)
+    const image = req.file || req.body.image
 
-    await characters.update({ name, url, image }, { where: { id: characterId } })
-    res.send({ message: 'Sikeresen módosítottad a karaktert!' })
+    const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
+    await characters.update({ name, url: characterUrl, image: image?.filename || image, animeId: anime[0].id }, { where: { id: characterId } })
+
+    res.send({ message: 'Sikeresen módosítottad a karaktert!', image: image?.filename || image, anime: anime[0] })
   } catch (err) {
     if (!err) return
     logger.error(err)

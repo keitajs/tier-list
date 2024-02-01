@@ -1,8 +1,16 @@
 import { Router } from 'express'
-import { Register, Login, Logout, Logged, getUserList, getUserLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { getCharacterImage, Register, Login, Logout, Logged, getUserList, getUserLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken } from '../controllers/verifyToken.js'
+import multer from 'multer'
+import path from 'path'
 const router = Router()
+
+const characterImageStorage = multer.diskStorage({ destination: 'images/characters/', filename: (req, file, cb) => {
+  cb(null, `${path.basename(file.originalname)}-${Date.now()}${path.extname(file.originalname)}`)
+} })
+
+const uploadCharacterImage = multer({ storage: characterImageStorage })
 
 router.get('/', (req, res) => { res.send({ message: 'Tier List backend API' }) })
 
@@ -29,9 +37,11 @@ router.patch('/lists/:id/categories/:categoryId/move', verifyToken, hasMovePermi
 router.patch('/lists/:id/categories/:categoryId/update', verifyToken, hasEditPermission, isInList, updateCategory)
 router.delete('/lists/:id/categories/:categoryId/remove', verifyToken, hasEditPermission, isInList, removeCategory)
 
-router.post('/lists/:id/characters/create', verifyToken, hasEditPermission, createCharacter)
+router.post('/lists/:id/characters/create', verifyToken, hasEditPermission, uploadCharacterImage.single('image'), createCharacter)
 router.patch('/lists/:id/characters/:characterId/move', verifyToken, hasMovePermission, isInList, moveCharacter)
-router.patch('/lists/:id/characters/:characterId/update', verifyToken, hasEditPermission, isInList, updateCharacter)
+router.patch('/lists/:id/characters/:characterId/update', verifyToken, hasEditPermission, isInList, uploadCharacterImage.single('image'), updateCharacter)
 router.delete('/lists/:id/characters/:characterId/remove', verifyToken, hasEditPermission, isInList, removeCharacter)
+
+router.get('/characters/images/:filename', verifyToken, getCharacterImage)
 
 export default router
