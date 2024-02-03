@@ -8,11 +8,32 @@ import permissions from '../models/permission.js'
 import categories from '../models/category.js'
 import characters from '../models/character.js'
 import animes from '../models/anime.js'
+import updates from '../models/update.js'
 import path from 'path'
 import { Op } from 'sequelize'
 import { Errors } from '../libs/errors.js'
 
+const updateActivity = async (userId, listId) => {
+  try {
+    // A felhasználó mai napi lista updateját megkeresi, ha nincs létrehozza, ha van frissíti a countot és a timeot
+    const update = await updates.findOne({ where: { date: new Date(), userId, listId } })
+    if (!update) await updates.create({ count: 1, date: new Date(), time: new Date(), userId, listId })
+    else {
+      update.count += 1
+      update.time = new Date()
+      await update.save()
+    }
+
+    return true
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    return err
+  }
+}
+
 export const getCharacterImage = async (req, res) => {
+  // Karakter képek lekérése
   res.sendFile(`${path.resolve()}/images/characters/${req.params.filename}`)
 }
 
@@ -120,6 +141,7 @@ export const getUserList = async(req, res) => {
   try {
     const { id } = req.params
 
+    // Lekéri a listát a kategóriákkal és karakterekkel
     const list = await lists.findOne({
       where: { id },
       include: {
@@ -134,6 +156,8 @@ export const getUserList = async(req, res) => {
         [categories, characters, 'position', 'asc']
       ]
     })
+
+    // Lekéri a hozzá tartozó permissiont (ha nincs jogosultság és eljutott idáig, akkor valószínűleg egy publikus listát tekint meg -> permission.value = 1 | ha a felhasználó listája akkor null)
     const permission = await permissions.findOne({ where: { userId: req.id, listId: id } })
     res.send({ list, permission: !permission && list.userId !== req.id ? { value: 1 } : permission })
   } catch (err) {
@@ -145,8 +169,50 @@ export const getUserList = async(req, res) => {
 
 export const getUserLists = async (req, res) => {
   try {
-    const results = await lists.findAll({ where: { userId: req.id }, include: { model: permissions, required: false, include: { model: users, required: true, attributes: ['id', 'username', 'avatar'] } } })
+    const results = await lists.findAll({
+      where: {
+        userId: req.id
+      },
+      include: {
+        model: permissions,
+        required: false,
+        include: {
+          model: users,
+          required: true,
+          attributes: ['id', 'username', 'avatar']
+        }
+      }
+    })
+
     res.send(results)
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const getSidebarLists = async (req, res) => {
+  try {
+    const results = await lists.findAll({
+      where: {
+        userId: req.id
+      },
+      include: {
+        model: updates,
+        separate: true,
+        order: [
+          ['date', 'desc'],
+          ['time', 'desc']
+        ],
+        limit: 1
+      }
+    })
+
+    const orderedResults = results.sort((a, b) => new Date(b.updates[0].date + 'T' + b.updates[0].time + 'Z') - new Date(a.updates[0].date + 'T' + a.updates[0].time + 'Z'))
+    const limitedResults = orderedResults.slice(0, 10)
+
+    res.send(limitedResults)
   } catch (err) {
     if (!err) return
     logger.error(err)
@@ -156,8 +222,32 @@ export const getUserLists = async (req, res) => {
 
 export const getSharedLists = async (req, res) => {
   try {
-    const results = await lists.findAll({ include: { model: permissions, where: { userId: req.id } } })
-    return res.send(results)
+    // Megosztott / listák amikhez jogosultságot kapott
+    const results = await lists.findAll({
+      include: [
+        {
+          model: permissions,
+          where: {
+            userId: req.id
+          }
+        },
+        {
+          model: updates,
+          separate: true,
+          order: [
+            ['date', 'desc'],
+            ['time', 'desc']
+          ],
+          limit: 1,
+          include: {
+            model: users,
+            attributes: ['id', 'username', 'avatar']
+          }
+        }
+      ]
+    })
+
+    res.send(results)
   } catch (err) {
     if (!err) return
     logger.error(err)
@@ -167,7 +257,27 @@ export const getSharedLists = async (req, res) => {
 
 export const getPublicLists = async (req, res) => {
   try {
-    const results = await lists.findAll({ where: { private: false } })
+    // Publikus listák + az utolsó módosítás
+    const results = await lists.findAll({
+      where: {
+        private: false
+      },
+      include: {
+        model: updates,
+        separate: true,
+        order: [
+          ['date', 'desc'],
+          ['time', 'desc']
+        ],
+        limit: 1,
+        include: {
+          model: users,
+          attributes: ['id', 'username', 'avatar']
+        }
+      },
+      limit: 10
+    })
+
     res.send(results)
   } catch (err) {
     if (!err) return
@@ -187,6 +297,7 @@ export const createList = async (req, res) => {
       { listId: list.id }
     ])
 
+    await updateActivity(req.id, list.id)
     res.send(list)
   } catch (err) {
     if (!err) return
@@ -197,8 +308,11 @@ export const createList = async (req, res) => {
 
 export const updateList = async (req, res) => {
   try {
+    const { id: listId } = req.params
     const { name, description, status, visible } = req.body
-    await lists.update({ name, description, status, private: !visible }, { where: { id: req.params.id, userId: req.id } })
+    await lists.update({ name, description, status, private: !visible }, { where: { id: listId, userId: req.id } })
+
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen módosítottad a listát!' })
   } catch (err) {
     if (!err) return
@@ -220,16 +334,21 @@ export const removeList = async (req, res) => {
 
 export const createPermission = async (req, res) => {
   try {
+    const { id: listId } = req.params
     const { username, permission } = req.body
     if (username === req.username) return res.status(400).send({ message: 'Saját magadnak nem adhatsz jogosultságot!' })
 
+    // Ellenőrzi, hogy az adott felhasználónév létezik-e
     const user = await users.findOne({ where: { username }, attributes: ['id', 'username', 'avatar'] })
     if (!user) return res.status(400).send({ message: 'Nem található felhasználó!' })
 
-    const checkPermission = await permissions.findOne({ where: { userId: user.id, listId: req.params.id }})
+    // Ellenőrzi, hogy kapott-e már jogosultságot
+    const checkPermission = await permissions.findOne({ where: { userId: user.id, listId }})
     if (checkPermission) return res.status(400).send({ message: 'A felhasználó már rendelkezik jogosultsággal!' })
 
-    const result = await permissions.create({ value: permission, userId: user.id, listId: req.params.id })
+    const result = await permissions.create({ value: permission, userId: user.id, listId })
+
+    await updateActivity(req.id, listId)
     res.send({ ...result.dataValues, user })
   } catch (err) {
     if (!err) return
@@ -244,6 +363,8 @@ export const updatePermission = async (req, res) => {
     const { value } = req.body
 
     await permissions.update({ value }, { where: { userId, listId } })
+    
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen módosítottad a jogosultságot!' })
   } catch (err) {
     if (!err) return
@@ -256,6 +377,8 @@ export const removePermission = async (req, res) => {
   try {
     const { id: listId, userId } = req.params
     await permissions.destroy({ where: { userId, listId } })
+
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen törölted a jogosultságot!' })
   } catch (err) {
     if (!err) return
@@ -269,9 +392,11 @@ export const createCategory = async (req, res) => {
     const { id: listId } = req.params
     const { name, color } = req.body
 
+    // Lekéri az utolsó kategória pozícióját -> az a pozíció + 1 lesz az új kategória helye
     const position = (await categories.findAndCountAll({ where: { listId, position: { [Op.not]: null } } })).count + 1
     const result = await categories.create({ name, position, color, listId })
 
+    await updateActivity(req.id, listId)
     res.send(result)
   } catch (err) {
     if (!err) return
@@ -285,14 +410,20 @@ export const moveCategory = async (req, res) => {
     const { id: listId, categoryId } = req.params
     const { position } = req.body
 
+    // Lekéri a kategóriát és ellenőrzi, hogy létezik-e
     const category = await categories.findOne({ where: { id: categoryId, listId } })
     if (!category) return res.status(400).send({ message: 'Nem található kategória!' })
 
+    // Ha ugyan oda szeretné letenni, ahol jelenleg is van, akkor visszaküldi
     if (position === category.position) return res.sendStatus(200)
+
+    // Növeli / csökkenti a kategória pozíciókat az alapján hol lesz az új helye (ennek a logikája a documents/tervezés/code/karakter-áthelyezés.png-ben látható)
     if (position < category.position) await categories.increment({ position: 1 }, { where: { listId, position: { [Op.between]: [position, category.position - 1] } } })
     else await categories.increment({ position: -1 }, { where: { listId, position: { [Op.between]: [category.position + 1, position] } } })
 
     await categories.update({ position }, { where: { id: categoryId } })
+
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen áthelyezted a kategóriát!' })
   } catch (err) {
     if (!err) return
@@ -308,6 +439,7 @@ export const updateCategory = async (req, res) => {
 
     await categories.update({ name, color }, { where: { id: categoryId, listId } })
 
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen módosítottad a kategóriát!' })
   } catch (err) {
     if (!err) return
@@ -320,6 +452,8 @@ export const removeCategory = async (req, res) => {
   try {
     const { id: listId, categoryId } = req.params
     await categories.destroy({ where: { id: categoryId, listId } })
+
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen törölted a kategóriát!' })
   } catch (err) {
     if (!err) return
@@ -335,12 +469,15 @@ export const createCharacter = async (req, res) => {
     const { title, url: animeUrl } = JSON.parse(req.body.anime)
     const image = req.file || req.body.image
 
+    // Lekéri a lista egyetlen pozíció nélküli kategóriáját, a pozícióját, az animét, majd a kapott adatokkal létrehozza a karaktert
+    // Az 'image' lehet URL vagy lementett kép, ezért az alapján mit kapott lementi azt
     const category = await categories.findOne({ where: { position: null, listId } })
     const position = (await characters.findAndCountAll({ where: { categoryId: category.id } })).count + 1
     const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
     const character = await characters.create({ name, position, url: characterUrl, image: image?.filename || image, categoryId: category.id, animeId: anime[0].id })
     const result = await characters.findOne({ where: { id: character.id }, include: { model: animes, required: false } })
 
+    await updateActivity(req.id, listId)
     res.send(result)
   } catch (err) {
     if (!err) return
@@ -354,12 +491,14 @@ export const moveCharacter = async (req, res) => {
     const { id: listId, characterId } = req.params
     const { position, categoryId } = req.body
 
+    // Lekéri a kategóriát és karaktert, hogy meglegyenek az eredeti adatok
     const category = await categories.findOne({ where: { id: categoryId, listId } })
     if (!category) return res.status(400).send({ message: 'Nem található kategória!' })
 
     const character = await characters.findOne({ where: { id: characterId } })
     if (!character) return res.status(400).send({ message: 'Nem található karakter!' })
 
+    // Növeli / csökkenti a karakterek pozícióját az alapján hol lesz az új helye (ennek a logikája a documents/tervezés/code/karakter-áthelyezés.png-ben látható)
     if (character.categoryId === category.id) {
       if (position === character.position) return res.sendStatus(200)
 
@@ -371,6 +510,8 @@ export const moveCharacter = async (req, res) => {
     }
 
     await characters.update({ position, categoryId }, { where: { id: characterId } })
+
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen áthelyezted a karaktert!' })
   } catch (err) {
     if (!err) return
@@ -381,14 +522,16 @@ export const moveCharacter = async (req, res) => {
 
 export const updateCharacter = async (req, res) => {
   try {
-    const { characterId } = req.params
+    const { id: listId, characterId } = req.params
     const { name, url: characterUrl } = JSON.parse(req.body.character)
     const { title, url: animeUrl } = JSON.parse(req.body.anime)
     const image = req.file || req.body.image
 
+    // Az 'image' lehet URL vagy lementett kép, ezért az alapján mit kapott lementi azt
     const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
     await characters.update({ name, url: characterUrl, image: image?.filename || image, animeId: anime[0].id }, { where: { id: characterId } })
 
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen módosítottad a karaktert!', image: image?.filename || image, anime: anime[0] })
   } catch (err) {
     if (!err) return
@@ -399,8 +542,10 @@ export const updateCharacter = async (req, res) => {
 
 export const removeCharacter = async (req, res) => {
   try {
-    const { characterId } = req.params
+    const { id: listId, characterId } = req.params
     await characters.destroy({ where: { id: characterId } })
+
+    await updateActivity(req.id, listId)
     res.send({ message: 'Sikeresen törölted a karaktert!' })
   } catch (err) {
     if (!err) return
