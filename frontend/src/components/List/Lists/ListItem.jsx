@@ -10,10 +10,10 @@ function ListItem(props) {
         {[<FontAwesomeIcon icon={faEllipsis} className='text-white' />, <FontAwesomeIcon icon={faCheck} className='text-emerald-500' />, <FontAwesomeIcon icon={faDumpsterFire} className='text-red-500' />][props.list.status - 1]}
       </div>
       <div className='flex items-center text-sm'>
-        {props.public ? <p>
-          <span className='text-blue-500 opacity-75'>Admin</span><span className='opacity-40'> frissítette ekkor: </span><span className='text-blue-500 opacity-75'>2024.01.12.</span>
+        {props.list?.updates ? <p>
+          <span className='text-blue-500 opacity-75'>{props.list.updates[0].user.username}</span><span className='opacity-40'> frissítette ekkor: </span><span className='text-blue-500 opacity-75'>{new Date(props.list.updates[0].date + 'T' + props.list.updates[0].time + 'Z').toLocaleString('hu-HU')}</span>
         </p> : <>
-          <span className='opacity-40'>{props.list.private ? 'Private' : 'Public'}</span>
+          <span className='opacity-40'>{props.list.private ? 'Privát' : 'Publikus'}</span>
           <FontAwesomeIcon icon={faChevronRight} className={`${props.list.id === props.activeList?.id ? 'ml-2 w-3' : 'ml-0 w-0'} transition-all`} />
         </>}
       </div>

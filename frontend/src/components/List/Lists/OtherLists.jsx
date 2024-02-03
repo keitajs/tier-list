@@ -32,7 +32,7 @@ function OtherLists(props) {
         </div>
       </div>
       <div className='flex flex-col grow gap-2.5'>
-        {lists.length > 0 ? lists.map(list => <ListItem key={list.id} onClick={() => {props.setSelectedList(list.id); props.history('/list/editor')}} list={list} public={true} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található lista.</div>}
+        {lists.length > 0 ? lists.map(list => <ListItem key={list.id} onClick={() => {props.setSelectedList(list.id); props.history('/list/editor')}} list={list} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található lista.</div>}
       </div>
     </>
   )
