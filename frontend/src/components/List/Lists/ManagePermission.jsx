@@ -21,7 +21,7 @@ function ManagePermission(props) {
         </div>
 
         <div className='flex flex-col grow gap-2.5 min-h-0 overflow-auto'>
-          {props.activeList.permissions.length > 0 ? props.activeList.permissions.map(permission => <PermissionItem key={permission.id} user={permission.user} permission={permission} active={active} setActive={setActive} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található jogosultság.</div>}
+          {props.activeList.permissions.length > 0 ? props.activeList.permissions.map((permission, i) => <PermissionItem key={i} user={permission.user} permission={permission} active={active} setActive={setActive} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található jogosultság.</div>}
         </div>
       </div>
 
