@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faHome, faUser, faList, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -6,9 +6,20 @@ import NavItem from './Sidebar/NavItem'
 import ListItem from './Sidebar/ListItem'
 
 function Sidebar(props) {
+  const [lists, setLists] = useState([])
+
   const Logout = () => {
     axios.delete('http://localhost:2000/logout').then(() => props.history('/'))
   }
+
+  const getLists = async () => {
+    const { data } = await axios.get('http://localhost:2000/lists/sidebar')
+    setLists(data)
+  }
+
+  useEffect(() => {
+    getLists().catch(err => console.log(err))
+  }, [])
 
   return (
     <div className='group fixed left-0 top-0 bottom-0 w-max rounded-e-3xl bg-neutral-800 shadow-lg overflow-hidden z-50'>
@@ -28,11 +39,7 @@ function Sidebar(props) {
         </div>
 
         <div className={`flex flex-col gap-0.5 w-52 py-2 rounded-xl bg-neutral-900 overflow-hidden opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity`}>
-          <ListItem name={'List 1'} status={2} />
-          <ListItem name={'List 2'} status={1} />
-          <ListItem name={'List 3'} status={3} />
-          <ListItem name={'List 4'} status={2} />
-          <ListItem name={'List 5'} status={3} />
+          {lists.map(list => <ListItem key={list.id} list={list} history={props.history} />)}
         </div>
 
         <button onClick={Logout} className='absolute left-5 bottom-5 flex items-center text-red-500 hover:text-red-400 transition-all'>
