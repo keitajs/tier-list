@@ -26,6 +26,7 @@ const db = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
+  define: { freezeTableName: true },
   dialect: 'mysql',
   logging: (msg) => {
     const id = msg.split(' ')[1].replace(':', '')
