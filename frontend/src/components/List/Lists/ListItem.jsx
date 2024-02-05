@@ -1,6 +1,8 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment'
+import 'moment/locale/hu'
 
 function ListItem(props) {
   return (
@@ -11,7 +13,7 @@ function ListItem(props) {
       </div>
       <div className='flex items-center text-sm'>
         {props.list?.updates ? <p>
-          <span className='text-blue-500 opacity-75'>{props.list.updates[0].user.username}</span><span className='opacity-40'> frissítette ekkor: </span><span className='text-blue-500 opacity-75'>{new Date(props.list.updates[0].date + 'T' + props.list.updates[0].time + 'Z').toLocaleString('hu-HU')}</span>
+          <span className='text-blue-500 opacity-75'>{props.list.updates[0].user.username}</span><span className='opacity-40'> frissítette ekkor: </span><span className='text-blue-500 opacity-75'>{moment(new Date(props.list.updates[0].date + 'T' + props.list.updates[0].time + 'Z')).locale('hu').fromNow()}</span>
         </p> : <>
           <span className='opacity-40'>{props.list.private ? 'Privát' : 'Publikus'}</span>
           <FontAwesomeIcon icon={faChevronRight} className={`${props.list.id === props.activeList?.id ? 'ml-2 w-3' : 'ml-0 w-0'} transition-all`} />
