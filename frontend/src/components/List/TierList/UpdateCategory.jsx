@@ -8,6 +8,8 @@ function UpdateCategory(props) {
   const [color, setColor] = useState(props.color)
 
   const updateCategory = async () => {
+    if (!name) return
+
     try {
       await axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(props.id)}/update`, { name, color })
 
@@ -43,7 +45,7 @@ function UpdateCategory(props) {
   return (
     <div className='flex flex-col justify-between h-full py-2.5 bg-neutral-900'>
       <div className='mx-2'>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className='w-full px-2 py-1 rounded-md bg-neutral-800 outline-none' />
+        <input type="text" value={name} maxLength={32} onChange={(e) => setName(e.target.value)} className='w-full px-2 py-1 rounded-md bg-neutral-800 outline-none' />
       </div>
       <div className='overflow-hidden h-8 mx-2 rounded-md'>
         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className='w-[200%] h-[200%] -translate-x-1/4 -translate-y-1/4' />

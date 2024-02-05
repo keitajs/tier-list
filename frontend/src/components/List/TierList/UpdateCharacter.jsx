@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrash, faXmark, faFileArrowUp, faFileExcel } from '@fortawesome/free-solid-svg-icons'
@@ -13,21 +13,10 @@ function UpdateCharacter(props) {
   const [file, setFile] = useState('')
   const fileInput = useRef(null)
 
-  const fileUpload = () => {
-    if (file) {
-      setImage('')
-      setFile('')
-    } else {
-      fileInput.current.click()
-    }
-  }
+  const [errors, setErrors] = useState({})
 
   const updateCharacter = async () => {
-    if (!isCorrect(name, { max: 256 })) return
-    if (!isCorrect(url, { url: true })) return
-    if (!isCorrect(image, { image: true })) return
-    if (!isCorrect(title, { max: 256 })) return
-    if (!isCorrect(animeUrl, { url: true })) return
+    if (Object.values(errors).find(x => !!x)) return
 
     try {
       const formData = new FormData()
@@ -68,35 +57,64 @@ function UpdateCharacter(props) {
     }
   }
 
-  const isCorrect = (value, options) => {
-    if (!value) return false
-    if (options.url) try { new URL(value) } catch { return false }
-    if (options.max) if (value.length > options.max) return false
-    if (options.image) {
-      if (file) return true
-      try { new URL(value) } catch { return false }
-      if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp|avif|gif|svg)$/.test(value)) return false
+  const fileUpload = () => {
+    if (file) {
+      setImage('')
+      setFile('')
+    } else {
+      fileInput.current.click()
     }
-    return true
   }
+
+  const handleErrors = (object, options) => {
+    const keys = Object.keys(object)
+    const key = keys[0]
+    const value = object[key]
+
+    if (!value) return setErrors(errors => { return {...errors, [key]: 'Üres mező!' } })
+    if (options?.url) try { new URL(value) } catch { return setErrors(errors => { return {...errors, [key]: 'Nem megfelelő URL formátum!' } })}
+    setErrors(errors => { return {...errors, [key]: false } })
+  }
+
+  const onImageLoad = (e) => {
+    setErrors(errors => ({...errors, image: false }))
+  }
+
+  const onImageError = (e) => {
+    if (!image) return
+    setErrors(errors => ({...errors, image: "Az URL-en nincs elérhető kép!" }))
+  }
+
+  useEffect(() => handleErrors({ name }), [name])
+  useEffect(() => handleErrors({ url }, { url: true }), [url])
+  useEffect(() => file ? setErrors(errors => { return {...errors, image: false } }) : handleErrors({ image }), [file, image])
+  useEffect(() => handleErrors({ title }), [title])
+  useEffect(() => handleErrors({ animeUrl }, { url: true }), [animeUrl])
 
   return (
     <div className='flex flex-col justify-between h-full py-0.5'>
       <div>
         {active ? 
         <div className='flex flex-col gap-1'>
-          <div className='flex flex-col w-5/6'>
+          <div className='relative flex flex-col w-5/6'>
             <input type="text" value={name} onChange={e => setName(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.name ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
-          <div className='flex flex-col w-5/6'>
+          <div className='relative flex flex-col w-5/6'>
             <input type="text" value={url} onChange={e => setUrl(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.url ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
           <div className='flex flex-col w-5/6'>
             <div className='relative flex items-center'>
+              <img src={file ? URL.createObjectURL(image) : image} onLoad={onImageLoad} onError={onImageError} alt="" className='hidden' />
+
               <input type="text" value={file ? image.name : image} onChange={e => setImage(e.target.value)} disabled={file} className='w-full px-2 py-0.5 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
               <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
+              
+              <div className={`absolute top-0 bottom-0 right-8 flex items-center text-xl text-rose-600 ${errors.image ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
+              
               <button onClick={fileUpload} className='absolute right-0 h-full aspect-square flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
                 {file ? <FontAwesomeIcon icon={faFileExcel} /> : <FontAwesomeIcon icon={faFileArrowUp} />}
               </button>
@@ -107,12 +125,14 @@ function UpdateCharacter(props) {
         </div>
         : 
         <div className='flex flex-col gap-1'>
-          <div className='flex flex-col w-5/6'>
+          <div className='relative flex flex-col w-5/6'>
             <input type="text" value={title} onChange={e => setTitle(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.title ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
-          <div className='flex flex-col w-5/6'>
+          <div className='relative flex flex-col w-5/6'>
             <input type="text" value={animeUrl} onChange={e => setAnimeUrl(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.animeUrl ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
           <div className='absolute right-0 top-0 bottom-0 w-8 flex items-center justify-center tracking-wider text-sm'><div className='rotate-90'>Anime</div></div>

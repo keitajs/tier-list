@@ -6,10 +6,10 @@ import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 function NewCategory(props) {
   const [name, setName] = useState('')
   const [color, setColor] = useState('')
+  const [errors, setErrors] = useState({})
 
   const createCategory = async () => {
-    if (!isCorrect(name, { max: 32 })) return
-    if (!isCorrect(color, { max: 7 })) return
+    if (Object.values(errors).find(x => !!x)) return
 
     try {
       const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/categories/create`, { name, color })
@@ -23,11 +23,10 @@ function NewCategory(props) {
     }
   }
 
-  const isCorrect = (value, options) => {
-    if (!value) return options.message ? 'Üres mező!' : false
-    if (options.max) if (value.length > options.max) return options.message ? 'Túl hosszú szöveg!' : false
-    return options.message ? '' : true
-  }
+  useEffect(() => {
+    if (!name) return setErrors(errors => { return {...errors, name: 'Üres mező!' } })
+    setErrors(errors => { return {...errors, name: false } })
+  }, [name])
 
   useEffect(() => {
     setName('')
@@ -53,10 +52,10 @@ function NewCategory(props) {
           <div className='flex flex-col gap-4'>
             <div className='relative flex flex-col gap-2 rounded-xl p-2.5 pt-2 pr-32 text-lg bg-neutral-900/35'>
               <div className='flex flex-col'>
-                <label htmlFor="name" className='ml-1'>Cím <span className='text-base ml-0.5 text-rose-600'>{isCorrect(name, { max: 256, message: true })}</span></label>
+                <label htmlFor="name" className='ml-1'>Cím <span className='text-base ml-0.5 text-rose-600'>{errors.name}</span></label>
                 <div className='relative'>
-                  <input type="text" value={name} onChange={e => setName(e.target.value)} name='name' id='name' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{isCorrect(name, { max: 256 }) ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+                  <input type="text" value={name} maxLength={32} onChange={e => setName(e.target.value)} name='name' id='name' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.name ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
                 </div>
               </div>
 
