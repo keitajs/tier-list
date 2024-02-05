@@ -10,7 +10,7 @@ import characters from '../models/character.js'
 import animes from '../models/anime.js'
 import updates from '../models/update.js'
 import path from 'path'
-import { Op } from 'sequelize'
+import { Op, fn } from 'sequelize'
 import { Errors } from '../libs/errors.js'
 
 const updateActivity = async (userId, listId) => {
@@ -275,6 +275,7 @@ export const getPublicLists = async (req, res) => {
           attributes: ['id', 'username', 'avatar']
         }
       },
+      order: [ fn('RAND') ],
       limit: 10
     })
 
