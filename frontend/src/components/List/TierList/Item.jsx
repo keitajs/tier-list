@@ -37,22 +37,17 @@ function Item(props) {
             <FontAwesomeIcon icon={faClose} onClick={() => setOpened(false)} className='h-6 text-red-500 opacity-75 hover:opacity-100 cursor-pointer transition-opacity' />
           </p>
           <p className='whitespace-nowrap text-lg leading-5 truncate opacity-50'>{props.anime.title}</p>
-          {/* <div className='flex gap-1.5 mt-1'>
-            <Link to={props.character.url} target='_blank' className='opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faArrowUpRightFromSquare} /></Link>
-            <Link to={props.anime.url} target='_blank' className='opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faLink} /></Link>
-          </div> */}
         </div>
 
-        {props.permission?.edit ?
+        
         <div className='flex items-center justify-between gap-1.5'>
           <div className='flex gap-1.5'>
             <Link to={props.character.url} target='_blank' className='opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faArrowUpRightFromSquare} /></Link>
             <Link to={props.anime.url} target='_blank' className='opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faLink} /></Link>
           </div>
 
-          <button onClick={() => setEdit(true)} className='opacity-25 hover:opacity-50 transition-opacity'><FontAwesomeIcon icon={faEdit} className='h-4' /></button>
+          {props.permission?.edit ?<button onClick={() => setEdit(true)} className='opacity-25 hover:opacity-50 transition-opacity'><FontAwesomeIcon icon={faEdit} className='h-4' /></button>: <></>}
         </div>
-        : <></>}
         </>}
       </div>
     </div>
