@@ -12,6 +12,7 @@ import updates from '../models/update.js'
 import path from 'path'
 import { Op, fn } from 'sequelize'
 import { Errors } from '../libs/errors.js'
+import moment from 'moment'
 
 const updateActivity = async (userId, listId) => {
   try {
@@ -137,7 +138,50 @@ export const Logged = async (req, res) => {
   }
 }
 
-export const getUserList = async(req, res) => {
+export const getUserData = async (req, res) => {
+  try {
+    const user = await users.findOne({ where: { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'registerDate'] })
+    const activities = await updates.findAll({ where: { userId: req.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }})
+
+    const weeklyActivies = []
+    for (let i = 6; i >= 0; i--) {
+      const date = moment().subtract(i, 'days')
+      const days = activities.filter(x => moment(x.date).toDate().toDateString() == date.toDate().toDateString())
+
+      weeklyActivies.push({
+        day: date.locale('hu').format('dddd'),
+        count: days.reduce((a, b) => a + b.count, 0)
+      })
+    }
+
+    const userLists = await lists.findAll({ where: { userId: req.id }, include: { model: categories, include: { model: characters } } })
+    const userCategories = [].concat(...userLists.map(x => x.categories))
+    const userCharacters = [].concat(...userCategories.map(x => x.characters))
+
+    res.send({
+      user,
+      weeklyActivies,
+      list: {
+        count: userLists.length,
+        0: userLists.filter(x => x.status === 1).length,
+        1: userLists.filter(x => x.status === 2).length,
+        2: userLists.filter(x => x.status === 3).length,
+        categories: {
+          count: userCategories.filter(x => x.name).length
+        },
+        characters: {
+          count: userCharacters.length
+        }
+      }
+    })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const getUserList = async (req, res) => {
   try {
     const { id } = req.params
 
