@@ -16,14 +16,35 @@ function UserData(props) {
         {props.user.username}
         <FontAwesomeIcon icon={faEdit} className='cursor-pointer absolute right-7 h-4 opacity-25 hover:opacity-50 transition-opacity' />
       </div>
-
+      
       <div className='flex flex-col gap-1.5 my-3 text-lg'>
-        <div className='flex items-center justify-between'>Státusz<div className='flex items-center gap-2'><div className='h-2.5 aspect-square rounded-full bg-emerald-500'></div>Online</div></div>
-        <div className='flex items-center justify-between'><p className='flex items-center gap-2'>Email<FontAwesomeIcon icon={faEdit} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' /></p><p>{props.user.email}</p></div>
+        <div className='flex items-center justify-between'>
+          Státusz
+          <div className='flex items-center gap-2'>
+            <div className='h-2.5 aspect-square rounded-full bg-emerald-500'></div>
+            Online
+          </div>
+        </div>
+        <div className='flex items-center justify-between'>
+          <p className='flex items-center gap-2'>
+            Email
+            <FontAwesomeIcon icon={faEdit} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />
+          </p>
+          <p>{props.user.email}</p>
+        </div>
         <div className='flex items-center justify-between'>Listák <p><span className='text-blue-400'>{props?.list?.count | 0}</span> db</p></div>
-        <div className='flex items-center justify-between ml-4 -mt-1.5'>Folyamatban <p><span className='text-blue-400'>{props?.list[0] | 0}</span> db</p></div>
-        <div className='flex items-center justify-between ml-4 -mt-1.5'>Kész <p><span className='text-emerald-400'>{props?.list[1] | 0}</span> db</p></div>
-        <div className='flex items-center justify-between ml-4 -mt-1.5'>Dobott <p><span className='text-rose-400'>{props?.list[2] | 0}</span> db</p></div>
+        <div className='flex items-center justify-between ml-4 -mt-1.5'>
+          Folyamatban
+          <p><span className='text-blue-400'>{props?.list[0] | 0}</span> db</p>
+        </div>
+        <div className='flex items-center justify-between ml-4 -mt-1.5'>
+          Kész
+          <p><span className='text-emerald-400'>{props?.list[1] | 0}</span> db</p>
+        </div>
+        <div className='flex items-center justify-between ml-4 -mt-1.5'>
+          Dobott
+          <p><span className='text-rose-400'>{props?.list[2] | 0}</span> db</p>
+        </div>
         <div className='flex items-center justify-between'>Kategóriák <p><span className='text-blue-400'>{props?.list?.categories?.count | 0}</span> db</p></div>
         <div className='flex items-center justify-between'>Karakterek <p><span className='text-blue-400'>{props?.list?.characters?.count | 0}</span> db</p></div>
         <div className='flex items-center justify-between'>Regisztráció ideje <p>{moment(props.user.registerDate).locale('hu').format('L LTS')}</p></div>

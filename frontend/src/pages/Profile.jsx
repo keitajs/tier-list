@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Sidebar from '../components/Sidebar'
 import UserData from '../components/Profile/UserData'
@@ -10,7 +10,6 @@ function Profile(props) {
   const [user, setUser] = useState({})
   const [list, setList] = useState({})
   const [weeklyActivies, setWeeklyActivies] = useState([])
-  const maxActivity = useMemo(() => Math.max(...weeklyActivies.map((activity) => activity.count)), [weeklyActivies])
 
   const getUserData = async () => {
     const { data } = await axios.get('http://localhost:2000/user/data')
@@ -38,9 +37,9 @@ function Profile(props) {
           </div>
         </div>
         <div className='flex flex-col gap-3 w-4/5 pr-12'>
-          <Activity weeklyActivies={weeklyActivies} maxActivity={maxActivity} />
-          <Characters />
-          <Lists />
+          <Activity weeklyActivies={weeklyActivies} />
+          <Characters characters={list?.characters?.mostUsed || []} />
+          <Lists lists={list?.mostUpdated || []} history={props.history} />
         </div>
       </div>
     </div>
