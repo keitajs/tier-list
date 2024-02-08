@@ -10,7 +10,7 @@ import characters from '../models/character.js'
 import animes from '../models/anime.js'
 import updates from '../models/update.js'
 import path from 'path'
-import { Op, fn } from 'sequelize'
+import { Op, fn, col } from 'sequelize'
 import { Errors } from '../libs/errors.js'
 import moment from 'moment'
 
@@ -154,9 +154,33 @@ export const getUserData = async (req, res) => {
       })
     }
 
-    const userLists = await lists.findAll({ where: { userId: req.id }, include: { model: categories, include: { model: characters } } })
+    const userLists = await lists.findAll({
+      where: { userId: req.id },
+      include: { model: categories, include: { model: characters, include: { model: animes } } }
+    })
     const userCategories = [].concat(...userLists.map(x => x.categories))
     const userCharacters = [].concat(...userCategories.map(x => x.characters))
+
+    const mostUsedCharacters = userCharacters.reduce((array, item) => {
+      const character = array.find(x => (x.name === item.name && x.animeId === item.animeId) || x.url === item.url)
+      if (character) character.count++
+      else array.push({ ...item.dataValues, count: 1 })
+      return array
+    }, []).sort((a, b) => b.count - a.count)
+
+    const mostUpdatedLists = await lists.findAll({
+      where: { userId: req.id },
+      attributes: [
+        'id', 'name',
+        [fn('SUM', col('count')), 'totalUpdates']
+      ],
+      include: {
+        model: updates,
+        attributes: []
+      },
+      group: ['listId'],
+      order: [['totalUpdates', 'DESC']],
+    })
 
     res.send({
       user,
@@ -170,8 +194,10 @@ export const getUserData = async (req, res) => {
           count: userCategories.filter(x => x.name).length
         },
         characters: {
-          count: userCharacters.length
-        }
+          count: userCharacters.length,
+          mostUsed: mostUsedCharacters.slice(0, 10)
+        },
+        mostUpdated: mostUpdatedLists.slice(0, 10)
       }
     })
   } catch (err) {
