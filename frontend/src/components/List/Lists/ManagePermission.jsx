@@ -14,13 +14,13 @@ function ManagePermission(props) {
 
   return (
     <>
-      <div className='flex flex-col grow max-h-min overflow-hidden'>
+      <div className='flex flex-col grow max-h-min -m-5 p-5 overflow-hidden'>
         <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
           Jogosultságok
           <button onClick={() => setActive(active => active?.new ? null : { new: true })}><FontAwesomeIcon icon={faUserPlus} /></button>
         </div>
 
-        <div className='flex flex-col grow gap-2.5 min-h-0 overflow-auto'>
+        <div className='flex flex-col grow gap-2.5 min-h-0 -mr-2 pr-2 overflow-y-auto'>
           {props.activeList.permissions.length > 0 ? props.activeList.permissions.map((permission, i) => <PermissionItem key={i} user={permission.user} permission={permission} active={active} setActive={setActive} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található jogosultság.</div>}
         </div>
       </div>

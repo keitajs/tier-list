@@ -32,9 +32,9 @@ function Lists(props) {
 
   return (
     <div className='flex xl:flex-row flex-col h-[calc(100vh-3rem)] gap-6'>
-      <div className='p-5 xl:w-1/2 w-full xl:h-full h-max rounded-3xl bg-neutral-900/85'>
+      <div className='flex flex-col p-5 xl:w-1/2 w-full xl:h-full h-max rounded-3xl bg-neutral-900/85'>
         <div className='mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>Listáid</div>
-        <div className='flex flex-col gap-2.5'>
+        <div className='flex flex-col gap-2.5 grow -mr-2 pr-2 overflow-y-auto'>
           {lists.map(list => <ListItem key={list.id} list={list} activeList={activeList} onClick={() => activeList?.id === list.id ? setActiveList(null) : setActiveList(list)} onDoubleClick={() => {props.setSelectedList(list.id); props.history('/list/editor')}} />)}
           <button onClick={() => setActiveList(null)} className='group flex items-center justify-center mx-2 mt-2 py-2.5 rounded-xl bg-neutral-950/30 hover:bg-neutral-950/20 transition-all'>
             <FontAwesomeIcon icon={faPlus} className='mx-2' />
