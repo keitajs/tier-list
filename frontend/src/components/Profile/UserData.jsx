@@ -14,7 +14,7 @@ function UserData(props) {
     <>
       <div className='flex items-center justify-center gap-2 py-3 border-b-2 border-blue-500 text-3xl'>
         {props.user.username}
-        <FontAwesomeIcon icon={faEdit} className='cursor-pointer absolute right-7 h-4 opacity-25 hover:opacity-50 transition-opacity' />
+        <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('username')} className='cursor-pointer absolute right-7 h-4 opacity-25 hover:opacity-50 transition-opacity' />
       </div>
       
       <div className='flex flex-col gap-1.5 my-3 text-lg'>
@@ -28,7 +28,7 @@ function UserData(props) {
         <div className='flex items-center justify-between'>
           <p className='flex items-center gap-2'>
             Email
-            <FontAwesomeIcon icon={faEdit} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />
+            <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('email')} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />
           </p>
           <p>{props.user.email}</p>
         </div>
@@ -51,7 +51,7 @@ function UserData(props) {
       </div>
 
       <div className='absolute bottom-4 right-4 left-4 flex flex-col gap-2'>
-        <button className='py-1 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>Jelszó módosítás</button>
+        <button onClick={() => props.setEdit('password')} className='py-1 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>Jelszó módosítás</button>
         <button onClick={Logout} className='py-1 rounded-lg bg-rose-700 hover:bg-rose-600 transition-colors'>Kijelentkezés</button>
       </div>
     </>
