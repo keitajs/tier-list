@@ -10,6 +10,7 @@ import characters from '../models/character.js'
 import animes from '../models/anime.js'
 import updates from '../models/update.js'
 import path from 'path'
+import fs from 'fs'
 import { Op, fn, col } from 'sequelize'
 import { Errors } from '../libs/errors.js'
 import moment from 'moment'
@@ -33,8 +34,19 @@ const updateActivity = async (userId, listId) => {
   }
 }
 
+export const getAvatarImage = async (req, res) => {
+  // Felhasználó profilképek lekérése
+  const filePath = `${path.resolve()}/images/avatars/${req.params.filename}`
+  if (!fs.existsSync(filePath)) res.status(404).send({ message: 'Nem található kép!' })
+
+  res.sendFile(filePath)
+}
+
 export const getCharacterImage = async (req, res) => {
   // Karakter képek lekérése
+  const filePath = `${path.resolve()}/images/characters/${req.params.filename}`
+  if (!fs.existsSync(filePath)) res.status(404).send({ message: 'Nem található kép!' })
+
   res.sendFile(`${path.resolve()}/images/characters/${req.params.filename}`)
 }
 
@@ -131,6 +143,69 @@ export const Logged = async (req, res) => {
 
       res.send(true)
     })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updateUsername = async (req, res) => {
+  try {
+    const { username } = req.body
+    
+    const checkUsername = await users.findOne({ where: { username } })
+    if (checkUsername) return res.status(400).send({ message: 'A megadott felhasználónév már foglalt!' })
+
+    await users.update({ username }, { where: { id: req.id } })
+
+    const accessToken = jwt.sign({ id: req.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
+    res.cookie('accessToken', accessToken, { maxAge: 7*24*60*60*1000, httpOnly: true, sameSite: 'None', secure: true })
+    res.send({ message: 'Sikeres felhasználónév módosítás!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updateAvatar = async (req, res) => {
+  try {
+    const avatar = req.file
+
+    await users.update({ avatar: avatar.filename }, { where: { id: req.id } })
+    res.send({ message: 'Sikeres profilkép módosítás!', file: avatar.filename })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updateEmail = async (req, res) => {
+  try {
+    const { email } = req.body
+
+    const checkEmail = await users.findOne({ where: { email } })
+    if (checkEmail) return res.status(400).send({ message: 'A megadott email cím már foglalt!' })
+
+    await users.update({ email }, { where: { id: req.id } })
+    res.send({ message: 'Sikeres email módosítás!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updatePassword = async (req, res) => {
+  try {
+    const { password } = req.body
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+    await users.update({ password: hashedPassword }, { where: { id: req.id } })
+
+    res.send({ message: 'Sikeres jelszó módosítás!' })
   } catch (err) {
     if (!err) return
     logger.error(err)
