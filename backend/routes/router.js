@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getCharacterImage, Register, Login, Logout, Logged, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, updateEmail, updatePassword, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken } from '../controllers/verifyToken.js'
 import multer from 'multer'
@@ -9,8 +9,12 @@ const router = Router()
 const characterImageStorage = multer.diskStorage({ destination: 'images/characters/', filename: (req, file, cb) => {
   cb(null, `${path.basename(file.originalname)}-${Date.now()}${path.extname(file.originalname)}`)
 } })
+const avatarImageStorage = multer.diskStorage({ destination: 'images/avatars/', filename: (req, file, cb) => {
+  cb(null, `${path.basename(file.originalname)}-${Date.now()}${path.extname(file.originalname)}`)
+} })
 
 const uploadCharacterImage = multer({ storage: characterImageStorage })
+const uploadAvatarImage = multer({ storage: avatarImageStorage })
 
 router.get('/', (req, res) => { res.send({ message: 'Tier List backend API' }) })
 
@@ -23,6 +27,10 @@ router.get('/user/data', verifyToken, getUserData)
 
 router.get('/user/lists', verifyToken, getUserLists)
 router.get('/user/lists/:id', verifyToken, hasAnyPermission, getUserList)
+router.patch('/user/username', verifyToken, updateUsername)
+router.patch('/user/avatar', verifyToken, uploadAvatarImage.single('avatar'), updateAvatar)
+router.patch('/user/email', verifyToken, updateEmail)
+router.patch('/user/password', verifyToken, updatePassword)
 
 router.get('/lists/sidebar', verifyToken, getSidebarLists)
 router.get('/lists/shared', verifyToken, getSharedLists)
@@ -45,6 +53,7 @@ router.patch('/lists/:id/characters/:characterId/move', verifyToken, hasMovePerm
 router.patch('/lists/:id/characters/:characterId/update', verifyToken, hasEditPermission, isInList, uploadCharacterImage.single('image'), updateCharacter)
 router.delete('/lists/:id/characters/:characterId/remove', verifyToken, hasEditPermission, isInList, removeCharacter)
 
+router.get('/user/images/:filename', verifyToken, getAvatarImage)
 router.get('/characters/images/:filename', verifyToken, getCharacterImage)
 
 export default router
