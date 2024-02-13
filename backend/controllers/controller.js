@@ -184,10 +184,15 @@ export const updateAvatar = async (req, res) => {
 
 export const updateEmail = async (req, res) => {
   try {
-    const { email } = req.body
+    const { email, password } = req.body
+
+    const user = await users.findOne({ where: { id: req.id }, attributes: [ 'password' ] })
+    const passMatch = await bcrypt.compare(password, user.password)
+    console.log(passMatch)
+    if (!passMatch) return res.status(400).send({ message: 'Hibás jelszó!', field: 'password' })
 
     const checkEmail = await users.findOne({ where: { email } })
-    if (checkEmail) return res.status(400).send({ message: 'A megadott email cím már foglalt!' })
+    if (checkEmail) return res.status(400).send({ message: 'A megadott email cím már foglalt!', field: 'email' })
 
     await users.update({ email }, { where: { id: req.id } })
     res.send({ message: 'Sikeres email módosítás!' })
@@ -200,7 +205,11 @@ export const updateEmail = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   try {
-    const { password } = req.body
+    const { password, currentPassword } = req.body
+
+    const user = await users.findOne({ where: { id: req.id }, attributes: [ 'password' ] })
+    const passMatch = await bcrypt.compare(currentPassword, user.password)
+    if (!passMatch) return res.status(400).send({ message: 'Hibás jelszó!' })
 
     const hashedPassword = await bcrypt.hash(password, 10)
     await users.update({ password: hashedPassword }, { where: { id: req.id } })

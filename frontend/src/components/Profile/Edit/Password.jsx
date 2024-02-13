@@ -6,6 +6,7 @@ import { faCheck, faXmark, faEyeSlash, faEye } from '@fortawesome/free-solid-svg
 function Password(props) {
   const [password, setPassword] = useState('')
   const [passwor2, setPasswor2] = useState('')
+  const [currentPassword, setCurrentPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [errors, setErrors] = useState({})
 
@@ -13,33 +14,39 @@ function Password(props) {
     if (Object.values(errors).find(x => !!x)) return
 
     try {
-      await axios.patch('http://localhost:2000/user/password', { password })
+      await axios.patch('http://localhost:2000/user/password', { password, currentPassword })
       props.setEdit(null)
     } catch (err) {
-      if (err?.response?.data?.message) return setErrors({ password: err.response.data.message })
+      if (err?.response?.data?.message) return setErrors({ ...errors, currentPassword: err.response.data.message })
       alert('Server error')
       console.log(err)
     }
   }
 
   useEffect(() => {
-    if (password !== passwor2) setErrors(errors => { return {...errors, passwor2: 'Két jelszó nem egyezik!' } })
-    else if (passwor2 !== '') setErrors(errors => { return {...errors, passwor2: false } })
-    if (!password) return setErrors(errors => { return {...errors, password: 'Üres mező!' } })
-    if (password.length < 8) return setErrors(errors => { return {...errors, password: 'Túl rövid!' } })
+    if (password !== passwor2) setErrors(errors => { return { ...errors, passwor2: 'Két jelszó nem egyezik!' } })
+    else if (passwor2 !== '') setErrors(errors => { return { ...errors, passwor2: false } })
+    if (!password) return setErrors(errors => { return { ...errors, password: 'Üres mező!' } })
+    if (password.length < 8) return setErrors(errors => { return { ...errors, password: 'Túl rövid!' } })
     setErrors(errors => { return {...errors, password: false } })
   }, [password, passwor2])
 
   useEffect(() => {
-    if (!password) return setErrors(errors => { return {...errors, passwor2: 'Üres mező!' } })
-    if (password !== passwor2) return setErrors(errors => { return {...errors, passwor2: 'Két jelszó nem egyezik!' } })
+    if (!password) return setErrors(errors => { return { ...errors, passwor2: 'Üres mező!' } })
+    if (password !== passwor2) return setErrors(errors => { return { ...errors, passwor2: 'Két jelszó nem egyezik!' } })
     setErrors(errors => { return {...errors, passwor2: false } })
   }, [password, passwor2])
+
+  useEffect(() =>{
+    if (!currentPassword) return setErrors(errors => { return { ...errors, currentPassword: 'Üres mező!' } })
+    setErrors(errors => { return {...errors, currentPassword: false } })
+  }, [currentPassword])
 
   useEffect(() => {
     if (!props.hide) {
       setPassword('')
       setPasswor2('')
+      setCurrentPassword('')
     }
   }, [props.hide])
 
@@ -62,13 +69,24 @@ function Password(props) {
           <span className='text-base ml-1 text-rose-600'>{errors.password}</span>
         </div>
 
-        <div className='flex flex-col text-lg'>
+        <div className='flex flex-col text-lg mb-1.5'>
           <label htmlFor="password" className='ml-1'>Jelszó újra</label>
           <div className='relative'>
             <input type="password" value={passwor2} maxLength={256} onChange={e => setPasswor2(e.target.value)} name='password' id='password' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
             <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.passwor2 ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
           </div>
           <span className='text-base ml-1 text-rose-600'>{errors.passwor2}</span>
+        </div>
+
+        <div className='flex flex-col text-lg'>
+          <label htmlFor="password" className='flex ml-1'>
+            Jelenlegi jelszó
+          </label>
+          <div className='relative'>
+            <input type='password' value={currentPassword} maxLength={256} onChange={e => setCurrentPassword(e.target.value)} name='password' id='password' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.currentPassword ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+          </div>
+          <span className='text-base ml-1 text-rose-600'>{errors.currentPassword}</span>
         </div>
 
         <div className='flex gap-2 mt-5'>
