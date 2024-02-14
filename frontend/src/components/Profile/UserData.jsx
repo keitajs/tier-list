@@ -13,7 +13,7 @@ function UserData(props) {
   return (
     <>
       <div className='flex items-center justify-center gap-2 py-3 border-b-2 border-blue-500 text-3xl'>
-        {props.user.username}
+        {props?.user?.username ? props.user.username : 'Betöltés...'}
         <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('username')} className='cursor-pointer absolute right-7 h-4 opacity-25 hover:opacity-50 transition-opacity' />
       </div>
       

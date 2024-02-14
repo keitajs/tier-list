@@ -34,8 +34,8 @@ function Profile(props) {
 
       <div className='h-full ml-14'>
         <div className='flex flex-col gap-6 fixed right-6 top-6 bottom-6 w-1/5'>
-          <div className='group relative aspect-square rounded-3xl bg-neutral-900/85 overflow-hidden'>
-            <img src={`http://localhost:2000/user/images/${user.avatar}`} alt="" className='w-full h-full object-cover' />
+          <div className='flex items-center justify-center group relative aspect-square rounded-3xl bg-neutral-900/85 overflow-hidden'>
+            {user.avatar ? <img src={`http://localhost:2000/user/images/${user.avatar}`} alt="" className='w-full h-full object-cover' /> : <div className='w-1/4 h-1/4 rounded-full border-e-4 border-neutral-700/50 animate-spin'></div>}
             <div onClick={() => setEdit('avatar')} className='cursor-pointer absolute bottom-0 left-0 right-0 py-3 text-lg text-center bg-neutral-950 opacity-0 group-hover:opacity-35 hover:!opacity-90 transition-opacity'>Profilkép módosítás</div>
           </div>
           <div className='px-4 grow rounded-3xl bg-neutral-900/85'>
