@@ -6,7 +6,7 @@ import { faSave, faTrash, faXmark, faFileArrowUp, faFileExcel } from '@fortaweso
 function UpdateCharacter(props) {
   const [name, setName] = useState(props.character.name)
   const [url, setUrl] = useState(props.character.url)
-  const [image, setImage] = useState(props.character.img)
+  const [image, setImage] = useState(props.character.img.startsWith('http') ? props.character.img : `http://localhost:2000/characters/images/${props.character.img}`)
   const [title, setTitle] = useState(props.anime.title)
   const [animeUrl, setAnimeUrl] = useState(props.anime.url)
   const [active, setActive] = useState(true)
