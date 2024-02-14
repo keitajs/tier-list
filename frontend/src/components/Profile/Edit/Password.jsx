@@ -17,7 +17,13 @@ function Password(props) {
       await axios.patch('http://localhost:2000/user/password', { password, currentPassword })
       props.setEdit(null)
     } catch (err) {
-      if (err?.response?.data?.message) return setErrors({ ...errors, currentPassword: err.response.data.message })
+      const { errors: results } = err?.response?.data
+      if (results) return setErrors(errors => {
+        if (results.password) errors.password = results.password
+        if (results.currentPassword) errors.currentPassword = results.currentPassword
+        return { ...errors }
+      })
+
       alert('Server error')
       console.log(err)
     }

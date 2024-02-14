@@ -18,7 +18,7 @@ function Username(props) {
         return user
       })
     } catch (err) {
-      if (err?.response?.data?.message) return setErrors({ name: err.response.data.message })
+      if (err?.response?.data?.errors) return setErrors({ name: err.response.data.errors.username })
       alert('Server error')
       console.log(err)
     }

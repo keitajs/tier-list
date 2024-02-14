@@ -19,10 +19,13 @@ function Email(props) {
         return user
       })
     } catch (err) {
-      if (err?.response?.data?.message) return setErrors(errors => {
-        errors[err.response.data.field] = err.response.data.message
+      const { errors: results } = err?.response?.data
+      if (results) return setErrors(errors => {
+        if (results.password) errors.password = results.password
+        if (results.email) errors.email = results.email
         return { ...errors }
       })
+
       alert('Server error')
       console.log(err)
     }
