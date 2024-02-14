@@ -49,7 +49,8 @@ function TierList(props) {
         }
         return arrayMove(items, activeIndex, overIndex)
       })
-    } else
+    }
+
     if (over.data.current?.type === "Category") {
       return setItems((items) => {
         const activeIndex = items.findIndex((t) => t.id === active.id)
@@ -63,19 +64,20 @@ function TierList(props) {
     if (!permission.move) return
     setActiveItem(null)
     setActiveCategory(null)
-
+    
     if (!over) return
+
     if (active.data.current?.type === "Item") {
       const activeItem = items.find(item => item.id === active.id)
       const firstItem = items.find(item => activeItem.categoryId === item.categoryId)
       const position = items.findIndex(item => item.id === activeItem.id) - items.findIndex(item => item.id === firstItem.id) + 1
-      axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId: parseInt(activeItem.categoryId) })
+      return axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId: parseInt(activeItem.categoryId) })
     }
-    else
+
     if (active.data.current?.type === "Category") {
       if (active.id === over.id) return
       
-      setCategories((categories) => {
+      return setCategories((categories) => {
         const activeIndex = categories.findIndex(category => category.id === active.id)
         const overIndex = categories.findIndex(category => category.id === over.id)
         axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex })
@@ -123,7 +125,7 @@ function TierList(props) {
           : <></>}
 
           <div className='mt-8 rounded-2xl'>
-            <Characters key={'characters'} permission={permission} id={categories.find(category => category.name === null)?.id} items={items.filter(item => item.categoryId === categories.find(category => category.name === null)?.id)} setItems={setItems} selectedList={props.selectedList} />
+            {categories.filter(category => !category.name).map(category => <Characters key={category.id} permission={permission} id={category.id} name={category.name} color={category.color} items={items.filter(item => item.categoryId === category.id)} setItems={setItems} selectedList={props.selectedList} />)}
           </div>
         </SortableContext>
 
