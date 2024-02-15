@@ -271,7 +271,7 @@ export const getUserData = async (req, res) => {
       if (character) character.count++
       else array.push({ ...item.dataValues, count: 1 })
       return array
-    }, []).sort((a, b) => b.count - a.count)
+    }, []).sort((a, b) => b.count - a.count).slice(0, 10)
 
     const mostUpdatedLists = await lists.findAll({
       where: { userId: req.id },
@@ -285,6 +285,8 @@ export const getUserData = async (req, res) => {
       },
       group: ['listId'],
       order: [['totalUpdates', 'DESC']],
+      subQuery: false,
+      limit: 10
     })
 
     res.send({
@@ -300,9 +302,9 @@ export const getUserData = async (req, res) => {
         },
         characters: {
           count: userCharacters.length,
-          mostUsed: mostUsedCharacters.slice(0, 10)
+          mostUsed: mostUsedCharacters
         },
-        mostUpdated: mostUpdatedLists.slice(0, 10)
+        mostUpdated: mostUpdatedLists
       }
     })
   } catch (err) {
@@ -380,7 +382,11 @@ export const getSidebarLists = async (req, res) => {
           ['date', 'desc'],
           ['time', 'desc']
         ],
-        limit: 1
+        limit: 1,
+        include: {
+          model: users,
+          attributes: ['id', 'username', 'avatar']
+        }
       }
     })
 
