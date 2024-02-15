@@ -245,8 +245,12 @@ export const updatePassword = async (req, res) => {
 
 export const getUserData = async (req, res) => {
   try {
-    const user = await users.findOne({ where: { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'registerDate'] })
-    const activities = await updates.findAll({ where: { userId: req.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }})
+    const { user: username } = req.query
+
+    const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'registerDate'] })
+    if (username) user.email = 'hiddenmail@tl.hu'
+
+    const activities = await updates.findAll({ where: { userId: user.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }})
 
     const weeklyActivies = []
     for (let i = 6; i >= 0; i--) {
@@ -260,7 +264,7 @@ export const getUserData = async (req, res) => {
     }
 
     const userLists = await lists.findAll({
-      where: { userId: req.id },
+      where: { userId: user.id },
       include: { model: categories, include: { model: characters, include: { model: animes } } }
     })
     const userCategories = [].concat(...userLists.map(x => x.categories))
@@ -274,7 +278,7 @@ export const getUserData = async (req, res) => {
     }, []).sort((a, b) => b.count - a.count).slice(0, 10)
 
     const mostUpdatedLists = await lists.findAll({
-      where: { userId: req.id },
+      where: { userId: user.id },
       attributes: [
         'id', 'name',
         [fn('SUM', col('count')), 'totalUpdates']

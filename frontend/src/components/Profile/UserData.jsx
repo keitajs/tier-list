@@ -30,7 +30,7 @@ function UserData(props) {
             Email
             <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('email')} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />
           </p>
-          <p>{props.user.email}</p>
+          <p className={props.params ? 'blur-sm overflow-hidden select-none' : ''}>{props.user.email}</p>
         </div>
         <div className='flex items-center justify-between'>Listák <p><span className='text-blue-400'>{props?.list?.count | 0}</span> db</p></div>
         <div className='flex items-center justify-between ml-4 -mt-1.5'>
