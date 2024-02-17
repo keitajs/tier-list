@@ -66,6 +66,7 @@ function NewCharacter(props) {
     if (file) {
       setImage('')
       setFile('')
+      setErrors(errors => { return {...errors, image: 'Üres mező!' } })
     } else {
       fileInput.current.click()
     }
@@ -150,7 +151,7 @@ function NewCharacter(props) {
                 <label htmlFor="name" className='ml-1'>Név <span className='text-base ml-0.5 text-rose-600'>{errors.name}</span></label>
                 <div className='relative'>
                   <input type="text" value={name} maxLength={256} onChange={e => setName(e.target.value)} name='name' id='name' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.name ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.name ? faXmark : faCheck} className={errors.name ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
                 </div>
               </div>
 
@@ -158,7 +159,7 @@ function NewCharacter(props) {
                 <label htmlFor="url" className='ml-1'>URL <span className='text-base ml-0.5 text-rose-600'>{errors.url}</span></label>
                 <div className='relative'>
                   <input type="text" value={url} maxLength={512} onChange={e => setUrl(e.target.value)} name='url' id='url' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.url ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.url ? faXmark : faCheck} className={errors.name ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
                 </div>
               </div>
 
@@ -168,7 +169,7 @@ function NewCharacter(props) {
                   <input type="text" value={file ? image.name : image} maxLength={512} onChange={e => setImage(e.target.value)} disabled={file} name='image' id='image' className='w-72 px-2 py-1 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
                   <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
                   <button onClick={fileUpload} className='absolute right-0 h-full aspect-square flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
-                    {file ? <FontAwesomeIcon icon={faFileExcel} /> : <FontAwesomeIcon icon={faFileArrowUp} />}
+                    <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
                   </button>
                 </div>
               </div>
@@ -181,7 +182,7 @@ function NewCharacter(props) {
                 <label htmlFor="title" className='ml-1'>Cím <span className='text-base ml-0.5 text-rose-600'>{errors.title}</span></label>
                 <div className='relative'>
                   <input type="text" value={title} maxLength={256} onChange={e => setTitle(e.target.value)} name='title' id='title' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.title ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.title ? faXmark : faCheck} className={errors.name ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
                 </div>
               </div>
 
@@ -189,7 +190,7 @@ function NewCharacter(props) {
                 <label htmlFor="animeUrl" className='ml-1'>URL <span className='text-base ml-0.5 text-rose-600'>{errors.animeUrl}</span></label>
                 <div className='relative'>
                   <input type="text" value={animeUrl} maxLength={512} onChange={e => setAnimeUrl(e.target.value)} name='animeUrl' id='animeUrl' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.animeUrl ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.animeUrl ? faXmark : faCheck} className={errors.name ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
                 </div>
               </div>
 

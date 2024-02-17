@@ -66,11 +66,11 @@ function Password(props) {
         <div className='flex flex-col text-lg mb-1.5'>
           <label htmlFor="password" className='flex ml-1'>
             Új jelszó
-            <button onClick={() => setShowPass(!showPass)} className='flex items-center px-2'>{showPass ? <FontAwesomeIcon icon={faEyeSlash} className='h-3' /> : <FontAwesomeIcon icon={faEye} className='h-3' />}</button>
+            <button onClick={() => setShowPass(!showPass)} className='flex items-center px-2'><FontAwesomeIcon icon={showPass ? faEyeSlash : faEye} className='h-3' /></button>
           </label>
           <div className='relative'>
             <input type={showPass ? 'text' : 'password'} value={password} maxLength={256} onChange={e => setPassword(e.target.value)} name='password' id='password' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.password ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.password ? faXmark : faCheck} className={errors.password ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
           </div>
           <span className='text-base ml-1 text-rose-600'>{errors.password}</span>
         </div>
@@ -79,7 +79,7 @@ function Password(props) {
           <label htmlFor="password" className='ml-1'>Jelszó újra</label>
           <div className='relative'>
             <input type="password" value={passwor2} maxLength={256} onChange={e => setPasswor2(e.target.value)} name='password' id='password' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.passwor2 ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.passwor2 ? faXmark : faCheck} className={errors.passwor2 ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
           </div>
           <span className='text-base ml-1 text-rose-600'>{errors.passwor2}</span>
         </div>
@@ -90,7 +90,7 @@ function Password(props) {
           </label>
           <div className='relative'>
             <input type='password' value={currentPassword} maxLength={256} onChange={e => setCurrentPassword(e.target.value)} name='password' id='password' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.currentPassword ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.currentPassword ? faXmark : faCheck} className={errors.currentPassword ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
           </div>
           <span className='text-base ml-1 text-rose-600'>{errors.currentPassword}</span>
         </div>

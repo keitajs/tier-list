@@ -13,7 +13,7 @@ function PermissionItem(props) {
       </div>
       <div className='flex items-center gap-2 text-sm opacity-40'>
         {['Megtekintés', 'Mozgatás', 'Szerkesztés'][props.permission.value - 1]}
-        {[<FontAwesomeIcon icon={faEye} />, <FontAwesomeIcon icon={faArrowsUpDownLeftRight} />, <FontAwesomeIcon icon={faPen} />][props.permission.value - 1]}
+        <FontAwesomeIcon icon={[faEye, faArrowsUpDownLeftRight, faPen][props.permission.value - 1]} />
       </div>
       <div className='flex'>
         <FontAwesomeIcon icon={faUserPen} className='text-emerald-600 hover:text-emerald-500 transition-colors' />

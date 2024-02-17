@@ -9,7 +9,7 @@ function ListItem(props) {
     <button onClick={props.onClick} onDoubleClick={props.onDoubleClick} className='flex items-center justify-between px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all'>
       <div className='flex items-center text-xl'>
         <span className='mr-3'>{props.list.name}</span>
-        {[<FontAwesomeIcon icon={faEllipsis} className='text-white' />, <FontAwesomeIcon icon={faCheck} className='text-emerald-500' />, <FontAwesomeIcon icon={faDumpsterFire} className='text-red-500' />][props.list.status - 1]}
+        <FontAwesomeIcon icon={[faEllipsis, faCheck, faDumpsterFire][props.list.status - 1]} className={['text-white', 'text-emerald-500', 'text-red-500'][props.list.status - 1]} />
       </div>
       <div className='flex items-center text-sm'>
         {props.list?.updates ? <div className='flex items-center'>

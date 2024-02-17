@@ -55,7 +55,7 @@ function NewCategory(props) {
                 <label htmlFor="name" className='ml-1'>Cím <span className='text-base ml-0.5 text-rose-600'>{errors.name}</span></label>
                 <div className='relative'>
                   <input type="text" value={name} maxLength={32} onChange={e => setName(e.target.value)} name='name' id='name' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'>{!errors.name ? <FontAwesomeIcon icon={faCheck} className='text-emerald-500 h-5 input-check-anim' /> : <FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' />}</div>
+                  <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.name ? faXmark : faCheck} className={errors.name ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
                 </div>
               </div>
 

@@ -61,6 +61,7 @@ function UpdateCharacter(props) {
     if (file) {
       setImage('')
       setFile('')
+      setErrors(errors => { return {...errors, image: 'Üres mező!' } })
     } else {
       fileInput.current.click()
     }
@@ -116,7 +117,7 @@ function UpdateCharacter(props) {
               <div className={`absolute top-0 bottom-0 right-8 flex items-center text-xl text-rose-600 ${errors.image ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
               
               <button onClick={fileUpload} className='absolute right-0 h-full aspect-square flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
-                {file ? <FontAwesomeIcon icon={faFileExcel} /> : <FontAwesomeIcon icon={faFileArrowUp} />}
+                <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
               </button>
             </div>
           </div>

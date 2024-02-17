@@ -59,7 +59,7 @@ function Avatar(props) {
         <div className='flex flex-col text-lg mt-2.5'>
           <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
           <button onClick={fileUpload} className='flex items-center justify-between gap-3 px-2.5 py-0.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
-            Feltöltés {file ? <FontAwesomeIcon icon={faFileExcel} /> : <FontAwesomeIcon icon={faFileArrowUp} />}
+            Feltöltés <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
           </button>
         </div>
 
