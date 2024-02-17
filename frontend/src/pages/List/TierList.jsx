@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import axios from 'axios'
+import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle, faRotateRight, faShare } from '@fortawesome/free-solid-svg-icons'
 import { useSensors, useSensor, MouseSensor, TouchSensor, KeyboardSensor, DndContext, DragOverlay } from "@dnd-kit/core"
@@ -107,8 +108,10 @@ function TierList(props) {
       <h1 className='flex items-center justify-between mb-8 px-3 pb-2 text-2xl border-b-2 border-blue-500'>
         {title}
         <div className='flex items-center gap-3'>
-          <FontAwesomeIcon icon={faRotateRight} className='cursor-pointer h-5 opacity-50 hover:opacity-75 transition-opacity' onClick={() => props.history(`/list?id=${props.selectedList}`)} />
-          <FontAwesomeIcon icon={faShare} className='cursor-pointer h-5 opacity-50 hover:opacity-75 transition-opacity' onClick={() => window.navigator.clipboard.writeText(window.location.origin + `/list?id=${props.selectedList}`)} />
+          <FontAwesomeIcon id='reload' icon={faRotateRight} className='cursor-pointer h-5 opacity-50 hover:opacity-75 transition-opacity' onClick={() => props.history(`/list?id=${props.selectedList}`)} />
+          <FontAwesomeIcon id='share' icon={faShare} className='cursor-pointer h-5 opacity-50 hover:opacity-75 transition-opacity' onClick={() => window.navigator.clipboard.writeText(window.location.origin + `/list?id=${props.selectedList}`)} />
+          <Tooltip anchorSelect='#reload' place='bottom-end' className='!text-sm !rounded-lg !bg-neutral-950'>Frissítés</Tooltip>
+          <Tooltip anchorSelect='#share' place='bottom-end' className='!text-sm !rounded-lg !bg-neutral-950'>Megosztás</Tooltip>
         </div>
       </h1>
 

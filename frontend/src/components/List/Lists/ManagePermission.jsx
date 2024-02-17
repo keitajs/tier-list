@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import EditPermission from './ManagePermission/EditPermission'
@@ -17,7 +18,8 @@ function ManagePermission(props) {
       <div className='flex flex-col grow max-h-min -m-5 p-5 overflow-hidden'>
         <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
           Jogosultságok
-          <button onClick={() => setActive(active => active?.new ? null : { new: true })}><FontAwesomeIcon icon={faUserPlus} /></button>
+          <button id='add' onClick={() => setActive(active => active?.new ? null : { new: true })}><FontAwesomeIcon icon={faUserPlus} /></button>
+          <Tooltip anchorSelect='#add' place='top' className='!text-sm !rounded-lg !bg-neutral-950'>Új jogosultság</Tooltip>
         </div>
 
         <div className='flex flex-col grow gap-2.5 min-h-0 -mr-2 pr-2 overflow-y-auto'>
