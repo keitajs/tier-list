@@ -64,9 +64,8 @@ function NewCharacter(props) {
 
   const fileUpload = () => {
     if (file) {
-      setImage('')
       setFile('')
-      setErrors(errors => { return {...errors, image: 'Üres mező!' } })
+      setImage('')
     } else {
       fileInput.current.click()
     }
@@ -79,11 +78,12 @@ function NewCharacter(props) {
 
     if (!value) return setErrors(errors => { return {...errors, [key]: 'Üres mező!' } })
     if (options?.url) try { new URL(value) } catch { return setErrors(errors => { return {...errors, [key]: 'Nem megfelelő URL formátum!' } })}
-    setErrors(errors => { return {...errors, [key]: false } })
+    setErrors(errors => { return {...errors, [key]: '' } })
   }
 
   const onImageLoad = (e) => {
-    setErrors(errors => ({...errors, image: false }))
+    if (!file || !image) return
+    setErrors(errors => ({...errors, image: '' }))
   }
 
   const onImageError = (e) => {
@@ -93,7 +93,7 @@ function NewCharacter(props) {
 
   useEffect(() => handleErrors({ name }), [name])
   useEffect(() => handleErrors({ url }, { url: true }), [url])
-  useEffect(() => file ? setErrors(errors => { return {...errors, image: false } }) : handleErrors({ image }), [file, image])
+  useEffect(() => handleErrors({ image }), [image])
   useEffect(() => handleErrors({ title }), [title])
   useEffect(() => handleErrors({ animeUrl }, { url: true }), [animeUrl])
 
