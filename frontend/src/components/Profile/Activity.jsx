@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { Tooltip } from 'react-tooltip'
 
 function Activity(props) {
   const maxActivity = useMemo(() => Math.max(...props.weeklyActivies.map((activity) => activity.count)), [props.weeklyActivies])
@@ -10,10 +11,13 @@ function Activity(props) {
         <div className='flex items-center justify-between h-96 pt-10'>
           {props.weeklyActivies.map((activity, i) =>
             <div key={i} className='flex flex-col items-center justify-end w-full h-full mt-5'>
-              <div className='relative w-10 mt-1 mb-4 pb-2 rounded-xl bg-blue-500' style={{ height: `${activity.count/maxActivity*100}%` }}>
+              <div id={`activity-${i}`} className='relative w-10 mt-1 mb-4 pb-2 rounded-xl bg-blue-500' style={{ height: `${activity.count/maxActivity*100}%` }}>
                 <div className='absolute -top-8 left-0 right-0 text-center'>{activity.count}</div>
               </div>
-            </div>  
+              <Tooltip anchorSelect={`#activity-${i}`} place='right' className='!z-40 !rounded-lg !bg-neutral-950'>
+                {activity.count > 0 ? activity.lists.sort((a, b) => b.count - a.count).map((list, j) => <div key={j} className='flex w-full justify-between gap-4'>{list.name}<div className='text-blue-400'>{list.count}</div></div>) : 'Ezen a napon nem volt aktivitás.'}
+              </Tooltip>
+            </div>
           )}
         </div>
         <div className='flex items-center mt-3'>

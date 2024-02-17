@@ -250,16 +250,17 @@ export const getUserData = async (req, res) => {
     const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'registerDate'] })
     if (username) user.email = 'hiddenmail@tl.hu'
 
-    const activities = await updates.findAll({ where: { userId: user.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }})
-
+    const activities = await updates.findAll({ where: { userId: user.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }, include: { model: lists, attributes: ['name'] }})
     const weeklyActivies = []
     for (let i = 6; i >= 0; i--) {
       const date = moment().subtract(i, 'days')
       const days = activities.filter(x => moment(x.date).toDate().toDateString() == date.toDate().toDateString())
+      const lists = days.reduce((a, b) => [ ...a, { name: b.list.name, count: b.count } ], [])
 
       weeklyActivies.push({
         day: date.locale('hu').format('dddd'),
-        count: days.reduce((a, b) => a + b.count, 0)
+        count: days.reduce((a, b) => a + b.count, 0),
+        lists
       })
     }
 
@@ -280,7 +281,7 @@ export const getUserData = async (req, res) => {
     const mostUpdatedLists = await lists.findAll({
       where: { userId: user.id },
       attributes: [
-        'id', 'name',
+        'id', 'name', 'private',
         [fn('SUM', col('count')), 'totalUpdates']
       ],
       include: {

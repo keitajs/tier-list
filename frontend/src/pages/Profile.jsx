@@ -51,7 +51,7 @@ function Profile(props) {
         <div className='flex flex-col gap-3 w-4/5 pr-12'>
           <Activity weeklyActivies={weeklyActivies} />
           <Characters characters={list?.characters?.mostUsed || []} />
-          <Lists lists={list?.mostUpdated || []} history={props.history} />
+          <Lists lists={list?.mostUpdated || []} params={params} history={props.history} />
         </div>
       </div>
 
