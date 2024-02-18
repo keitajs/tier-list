@@ -443,9 +443,13 @@ export const getSharedLists = async (req, res) => {
 
 export const getPublicLists = async (req, res) => {
   try {
+    // Kereséskor kap egy query-t
+    const { q: query } = req.query
+
     // Publikus listák + az utolsó módosítás
     const results = await lists.findAll({
       where: {
+        name: { [Op.like]: query ? `%${query}%` : '%' },
         private: false
       },
       include: {
@@ -461,7 +465,7 @@ export const getPublicLists = async (req, res) => {
           attributes: ['id', 'username', 'avatar']
         }
       },
-      order: [ fn('RAND') ],
+      order: query ? [] : [ fn('RAND') ],
       limit: 10
     })
 
