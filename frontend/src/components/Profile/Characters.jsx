@@ -55,20 +55,20 @@ function Characters(props) {
                 </div>
               </div>
 
-              <button onClick={() => setFull(character.id)} className='h-32 aspect-[3/4] rounded-2xl overflow-hidden'>
+              <button onClick={() => setFull(character.id)} className='h-32 w-24 rounded-2xl overflow-hidden'>
                 <img src={character.image.startsWith('http') ? character.image : `http://localhost:2000/characters/images/${character.image}`} alt="" className='w-full h-full object-cover' />
               </button>
-              <div className='flex flex-col w-full justify-center'>
-                <Link to={character.url} target='_blank' className='group flex items-center gap-1.5 text-xl leading-6 w-max ml-2'>
+              <div className='flex flex-col justify-center grow w-1/2'>
+                <Link to={character.url} target='_blank' className='group truncate flex items-center gap-1.5 text-xl leading-6 w-full lg:w-max ml-2'>
                   {character.name}
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='hidden lg:inline h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
                 </Link>
-                <Link to={character.anime.url} target='_blank' className='group flex items-center gap-1.5 w-max ml-2 mb-2 opacity-50 hover:opacity-75 transition-opacity'>
+                <Link to={character.anime.url} target='_blank' className='group truncate flex items-center gap-1.5 w-full lg:w-max ml-2 mb-2 opacity-50 hover:opacity-75 transition-opacity'>
                   {character.anime.title}
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='hidden lg:inline h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
                 </Link>
                 <div className='w-[95%]'>
-                  <div className='relative h-8 rounded-e-xl bg-blue-500' style={{width: `${character.count/maxCount*100}%`}}>
+                  <div className='relative h-6 lg:h-8 rounded-e-md lg:rounded-e-xl bg-blue-500' style={{width: `${character.count/maxCount*100}%`}}>
                     <div className='absolute -right-5'>{character.count}</div>
                   </div>
                 </div>

@@ -38,17 +38,17 @@ function Profile(props) {
     <div className='min-h-screen p-6'>
       <Sidebar history={props.history} />
 
-      <div className='h-full ml-14'>
-        <div className='flex flex-col gap-6 fixed right-6 top-6 bottom-6 w-1/5'>
+      <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
+        <div className='flex flex-col gap-6 relative lg:fixed lg:right-6 lg:top-6 lg:bottom-6 w-full lg:w-1/5 mb-3 lg:mb-0'>
           <div className='flex items-center justify-center group relative aspect-square rounded-3xl bg-neutral-900/85 overflow-hidden'>
             {user.avatar ? <img src={`http://localhost:2000/user/images/${user.avatar}`} alt="" className='w-full h-full object-cover' /> : <div className='w-1/4 h-1/4 rounded-full border-e-4 border-neutral-700/50 animate-spin'></div>}
             <div onClick={() => setEdit('avatar')} className='cursor-pointer absolute bottom-0 left-0 right-0 py-3 text-lg text-center bg-neutral-950 opacity-0 group-hover:opacity-35 hover:!opacity-90 transition-opacity'>Profilkép módosítás</div>
           </div>
-          <div className='px-4 grow rounded-3xl bg-neutral-900/85'>
+          <div className='px-4 h-max lg:h-auto lg:grow rounded-3xl bg-neutral-900/85'>
             <UserData user={user} list={list} setEdit={setEdit} params={params} history={props.history} />
           </div>
         </div>
-        <div className='flex flex-col gap-3 w-4/5 pr-12'>
+        <div className='flex flex-col gap-3 w-full lg:w-4/5 pr-0 lg:pr-12'>
           <Activity weeklyActivies={weeklyActivies} />
           <Characters characters={list?.characters?.mostUsed || []} />
           <Lists lists={list?.mostUpdated || []} params={params} history={props.history} />

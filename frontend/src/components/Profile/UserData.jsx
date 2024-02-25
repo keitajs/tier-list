@@ -30,27 +30,27 @@ function UserData(props) {
             Email
             <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('email')} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />
           </p>
-          <p className={props.params ? 'blur-sm overflow-hidden select-none' : ''}>{props.user.email}</p>
+          <p className={`text-right ${props.params ? 'blur-sm overflow-hidden select-none' : ''}`}>{props.user.email}</p>
         </div>
         <div className='flex items-center justify-between'>Listák <p><span className='text-blue-400'>{props?.list?.count | 0}</span> db</p></div>
         <div className='flex items-center justify-between ml-4 -mt-1.5'>
           Folyamatban
-          <p><span className='text-blue-400'>{props?.list[0] | 0}</span> db</p>
+          <p className='text-right'><span className='text-blue-400'>{props?.list[0] | 0}</span> db</p>
         </div>
         <div className='flex items-center justify-between ml-4 -mt-1.5'>
           Kész
-          <p><span className='text-emerald-400'>{props?.list[1] | 0}</span> db</p>
+          <p className='text-right'><span className='text-emerald-400'>{props?.list[1] | 0}</span> db</p>
         </div>
         <div className='flex items-center justify-between ml-4 -mt-1.5'>
           Dobott
-          <p><span className='text-rose-400'>{props?.list[2] | 0}</span> db</p>
+          <p className='text-right'><span className='text-rose-400'>{props?.list[2] | 0}</span> db</p>
         </div>
-        <div className='flex items-center justify-between'>Kategóriák <p><span className='text-blue-400'>{props?.list?.categories?.count | 0}</span> db</p></div>
-        <div className='flex items-center justify-between'>Karakterek <p><span className='text-blue-400'>{props?.list?.characters?.count | 0}</span> db</p></div>
-        <div className='flex items-center justify-between'>Regisztráció ideje <p>{moment(props.user.registerDate).locale('hu').format('L LTS')}</p></div>
+        <div className='flex items-center justify-between'>Kategóriák <p className='text-right'><span className='text-blue-400'>{props?.list?.categories?.count | 0}</span> db</p></div>
+        <div className='flex items-center justify-between'>Karakterek <p className='text-right'><span className='text-blue-400'>{props?.list?.characters?.count | 0}</span> db</p></div>
+        <div className='flex items-center justify-between'>Regisztráció ideje <p className='text-right'>{moment(props.user.registerDate).locale('hu').format('L LTS')}</p></div>
       </div>
 
-      <div className='absolute bottom-4 right-4 left-4 flex flex-col gap-2'>
+      <div className='relative lg:absolute lg:bottom-4 lg:right-4 lg:left-4 mb-4 lg:mb-0 flex flex-col gap-2'>
         <button onClick={() => props.setEdit('password')} className='py-1 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>Jelszó módosítás</button>
         <button onClick={Logout} className='py-1 rounded-lg bg-rose-700 hover:bg-rose-600 transition-colors'>Kijelentkezés</button>
       </div>
