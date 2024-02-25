@@ -4,14 +4,14 @@ import { faEye, faArrowsUpDownLeftRight, faPen, faUserPen, faChevronRight } from
 
 function PermissionItem(props) {
   return (
-    <button onClick={() => props.setActive(active => active?.edit ? null : { edit: true, ...props.permission })} className='flex items-center justify-between px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all'>
-      <div className='flex items-center gap-3 text-xl'>
-        {props.user.username}
+    <button onClick={() => props.setActive(active => active?.edit ? null : { edit: true, ...props.permission })} className='flex items-center justify-between gap-2 px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all'>
+      <div className='flex items-center gap-3 overflow-hidden text-xl'>
+        <div className='truncate'>{props.user.username}</div>
         <div className='w-6 h-6 rounded-full overflow-hidden'>
           <img src={`http://localhost:2000/user/images/${props.user.avatar}`} alt="" className='w-full h-full object-cover' />
         </div>
       </div>
-      <div className='flex items-center gap-2 text-sm opacity-40'>
+      <div className='hidden sm:flex items-center gap-2 text-sm opacity-40'>
         {['Megtekintés', 'Mozgatás', 'Szerkesztés'][props.permission.value - 1]}
         <FontAwesomeIcon icon={[faEye, faArrowsUpDownLeftRight, faPen][props.permission.value - 1]} />
       </div>

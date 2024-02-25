@@ -28,12 +28,12 @@ function OtherLists(props) {
 
   return (
     <>
-      <div className='flex items-center justify-between px-3 pb-2 text-xl border-b-2 border-blue-500'>
-        {shared ? 'Megosztott listák' : 'Publikus listák'}
+      <div className='flex flex-col sm:flex-row gap-2 items-center justify-between px-3 pb-2 text-xl border-b-2 border-blue-500'>
+        <div className='w-full text-left'>{shared ? 'Megosztott listák' : 'Publikus listák'}</div>
 
-        <div className='flex gap-3'>
-          <input type="text" value={query} onChange={e => setQuery(e.target.value)} className='px-2 text-sm placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' placeholder='Lista keresése...' />
-          <div className='relative flex items-center rounded-lg bg-neutral-700/50 overflow-hidden'>
+        <div className='flex gap-3 -mx-1 sm:mx-0'>
+          <input type="text" value={query} onChange={e => setQuery(e.target.value)} className='w-full sm:w-auto px-2 text-sm placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' placeholder='Lista keresése...' />
+          <div className='relative flex items-center rounded-lg w-24 sm:w-auto bg-neutral-700/50 overflow-hidden'>
             <div className={`absolute ${shared ? 'left-0' : 'left-1/2'} w-1/2 h-full rounded-lg bg-blue-500 transition-all`}></div>
             <button id='shared' onClick={() => setShared(true)} className={`z-10 flex items-center justify-center w-1/2 px-2 py-1.5 rounded-lg ${!shared ? 'hover:bg-neutral-700/75' : ''} transition-all`}>
               <FontAwesomeIcon icon={faShare} className='h-4' />

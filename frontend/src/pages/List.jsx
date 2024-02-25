@@ -10,9 +10,9 @@ function List(props) {
 
   return (
     <div className='min-h-screen p-6'>
-      <Sidebar history={props.history} />
+      <Sidebar selectedList={selectedList} history={props.history} />
 
-      <div className='h-full ml-14'>
+      <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
         <Routes>
           <Route path='/' element={<Lists history={props.history} setSelectedList={setSelectedList} />} />
           <Route path='/editor' element={<TierList history={props.history} selectedList={selectedList} />} />

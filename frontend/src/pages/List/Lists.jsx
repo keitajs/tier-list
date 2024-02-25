@@ -31,7 +31,7 @@ function Lists(props) {
   }, [props, searchParams])
 
   return (
-    <div className='flex xl:flex-row flex-col h-[calc(100vh-3rem)] gap-6'>
+    <div className='flex xl:flex-row flex-col sm:min-h-[calc(100vh-3rem)] xl:h-[calc(100vh-3rem)] gap-6'>
       <div className='flex flex-col p-5 xl:w-1/2 w-full xl:h-full h-max rounded-3xl bg-neutral-900/85'>
         <div className='mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>Listáid</div>
         <div className='flex flex-col gap-2.5 grow -mr-2 pr-2 overflow-y-auto'>
