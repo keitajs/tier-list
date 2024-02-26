@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
-import Sidebar from '../components/Sidebar'
+import Navigation from '../components/Navigation'
 import UserData from '../components/Profile/UserData'
 import Activity from '../components/Profile/Activity'
 import Characters from '../components/Profile/Characters'
@@ -36,7 +36,7 @@ function Profile(props) {
 
   return (
     <div className='min-h-screen p-6'>
-      <Sidebar history={props.history} />
+      <Navigation history={props.history} />
 
       <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
         <div className='flex flex-col gap-6 relative lg:fixed lg:right-6 lg:top-6 lg:bottom-6 w-full lg:w-1/5 mb-3 lg:mb-0'>

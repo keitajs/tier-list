@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
-import Navbar from '../components/List/Navbar'
+import Navigation from '../components/Navigation'
 import Lists from './List/Lists'
 import TierList from './List/TierList'
 
@@ -10,7 +9,7 @@ function List(props) {
 
   return (
     <div className='min-h-screen p-6'>
-      <Sidebar selectedList={selectedList} history={props.history} />
+      <Navigation selectedList={selectedList} history={props.history} />
 
       <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
         <Routes>
@@ -18,7 +17,6 @@ function List(props) {
           <Route path='/editor' element={<TierList history={props.history} selectedList={selectedList} />} />
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
-        <Navbar selectedList={selectedList} />
       </div>
     </div>
   )
