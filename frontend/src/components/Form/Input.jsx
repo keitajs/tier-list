@@ -11,7 +11,7 @@ function Input(props) {
   }, [props.reset, props.type])
 
   return (
-    <div className="mt-6 flex flex-col">
+    <div className="mt-1.5 lg:mt-6 flex flex-col">
       <div className='flex'>
         <label htmlFor={props.name} className='ml-1 mb-0.5 text-lg'>{props.label}</label>
         {props.type === 'password' ? <button onClick={() => setShowPass(!showPass)} className='flex items-center px-2'><FontAwesomeIcon icon={showPass ? faEyeSlash : faEye} className='h-3' /></button> : <></>}

@@ -42,8 +42,8 @@ function Register(props) {
   }
 
   return (
-    <div className={`absolute flex flex-col items-center mr-12 px-12 py-16 rounded-3xl bg-neutral-900/50 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
-      <h3 className='text-center text-3xl font-bold tracking-wide w-72 pb-2 mb-10 border-b-[3px] border-blue-500'>REGISZTRÁCIÓ</h3>
+    <div className={`absolute flex flex-col items-center mr-0 lg:mr-12 px-12 py-12 lg:py-16 rounded-3xl bg-neutral-900/50 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
+      <h3 className='text-center text-3xl font-bold tracking-wide w-full lg:w-72 pb-2 mb-2 lg:mb-10 border-b-[3px] border-blue-500'>REGISZTRÁCIÓ</h3>
 
       <div className="form flex flex-col items-center">
         <Username username={username} setUsername={setUsername} nameMsg={nameMsg} setNameMsg={setNameMsg} />
@@ -51,7 +51,9 @@ function Register(props) {
         <Password password={password} setPassword={setPassword} passwordMsg={passwordMsg} setPasswordMsg={setPasswordMsg} passwor2={passwor2} setPasswor2Msg={setPasswor2Msg} active={props.active} />
         <Passwor2 passwor2={passwor2} setPasswor2={setPasswor2} passwor2Msg={passwor2Msg} setPasswor2Msg={setPasswor2Msg} password={password} active={props.active} />
 
-        <button className={`w-full mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${nameMsg === '' && emailMsg === '' && passwordMsg === '' && passwor2Msg === '' ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={Register}>Regisztráció</button>
+        <button className={`w-full mt-4 lg:mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${nameMsg === '' && emailMsg === '' && passwordMsg === '' && passwor2Msg === '' ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={Register}>Regisztráció</button>
+        <button onClick={() => props.setActive(1)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Már van felhasználód? Jelentkezz be itt.</button>
+        <button onClick={() => props.setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
       </div>
       
       {msg === '' ? <></> : <SuccessMsg msg={msg} text={'Másodperceken belül átirányítunk a bejelentkezéshez'} />}

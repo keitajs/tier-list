@@ -20,10 +20,10 @@ function Home(props) {
   }
 
   return (
-    <div className={`absolute flex w-full mr-12 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
+    <div className={`absolute flex w-full mr-0 lg:mr-12 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
       <div className='flex flex-col justify-center select-none'><FontAwesomeIcon icon={faChevronLeft} onClick={previousPage} className='cursor-pointer h-8 p-4 opacity-75 hover:opacity-100 transition-opacity' /></div>
       
-      <div className='relative w-full h-screen flex items-center justify-center'>
+      <div className='relative w-full h-max lg:h-screen flex items-center justify-center'>
         { contents.map((Content, i) => <Content key={i} logged={props.logged} history={props.history} left={i === contentIds[0]} center={i === contentIds[1]} right={i === contentIds[2]} setActive={props.setActive} />) }
       </div>
       
