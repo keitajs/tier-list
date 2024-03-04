@@ -132,6 +132,7 @@ dist
 # Multer folders
 images/*/*
 !images/*/placeholder
+!images/avatars/dummy.png
 
 # SQL Examples
 sql

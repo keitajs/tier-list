@@ -157,13 +157,15 @@ export const updateUsername = async (req, res) => {
 
     errors.empty({ username }, 'Üres mező!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
-    
+
+    // Ellenőrzi, hogy az új felhasználónévvel már van-e felhasználó
     const checkUsername = await users.findOne({ where: { username } })
     if (checkUsername) errors.push('username', 'A megadott felhasználónév már foglalt!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
     
     await users.update({ username }, { where: { id: req.id } })
 
+    // Új accessToken, ezáltal nem lesz kijelentkezve
     const accessToken = jwt.sign({ id: req.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
     res.cookie('accessToken', accessToken, { maxAge: 7*24*60*60*1000, httpOnly: true, sameSite: 'None', secure: true })
     res.send({ message: 'Sikeres felhasználónév módosítás!' })
@@ -199,10 +201,12 @@ export const updateEmail = async (req, res) => {
     errors.empty({ email, password }, 'Üres mező!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
+    // Jelszó ellenőrzés
     const user = await users.findOne({ where: { id: req.id }, attributes: [ 'password' ] })
     const passMatch = await bcrypt.compare(password, user.password)
     if (!passMatch) errors.push('password', 'Hibás jelszó!')
     
+    // Ellenőrzi, hogy az új e-mail címmel már van-e felhasználó
     const checkEmail = await users.findOne({ where: { email } })
     if (checkEmail) errors.push('email', 'A megadott email cím már foglalt!')
 
@@ -225,10 +229,12 @@ export const updatePassword = async (req, res) => {
     errors.empty({ password, currentPassword }, 'Üres mező!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
+    // Jelenlegi jelszó ellenőrzés
     const user = await users.findOne({ where: { id: req.id }, attributes: [ 'password' ] })
     const passMatch = await bcrypt.compare(currentPassword, user.password)
     if (!passMatch) errors.push('currentPassword', 'Hibás jelszó!')
 
+    // Új jelszó ellenőrzés
     errors.password({ password }, 'Túl rövid!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
@@ -250,6 +256,7 @@ export const getUserData = async (req, res) => {
     const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'registerDate'] })
     if (username) user.email = 'hiddenmail@tl.hu'
 
+    // A felhasználó heti aktivitása
     const activities = await updates.findAll({ where: { userId: user.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }, include: { model: lists, attributes: ['name'] }})
     const weeklyActivies = []
     for (let i = 6; i >= 0; i--) {
@@ -264,6 +271,7 @@ export const getUserData = async (req, res) => {
       })
     }
 
+    // Felhasználó összes listája, kategóriája és karakterje
     const userLists = await lists.findAll({
       where: { userId: user.id },
       include: { model: categories, include: { model: characters, include: { model: animes } } }
@@ -271,6 +279,7 @@ export const getUserData = async (req, res) => {
     const userCategories = [].concat(...userLists.map(x => x.categories))
     const userCharacters = [].concat(...userCategories.map(x => x.characters))
 
+    // Kikeresi a legtöbbet használt karaktereket, az alapján hogy név és animeId vagy az url megegyezik
     const mostUsedCharacters = userCharacters.reduce((array, item) => {
       const character = array.find(x => (x.name === item.name && x.animeId === item.animeId) || x.url === item.url)
       if (character) character.count++
@@ -278,6 +287,7 @@ export const getUserData = async (req, res) => {
       return array
     }, []).sort((a, b) => b.count - a.count).slice(0, 10)
 
+    // Legtöbbet frissített listák
     const mostUpdatedLists = await lists.findAll({
       where: { userId: user.id },
       attributes: [
@@ -376,6 +386,7 @@ export const getUserLists = async (req, res) => {
 
 export const getSidebarLists = async (req, res) => {
   try {
+    // Sidebar-ra lekéri az utoljára frissített 10 listát
     const results = await lists.findAll({
       where: {
         userId: req.id
@@ -481,6 +492,8 @@ export const createList = async (req, res) => {
   try {
     const { name, description, status, visible } = req.body
     const list = await lists.create({ name, description, status, private: !visible, userId: req.id })
+
+    // Alapértelmezett kategóriák hozzáadása
     await categories.bulkCreate([
       { name: 'A', position: 1, color: '#880000', listId: list.id },
       { name: 'B', position: 2, color: '#888800', listId: list.id },

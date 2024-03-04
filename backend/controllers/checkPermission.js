@@ -8,6 +8,7 @@ export const isAdmin = async (req, res, next) => {
     const userId = req.id
     const listId = req.params.id
 
+    // Csak akkor lehet admin egy listához, ha az a saját listája
     const list = await lists.findOne({ where: { id: listId, userId } })
     if (!list) return res.status(403).send({ message: 'Ehhez a művelethez nincs jogosultságod!' })
 
@@ -30,6 +31,8 @@ const hasMinLevel = async (req, res, next, level) => {
 
     const list = await lists.findOne({ where: { id: listId } })
     const permission = await permissions.findOne({ where: { listId, userId } })
+
+    // Ellenőrzi, hogy megadott szintű jogosultsággal rendelkezik-e a felhasználó
     if (!list || !(list.userId === userId || (!list.private && level === 1) || (permission?.value >= level))) return res.status(403).send({ message: 'Nincs jogosultságod!' })
     
     next()
@@ -40,6 +43,7 @@ const hasMinLevel = async (req, res, next, level) => {
   }
 }
 
+// Ha kap paraméterként egy kategóriát vagy karaktert, akkor ellenőrzi, hogy az benne van-e az adott listában
 export const isInList = async (req, res, next) => {
   const { id: listId, categoryId, characterId } = req.params
   
