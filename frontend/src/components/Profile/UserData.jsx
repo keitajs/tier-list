@@ -21,8 +21,8 @@ function UserData(props) {
         <div className='flex flex-wrap items-center justify-between'>
           Státusz
           <div className='flex items-center gap-2'>
-            <div className='h-2.5 aspect-square rounded-full bg-emerald-500'></div>
-            Online
+            <div className={`h-2.5 aspect-square rounded-full ${props.user.status === 1 ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+            {props.user.status === 1 ? 'Online' : 'Offline'}
           </div>
         </div>
         <div className='flex flex-wrap items-center justify-between'>

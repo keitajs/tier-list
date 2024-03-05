@@ -253,7 +253,7 @@ export const getUserData = async (req, res) => {
   try {
     const { user: username } = req.query
 
-    const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'registerDate'] })
+    const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'status', 'registerDate'] })
     if (username) user.email = 'hiddenmail@tl.hu'
 
     // A felhasználó heti aktivitása
