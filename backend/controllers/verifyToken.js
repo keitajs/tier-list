@@ -29,3 +29,27 @@ export const verifyToken = async (req, res, next) => {
     res.sendStatus(500)
   }
 }
+
+export const verifyTokenSocket = async (socket, next) => {
+  try {
+    const token = socket.request.cookies.accessToken
+    if (!token) return socket.disconnect()
+
+    jwt.verify(token, process.env.ACCESS_SECRET, async (err, decoded) => {
+      if (err) return res.sendStatus(403)
+      const { id, username } = decoded
+      
+      // Felhasználó létezésének ellenőrzése
+      const user = await users.findOne({ where: { id: id, username: username } })
+      if (!user) return res.sendStatus(403)
+
+      // Felhasználó adatait megkapja a socket
+      socket.user = { id, username }
+      next()
+    })
+  } catch (error) {
+    if (!err) return
+    console.log(err)
+    res.sendStatus(500)
+  }
+}

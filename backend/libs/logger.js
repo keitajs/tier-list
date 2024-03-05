@@ -4,6 +4,9 @@ const logger = {
     db: (msg) => {
         console.log(`${chalk.bgCyan.bold(' SEQUELIZE ')} ${msg}`)
     },
+    socket: (msg) => {
+        console.log(`${chalk.bgHex('#FA5').bold(' SOCKET ')} ${msg}`)
+    },
     server: (msg) => {
         console.log(`${chalk.bgYellow.bold(' SERVER ')} ${msg}`)
     },
