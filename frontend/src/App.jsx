@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import socket from './socket'
 import axios from 'axios'
 import './css/App.css'
 
