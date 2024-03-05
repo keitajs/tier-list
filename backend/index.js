@@ -4,6 +4,7 @@ import cp from 'cookie-parser'
 import router from './routes/router.js'
 import logger from './libs/logger.js'
 import './libs/associations.js'
+import users from './models/user.js'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import { verifyTokenSocket } from './controllers/verifyToken.js'
@@ -36,10 +37,22 @@ io.use(verifyTokenSocket)
 
 // Socket IO
 io.on("connection", socket => {
-  logger.socket(`Socket connected :: ${socket.user.username} # ${socket.user.id}`)
+  logger.socket(`User connected :: ${socket.user.username} # ${socket.user.id}`)
 
   socket.on('disconnect', () => {
-    logger.socket(`Socket disconnected :: ${socket.user.username} # ${socket.user.id}`)
+    logger.socket(`User disconnected :: ${socket.user.username} # ${socket.user.id}`)
+
+    // 5 másodperc után ellenőrzi, hogy a felhasználó jelen van-e mint socket, ha nem akkor átállítja az adatbázisban is
+    setTimeout(() => {
+      let isOnline = false
+      io.of('/').sockets.forEach(_socket => {
+        if (socket.user.id === _socket.user.id && socket.user.username === _socket.user.username)
+          isOnline = true
+      })
+
+      if (!isOnline)
+        users.update({ status: 0 }, { where: { id: socket.user.id, username: socket.user.username } })
+    }, 5000)
   })
 })
 

@@ -43,6 +43,10 @@ export const verifyTokenSocket = async (socket, next) => {
       const user = await users.findOne({ where: { id: id, username: username } })
       if (!user) return res.sendStatus(403)
 
+      // Felhasználó online
+      user.status = 1
+      user.save()
+
       // Felhasználó adatait megkapja a socket
       socket.user = { id, username }
       next()
