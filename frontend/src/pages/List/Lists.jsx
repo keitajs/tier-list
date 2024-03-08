@@ -19,6 +19,7 @@ function Lists(props) {
   }
 
   useEffect(() => {
+    document.title = 'Listák | Tier List'
     getUserLists().catch(() => props.history('/'))
   }, [props])
 

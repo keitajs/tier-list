@@ -95,6 +95,8 @@ function TierList(props) {
     setItems([].concat(...list.categories.map(category => category.characters.map(character => { return { ...character, categoryId: `${category.id}cat`, } }))))
 
     if (permission) setPermission({ move: permission.value >= 2, edit: permission.value === 3, admin: false })
+
+    document.title = `${list.name} - Listák | Tier List`
   }
 
   useEffect(() => {

@@ -16,6 +16,7 @@ function Home(props) {
   }
 
   useEffect(() => {
+    document.title = 'Tier List'
     getLogged().catch(err => { alert('Server error'); console.log(err) })
   }, [])
 

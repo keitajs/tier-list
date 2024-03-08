@@ -25,6 +25,8 @@ function Profile(props) {
     setUser(data.user)
     setWeeklyActivies(data.weeklyActivies)
     setList(data.list)
+
+    document.title = `${data.user.username} - Felhasználók | Tier List`
   }
 
   useEffect(() => {
