@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import Index from '../components/Home/Index'
 import Login from '../components/Home/Login'
@@ -7,21 +8,44 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 function Home(props) {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [active, setActive] = useState(0)
   const [logged, setLogged] = useState(false)
-
+  
   const getLogged = async () => {
     const { data } = await axios.get('http://localhost:2000/logged')
     setLogged(data)
   }
 
   useEffect(() => {
-    document.title = 'Tier List'
     getLogged().catch(err => { alert('Server error'); console.log(err) })
-  }, [])
+
+    const loginParam = searchParams.get('login')
+    const registerParam = searchParams.get('register')
+
+    if (loginParam) return setActive(1)
+    if (registerParam) return setActive(2)
+  }, [searchParams])
 
   useEffect(() => {
     if (logged) return setActive(0)
+
+    searchParams.delete('login')
+    searchParams.delete('register')
+
+    if (active <= 0) {
+      document.title = 'Tier List'
+    }
+    else if (active === 1) {
+      document.title = 'Bejelentkezés | Tier List'
+      searchParams.append('login', 1)
+    }
+    else if (active === 2) {
+      document.title = 'Regisztráció | Tier List'
+      searchParams.append('register', 1)
+    }
+
+    setSearchParams(searchParams)
   }, [active, logged])
 
   return (
