@@ -104,6 +104,8 @@ export const Login = async (req, res) => {
 
     // accessToken létrehozás
     const accessToken = jwt.sign({ id: user.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
+    user.accessToken = accessToken
+    await user.save()
 
     res.cookie('accessToken', accessToken, { maxAge: 7*24*60*60*1000, httpOnly: true, sameSite: 'None', secure: true })
     res.send({ message: 'Sikeres bejelentkezés!' })
@@ -118,6 +120,8 @@ export const Logout = async (req, res) => {
   try {
     const accessToken = req.cookies.accessToken
     if (!accessToken) return res.status(400).send({ message: 'Nem vagy bejelentkezve!' })
+
+    await users.update({ accessToken: null }, { where: { accessToken } })
 
     res.clearCookie('accessToken')
     return res.send({ message: 'Sikeres kijelentkezés!' })
@@ -140,6 +144,7 @@ export const Logged = async (req, res) => {
       // Felhasználó létezésének ellenőrzése
       const user = await users.findOne({ where: { id: id, username: username } })
       if (!user) return res.send(false)
+      if (user.accessToken !== token) return res.send(false)
 
       res.send(true)
     })

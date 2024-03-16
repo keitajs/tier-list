@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, updateEmail, updatePassword, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
-import { verifyToken } from '../controllers/verifyToken.js'
+import { verifyToken, refreshToken } from '../controllers/verifyToken.js'
 import multer from 'multer'
 import path from 'path'
 
@@ -28,6 +28,7 @@ router.post('/login', Login)
 router.delete('/logout', Logout)
 
 router.get('/user/data', verifyToken, getUserData)
+router.get('/user/token/refresh', verifyToken, refreshToken)
 
 router.get('/user/lists', verifyToken, getUserLists)
 router.get('/user/lists/:id', verifyToken, hasAnyPermission, getUserList)
