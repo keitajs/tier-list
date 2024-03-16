@@ -46,7 +46,7 @@ function Home(props) {
     }
 
     setSearchParams(searchParams)
-  }, [active, logged])
+  }, [active, logged, searchParams, setSearchParams])
 
   return (
     <div className='w-screen h-screen flex flex-col lg:flex-row overflow-hidden'>
