@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { socket } from '../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faHome, faUser, faList, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import NavItem from './Sidebar/NavItem'
@@ -9,6 +10,7 @@ function Sidebar(props) {
   const [lists, setLists] = useState([])
 
   const Logout = () => {
+    socket.disconnect()
     axios.delete('http://localhost:2000/logout').then(() => props.history('/'))
   }
 

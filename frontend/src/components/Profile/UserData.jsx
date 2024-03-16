@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { socket } from '../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
@@ -7,6 +8,7 @@ import 'moment/locale/hu'
 
 function UserData(props) {
   const Logout = () => {
+    socket.disconnect()
     axios.delete('http://localhost:2000/logout').then(() => props.history('/'))
   }
 

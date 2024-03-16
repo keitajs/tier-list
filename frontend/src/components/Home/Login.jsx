@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-
+import { socket } from '../../socket'
 import Username from './Login/Username'
 import Password from './Login/Password'
 import SuccessMsg from '../Form/SuccessMsg'
@@ -19,7 +19,10 @@ function Login(props) {
 
     axios.post('http://localhost:2000/login', { username, password }).then(res => {
       setMsg(res.data.message)
-      setTimeout(() => props.history('/list'), 2500)
+      setTimeout(() => {
+        socket.connect()
+        props.history('/list')
+      }, 2500)
     }).catch(err => {
       const { errors } = err.response.data
 
