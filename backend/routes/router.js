@@ -63,7 +63,7 @@ router.patch('/lists/:id/characters/:characterId/update', verifyToken, hasEditPe
 router.delete('/lists/:id/characters/:characterId/remove', verifyToken, hasEditPermission, isInList, removeCharacter)
 
 // Fájl lekérés útvonalak
-router.get('/user/images/:filename', verifyToken, getAvatarImage)
-router.get('/characters/images/:filename', verifyToken, getCharacterImage)
+router.get('/user/images/:filename', getAvatarImage)
+router.get('/characters/images/:filename', getCharacterImage)
 
 export default router
