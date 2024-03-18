@@ -22,6 +22,8 @@ function Profile(props) {
 
   const getUserData = async (username) => {
     const { data } = await axios.get(`http://localhost:2000/user/data${username ? `?user=${username}` : ''}`)
+    await axios.get('http://localhost:2000/user/token/refresh')
+    
     setUser(data.user)
     setWeeklyActivies(data.weeklyActivies)
     setList(data.list)

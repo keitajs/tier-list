@@ -89,6 +89,7 @@ function TierList(props) {
 
   const getTierList = async (id) => {
     const { data: { list, permission } } = await axios.get(`http://localhost:2000/user/lists/${id}`)
+    await axios.get('http://localhost:2000/user/token/refresh')
 
     setTitle(list.name)
     setCategories(list.categories.map(category => { return { id: `${category.id}cat`, name: category.name, color: category.color } }))

@@ -15,6 +15,7 @@ function Lists(props) {
 
   const getUserLists = async () => {
     const { data } = await axios.get('http://localhost:2000/user/lists')
+    await axios.get('http://localhost:2000/user/token/refresh')
     setLists(data)
   }
 
