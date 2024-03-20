@@ -678,11 +678,11 @@ export const createCharacter = async (req, res) => {
     const { title, url: animeUrl } = JSON.parse(req.body.anime)
     const image = req.file || req.body.image
 
-    // Lekéri a lista egyetlen pozíció nélküli kategóriáját, a pozícióját, az animét, majd a kapott adatokkal létrehozza a karaktert
+    // Lekéri a lista egyetlen pozíció nélküli kategóriáját, a karakter pozícióját, az animét (ha van), majd a kapott adatokkal létrehozza a karaktert
     // Az 'image' lehet URL vagy lementett kép, ezért az alapján mit kapott lementi azt
     const category = await categories.findOne({ where: { position: null, listId } })
     const position = (await characters.findAndCountAll({ where: { categoryId: category.id } })).count + 1
-    const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
+    const anime = title ? await animes.findOrCreate({ where: { title, url: animeUrl } }) : [ { id: null } ]
     const character = await characters.create({ name, position, url: characterUrl, image: image?.filename || image, categoryId: category.id, animeId: anime[0].id })
     const result = await characters.findOne({ where: { id: character.id }, include: { model: animes, required: false } })
 
@@ -737,7 +737,7 @@ export const updateCharacter = async (req, res) => {
     const image = req.file || req.body.image
 
     // Az 'image' lehet URL vagy lementett kép, ezért az alapján mit kapott lementi azt
-    const anime = await animes.findOrCreate({ where: { title, url: animeUrl } })
+    const anime = title ? await animes.findOrCreate({ where: { title, url: animeUrl } }) : [ { id: null } ]
     await characters.update({ name, url: characterUrl, image: image?.filename || image, animeId: anime[0].id }, { where: { id: characterId } })
 
     await updateActivity(req.id, listId)

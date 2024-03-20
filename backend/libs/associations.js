@@ -40,7 +40,7 @@ import updates from '../models/update.js'
     characters.belongsTo(categories)
 
     // Animek - Karakterek | 1:M
-    animes.hasMany(characters, { foreignKey: { name: 'animeId', allowNull: false }, onDelete: 'CASCADE' })
+    animes.hasMany(characters, { foreignKey: { name: 'animeId', allowNull: true }, onDelete: 'CASCADE' })
     characters.belongsTo(animes)
 
     await checkDatabase()
