@@ -5,10 +5,10 @@ import { faSave, faTrash, faXmark, faFileArrowUp, faFileExcel } from '@fortaweso
 
 function UpdateCharacter(props) {
   const [name, setName] = useState(props.character.name)
-  const [url, setUrl] = useState(props.character.url)
+  const [url, setUrl] = useState(props.character?.url ? props.character.url : '')
   const [image, setImage] = useState(props.character.img.startsWith('http') ? props.character.img : `http://localhost:2000/characters/images/${props.character.img}`)
-  const [title, setTitle] = useState(props.anime.title)
-  const [animeUrl, setAnimeUrl] = useState(props.anime.url)
+  const [title, setTitle] = useState(props?.anime?.title ? props.anime.title : '')
+  const [animeUrl, setAnimeUrl] = useState(props?.anime?.url ? props.anime.url : '')
   const [active, setActive] = useState(true)
   const [file, setFile] = useState('')
   const fileInput = useRef(null)
@@ -71,6 +71,7 @@ function UpdateCharacter(props) {
     const key = keys[0]
     const value = object[key]
 
+    if (options?.allowEmpty && !value) return setErrors(errors => { return {...errors, [key]: '' } })
     if (!value) return setErrors(errors => { return {...errors, [key]: 'Üres mező!' } })
     if (options?.url) try { new URL(value) } catch { return setErrors(errors => { return {...errors, [key]: 'Nem megfelelő URL formátum!' } })}
     setErrors(errors => { return {...errors, [key]: '' } })
@@ -87,10 +88,9 @@ function UpdateCharacter(props) {
   }
 
   useEffect(() => handleErrors({ name }), [name])
-  useEffect(() => handleErrors({ url }, { url: true }), [url])
+  useEffect(() => handleErrors({ url }, { url: true, allowEmpty: true }), [url])
   useEffect(() => handleErrors({ image }), [image])
-  useEffect(() => handleErrors({ title }), [title])
-  useEffect(() => handleErrors({ animeUrl }, { url: true }), [animeUrl])
+  useEffect(() => handleErrors({ animeUrl }, { url: true, allowEmpty: true }), [animeUrl])
 
   return (
     <div className='flex flex-col justify-between h-full py-0.5'>
@@ -98,12 +98,12 @@ function UpdateCharacter(props) {
         {active ? 
         <div className='flex flex-col gap-1'>
           <div className='relative flex flex-col w-5/6'>
-            <input type="text" value={name} onChange={e => setName(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <input type="text" value={name} placeholder='Név' onChange={e => setName(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
             <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.name ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
           <div className='relative flex flex-col w-5/6'>
-            <input type="text" value={url} onChange={e => setUrl(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <input type="text" value={url} placeholder='URL' onChange={e => setUrl(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
             <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.url ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
@@ -111,7 +111,7 @@ function UpdateCharacter(props) {
             <div className='relative flex items-center'>
               <img src={file ? URL.createObjectURL(image) : image} onLoad={onImageLoad} onError={onImageError} alt="" className='hidden' />
 
-              <input type="text" value={file ? image.name : image} onChange={e => setImage(e.target.value)} disabled={file} className='w-full px-2 py-0.5 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+              <input type="text" value={file ? image.name : image} placeholder='Kép' onChange={e => setImage(e.target.value)} disabled={file} className='w-full px-2 py-0.5 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
               <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
               
               <div className={`absolute top-0 bottom-0 right-8 flex items-center text-xl text-rose-600 ${errors.image ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
@@ -127,12 +127,12 @@ function UpdateCharacter(props) {
         : 
         <div className='flex flex-col gap-1'>
           <div className='relative flex flex-col w-5/6'>
-            <input type="text" value={title} onChange={e => setTitle(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <input type="text" value={title} placeholder='Cím' onChange={e => setTitle(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
             <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.title ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
           <div className='relative flex flex-col w-5/6'>
-            <input type="text" value={animeUrl} onChange={e => setAnimeUrl(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
+            <input type="text" value={animeUrl} placeholder='URL' onChange={e => setAnimeUrl(e.target.value)} className='w-full px-2 py-0.5 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
             <div className={`absolute top-0 bottom-0 right-2 flex items-center text-xl text-rose-600 ${errors.animeUrl ? 'opacity-100' : 'opacity-0'} transition-opacity`}><FontAwesomeIcon icon={faXmark} /></div>
           </div>
 
