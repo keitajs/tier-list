@@ -21,8 +21,8 @@ function Profile(props) {
   const [edit, setEdit] = useState(null)
 
   const getUserData = async (username) => {
-    const { data } = await axios.get(`http://localhost:2000/user/data${username ? `?user=${username}` : ''}`)
     await axios.get('http://localhost:2000/user/token/refresh')
+    const { data } = await axios.get(`http://localhost:2000/user/data${username ? `?user=${username}` : ''}`)
     
     setUser(data.user)
     setWeeklyActivies(data.weeklyActivies)

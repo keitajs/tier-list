@@ -18,12 +18,14 @@ function OtherLists(props) {
   }
 
   useEffect(() => {
+    if (!props.loaded) return
+
     setQuery('')
-    getLists(shared).catch(() => {})
-  }, [shared])
+    getLists(shared).catch((e) => console.log(e))
+  }, [shared, props.loaded])
 
   useEffect(() => {
-    if (!shared) getLists(shared, queryValue.toLowerCase().trim()).catch(() => {})
+    if (!shared) getLists(shared, queryValue.toLowerCase().trim()).catch((e) => console.log(e))
   }, [shared, queryValue])
 
   return (

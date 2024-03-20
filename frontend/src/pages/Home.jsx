@@ -19,8 +19,10 @@ function Home(props) {
   }
 
   useEffect(() => {
-    getLogged().catch(err => { alert('Server error'); console.log(err) })
+    getLogged().catch(() => setLogged(false))
+  }, [])
 
+  useEffect(() => {
     const loginParam = searchParams.get('login')
     const registerParam = searchParams.get('register')
 
@@ -29,12 +31,12 @@ function Home(props) {
   }, [searchParams])
 
   useEffect(() => {
-    if (logged) return setActive(0)
+    if (logged) setActive(0)
 
     searchParams.delete('login')
     searchParams.delete('register')
 
-    if (active <= 0) {
+    if (logged || active <= 0) {
       document.title = 'Tier List'
     }
     else if (active === 1) {
