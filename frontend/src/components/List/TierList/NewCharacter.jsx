@@ -41,12 +41,14 @@ function NewCharacter(props) {
 
   const fillInputs = async (id) => {
     const { data } = await (await fetch(`https://api.jikan.moe/v4/characters/${id}/full`)).json()
+    const anime = data.anime.find(anime => anime.role === 'Main')?.anime || data.anime[0]?.anime || data.manga.find(manga => manga.role === 'Main')?.manga || data.manga[0]?.manga || { title: '', url: '' }
+
     setName(data.name)
     setUrl(data.url)
     setImage(data.images.jpg.image_url)
     setFile('')
-    setTitle(data.anime[0].anime.title)
-    setAnimeUrl(data.anime[0].anime.url)
+    setTitle(anime.title)
+    setAnimeUrl(anime.url)
     setQuery('')
     setResults([])
   }
