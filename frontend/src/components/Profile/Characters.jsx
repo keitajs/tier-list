@@ -63,11 +63,13 @@ function Characters(props) {
                   {character.name}
                   <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='hidden lg:inline h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
                 </Link>
-                <Link to={character.anime.url} target='_blank' className='group truncate flex items-center gap-1.5 w-full lg:w-max ml-2 mb-2 opacity-50 hover:opacity-75 transition-opacity'>
-                  {character.anime.title}
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='hidden lg:inline h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
-                </Link>
-                <div className='w-[95%]'>
+                {character.anime ?
+                  <Link to={character.anime.url} target='_blank' className='group truncate flex items-center gap-1.5 w-full lg:w-max ml-2 opacity-50 hover:opacity-75 transition-opacity'>
+                    {character.anime.title}
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} className='hidden lg:inline h-2.5 opacity-0 group-hover:opacity-50 -translate-x-3 group-hover:translate-x-0 transition-all' />
+                  </Link>
+                : <></>}
+                <div className='w-[95%] mt-2'>
                   <div className='relative h-6 lg:h-8 rounded-e-md lg:rounded-e-xl bg-blue-500' style={{width: `${character.count/maxCount*100}%`}}>
                     <div className='absolute -right-5'>{character.count}</div>
                   </div>
@@ -77,7 +79,6 @@ function Characters(props) {
           )}
         </div>
       : <div className='flex items-center justify-center h-20 pt-4 opacity-50'>Nincs betölthető karakter</div>}
-      
     </div>
   )
 }
