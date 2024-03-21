@@ -198,6 +198,17 @@ export const updateAvatar = async (req, res) => {
   }
 }
 
+export const deleteAvatar = async (req, res) => {
+  try {
+    await users.update({ avatar: 'dummy.png' }, { where: { id: req.id } })
+    res.send({ message: 'Sikeres profilkép törlés!', file: 'dummy.png' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
 export const updateEmail = async (req, res) => {
   try {
     const { email, password } = req.body

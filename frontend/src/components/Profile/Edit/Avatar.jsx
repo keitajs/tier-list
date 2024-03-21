@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faFileArrowUp, faFileExcel } from '@fortawesome/free-solid-svg-icons'
+import { faFileArrowUp, faFileExcel, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 function Avatar(props) {
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
   const fileInput = useRef(null)
 
-  const update = async() => {
+  const update = async () => {
     if (!file || !image) return
 
     try {
@@ -20,7 +20,23 @@ function Avatar(props) {
       props.setEdit(null)
       props.setUser(user => {
         user.avatar = data.file
-        return user
+        return { ...user }
+      })
+    } catch (err) {
+      if (err?.response?.data?.message) return alert(err.response.data.message)
+      alert('Server error')
+      console.log(err)
+    }
+  }
+
+  const remove = async () => {
+    try {
+      const { data } = await axios.delete('http://localhost:2000/user/avatar')
+      
+      props.setEdit(null)
+      props.setUser(user => {
+        user.avatar = data.file
+        return { ...user }
       })
     } catch (err) {
       if (err?.response?.data?.message) return alert(err.response.data.message)
@@ -56,10 +72,14 @@ function Avatar(props) {
           <img src={file ? URL.createObjectURL(image) : image} alt="" className={`w-full h-full object-cover ${!image ? 'opacity-0' : 'opacity-100'}`} />
         </div>
 
-        <div className='flex flex-col text-lg mt-2.5'>
+        <div className='flex flex-col gap-2 text-lg mt-2.5'>
           <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
           <button onClick={fileUpload} className='flex items-center justify-between gap-3 px-2.5 py-0.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
             Feltöltés <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
+          </button>
+
+          <button onClick={remove} className='flex items-center justify-between gap-3 px-2.5 py-0.5 rounded-lg bg-neutral-700 hover:bg-rose-700 transition-colors'>
+            Törlés <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
 
