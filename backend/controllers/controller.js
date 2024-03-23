@@ -123,7 +123,7 @@ export const Logout = async (req, res) => {
 
     await users.update({ accessToken: null }, { where: { accessToken } })
 
-    res.clearCookie('accessToken')
+    res.clearCookie('accessToken', { sameSite: 'None', secure: true })
     return res.send({ message: 'Sikeres kijelentkezés!' })
   } catch (err) {
     if (!err) return

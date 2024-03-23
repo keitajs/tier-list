@@ -58,7 +58,7 @@ export const verifyTokenSocket = async (socket, next) => {
 
       // Felhasználó online
       user.status = 1
-      user.save()
+      await user.save()
 
       // Felhasználó adatait megkapja a socket
       socket.user = { id, username }
@@ -67,6 +67,6 @@ export const verifyTokenSocket = async (socket, next) => {
   } catch (error) {
     if (!err) return
     console.log(err)
-    res.sendStatus(500)
+    socket.disconnect()
   }
 }
