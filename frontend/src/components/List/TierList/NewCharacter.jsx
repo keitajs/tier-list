@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import { Tooltip } from 'react-tooltip'
 import { useDebounce } from 'use-debounce'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFileArrowUp, faFileExcel, faCheck, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -150,7 +151,7 @@ function NewCharacter(props) {
           <div className='flex flex-col gap-4'>
             <div className='relative flex flex-col gap-2 rounded-xl p-2.5 pt-2 pr-32 text-lg bg-neutral-900/35'>
               <div className='flex flex-col'>
-                <label htmlFor="name" className='ml-1'>Név <span className='text-base ml-0.5 text-rose-600'>{errors.name}</span></label>
+                <label htmlFor="name" className='ml-1'>Név <span id='required' className='text-rose-600'>*</span> <span className='text-base ml-0.5 text-rose-600'>{errors.name}</span></label>
                 <div className='relative'>
                   <input type="text" value={name} maxLength={256} onChange={e => setName(e.target.value)} name='name' id='name' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
                   <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.name ? faXmark : faCheck} className={errors.name ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
@@ -166,7 +167,7 @@ function NewCharacter(props) {
               </div>
 
               <div className='flex flex-col'>
-                <label htmlFor="image" className='ml-1'>Kép <span className='text-base ml-0.5 text-rose-600'>{errors.image}</span></label>
+                <label htmlFor="image" className='ml-1'>Kép <span id='required' className='text-rose-600'>*</span> <span className='text-base ml-0.5 text-rose-600'>{errors.image}</span></label>
                 <div className='relative flex items-center'>
                   <input type="text" value={file ? image.name : image} maxLength={512} onChange={e => setImage(e.target.value)} disabled={file} name='image' id='image' className='w-72 px-2 py-1 pr-9 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
                   <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
@@ -198,6 +199,8 @@ function NewCharacter(props) {
 
               <div className='absolute right-0 top-0 bottom-0 w-8 flex items-center justify-center tracking-wider'><div className='rotate-90'>Anime</div></div>
             </div>
+
+            <Tooltip anchorSelect='#required' place='right' className='!text-sm !rounded-lg !bg-neutral-950'>Kötelező mező</Tooltip>
           </div>
         </div>
       </div>
