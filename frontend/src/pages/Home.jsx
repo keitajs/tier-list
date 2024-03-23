@@ -14,7 +14,6 @@ function Home(props) {
   
   const getLogged = async () => {
     const { data } = await axios.get('http://localhost:2000/logged')
-    if (data) await axios.get('http://localhost:2000/user/token/refresh')
     setLogged(data)
   }
 

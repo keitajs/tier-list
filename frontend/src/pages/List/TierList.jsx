@@ -88,7 +88,6 @@ function TierList(props) {
   }
 
   const getTierList = async (id) => {
-    await axios.get('http://localhost:2000/user/token/refresh')
     const { data: { list, permission } } = await axios.get(`http://localhost:2000/user/lists/${id}`)
 
     setTitle(list.name)
