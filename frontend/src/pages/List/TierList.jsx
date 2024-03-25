@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import axios from 'axios'
+import { socket } from '../../socket'
 import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle, faRotateRight, faShare } from '@fortawesome/free-solid-svg-icons'
@@ -29,7 +30,10 @@ function TierList(props) {
 
   const onDragStart = ({ active }) => {
     if (!permission.move) return
-    if (active.data.current?.type === "Item") return setActiveItem(active.data.current.item)
+    if (active.data.current?.type === "Item") {
+      socket.emit('character-move-start', active.id)
+      return setActiveItem(active.data.current.item)
+    }
     if (active.data.current?.type === "Category") return setActiveCategory(active.data.current.category)
   }
 
@@ -72,7 +76,10 @@ function TierList(props) {
       const activeItem = items.find(item => item.id === active.id)
       const firstItem = items.find(item => activeItem.categoryId === item.categoryId)
       const position = items.findIndex(item => item.id === activeItem.id) - items.findIndex(item => item.id === firstItem.id) + 1
-      return axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId: parseInt(activeItem.categoryId) })
+      const categoryId = parseInt(activeItem.categoryId)
+
+      socket.emit('character-move-end', active.id, categoryId, position)
+      return axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId })
     }
 
     if (active.data.current?.type === "Category") {
@@ -99,10 +106,44 @@ function TierList(props) {
     document.title = `${list.name} - Listák | Tier List`
   }
 
+  const joinListRoom = async (id) => {
+    if (!socket.connected) socket.connect()
+
+    socket.emit('list-join', id)
+  }
+
   useEffect(() => {
     if (props.selectedList === null) return props.history('/list')
 
     getTierList(props.selectedList).catch(err => props.history('/list'))
+    joinListRoom(props.selectedList)
+
+    const characterMoveStart = (id, user) => {
+      setItems(items => {
+        const character = items.find(item => item.id === id)
+        character.move = true
+        character.user = user
+        return [...items]
+      })
+    }
+
+    const characterMoveEnd = (id, category, position) => {
+      setItems((items) => {
+        const activeIndex = items.findIndex(item => item.id === id)
+        const catItemIndex = items.findIndex(item => item.categoryId === `${category}cat`)
+        items[activeIndex].move = false
+        items[activeIndex].categoryId = `${category}cat`
+        return arrayMove(items, activeIndex, catItemIndex === -1 ? items.length : catItemIndex + position - 1)
+      })
+    }
+
+    socket.on('character-move-start', characterMoveStart)
+    socket.on('character-move-end', characterMoveEnd)
+
+    return () => {
+      socket.off('character-move-start', characterMoveStart)
+      socket.off('character-move-end', characterMoveEnd)
+    }
   }, [props, props.selectedList])
 
   return (

@@ -18,7 +18,7 @@ function Characters(props) {
     <div ref={setNodeRef} className='flex bg-neutral-900/85 rounded-2xl'>
       <div className='flex flex-wrap w-full lg:min-h-32 md:min-h-28 min-h-24'>
         <SortableContext items={itemIds} strategy={horizontalListSortingStrategy}>
-          {props.items.map(item => <Item key={item.id} permission={props.permission} id={item.id} character={{ id: item.id, name: item.name, url: item.url, img: item.image }} anime={item?.anime} selectedList={props.selectedList} setItems={props.setItems} />)}
+          {props.items.map(item => <Item key={item.id} permission={props.permission} id={item.id} character={item} anime={item?.anime} selectedList={props.selectedList} setItems={props.setItems} />)}
         </SortableContext>
         {props.permission?.edit ?
           <button onClick={() => setCreate(true)} className='group flex flex-col items-center justify-center lg:h-32 md:h-28 h-24 aspect-[3/4] ml-0.5 rounded-2xl border-2 border-neutral-900 hover:border-neutral-400 bg-neutral-900 transition-all'>

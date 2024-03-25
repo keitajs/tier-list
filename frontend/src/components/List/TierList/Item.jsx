@@ -5,7 +5,7 @@ import { isMobile } from 'react-device-detect'
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLink, faArrowUpRightFromSquare, faEdit, faClose } from '@fortawesome/free-solid-svg-icons'
+import { faLink, faArrowUpRightFromSquare, faEdit, faClose, faUpDownLeftRight } from '@fortawesome/free-solid-svg-icons'
 import UpdateCharacter from './UpdateCharacter'
 
 function Item(props) {
@@ -26,9 +26,15 @@ function Item(props) {
   }
 
   return (
-    <div ref={props.permission?.move ? setNodeRef : null} className='flex rounded-2xl overflow-hidden' style={style}>
-      <div {...attributes} {...listeners} onClick={() => openItem('onclick')} onContextMenu={() => openItem('context')} className={`flex items-center justify-center lg:h-32 md:h-28 h-24 aspect-[3/4] ml-0.5 bg-neutral-700/15 overflow-hidden relative after:content-[""] after:absolute after:inset-0 after:rounded-2xl after:border-2 after:border-transparent hover:after:border-neutral-400 after:transition-all ${props.permission?.move && isDragging ? 'cursor-grabbing opacity-50' : 'cursor-grab'} ${opened || isDragging ? 'hover:after:border-transparent rounded-s-2xl' : 'rounded-2xl'} transition-all`}>
-        <img src={props.character.img.startsWith('http') ? props.character.img : `http://localhost:2000/characters/images/${props.character.img}`} alt="" className='w-full h-full object-cover' />
+    <div ref={props.permission?.move && !props.character.move ? setNodeRef : null} className='relative flex rounded-2xl overflow-hidden' style={style}>
+      {props.character.move ?
+      <div className='absolute inset-0 flex flex-col items-center justify-center z-20 bg-black/75'>
+        <FontAwesomeIcon icon={faUpDownLeftRight} className='h-3/5 opacity-25' />
+        <p className='absolute text-center text-xs px-1 py-0.5'>Mozgatás <span className='text-blue-400'>{props.character.user.username}</span> által</p>
+      </div>
+      : <></>}
+      <div {...attributes} {...listeners} onClick={() => openItem('onclick')} onContextMenu={() => openItem('context')} className={`flex items-center justify-center lg:h-32 md:h-28 h-24 aspect-[3/4] ml-0.5 bg-neutral-700/15 overflow-hidden relative after:content-[""] after:absolute after:inset-0 after:rounded-2xl after:border-2 after:border-transparent hover:after:border-neutral-400 after:transition-all ${props.permission?.move && !props.character.move && isDragging ? 'cursor-grabbing opacity-50' : 'cursor-grab'} ${opened || isDragging ? 'hover:after:border-transparent rounded-s-2xl' : 'rounded-2xl'} ${props.character.move ? 'grayscale' : ''} transition-all`}>
+        <img src={props.character.image.startsWith('http') ? props.character.image : `http://localhost:2000/characters/images/${props.character.image}`} alt="" className='w-full h-full object-cover' />
       </div>
       <div className={`relative flex flex-col justify-between select-text ${opened ? 'w-64 px-2' : 'w-0 px-0'} lg:h-32 md:h-28 h-24 py-1 bg-neutral-700/60 rounded-e-2xl transition-all overflow-hidden`}>
         {edit ? <UpdateCharacter id={props.id} character={props.character} anime={props?.anime} setEdit={setEdit} setItems={props.setItems} selectedList={props.selectedList} /> : <>
@@ -46,7 +52,7 @@ function Item(props) {
               {props?.anime?.url ? <Link id={`anime-${props.anime.id}`} to={props.anime.url} target='_blank' className='opacity-50 hover:opacity-75 transition-opacity'><FontAwesomeIcon icon={faLink} /></Link> : <></>}
             </div>
 
-            {props.permission?.edit ?<button onClick={() => setEdit(true)} id={`edit-${props.character.id}`} className='opacity-25 hover:opacity-50 transition-opacity'><FontAwesomeIcon icon={faEdit} className='h-4' /></button>: <></>}
+            {props.permission?.edit ? <button onClick={() => setEdit(true)} id={`edit-${props.character.id}`} className='opacity-25 hover:opacity-50 transition-opacity'><FontAwesomeIcon icon={faEdit} className='h-4' /></button>: <></>}
           </div>
 
           {props?.character?.url ? <Tooltip anchorSelect={`#character-${props.character.id}`} place='top-start' className='!px-2 !py-1 !text-sm !rounded-lg !bg-neutral-950'>Karakter</Tooltip> : <></>}
