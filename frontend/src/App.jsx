@@ -30,7 +30,7 @@ function App() {
   return (
     <div className='text-white bg-neutral-800 min-h-screen'>
       {logged === null ?
-        <div className='flex gap-4 items-center justify-center w-screen h-screen text-xl'>
+        <div className='flex gap-4 items-center justify-center w-svw h-svh text-xl'>
           <div className='w-7 h-7 border-2 border-transparent border-x-white rounded-full animate-spin'></div>
           Betöltés...
         </div>
