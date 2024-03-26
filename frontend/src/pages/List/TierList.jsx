@@ -118,6 +118,28 @@ function TierList(props) {
     getTierList(props.selectedList).catch(err => props.history('/list'))
     joinListRoom(props.selectedList)
 
+    const characterCreate = (data) => {
+      setItems(items => [...items, data])
+    }
+
+    const characterUpdate = (data) => {
+      setItems(items => {
+        const item = items.find(x => x.id === data.id)
+        item.name = data.name
+        item.url = data.url
+        item.image = data.image
+        item.anime = data.anime
+        return items.slice()
+      })
+    }
+
+    const characterDelete = (id) => {
+      setItems(items => {
+        items.splice(items.findIndex(item => item.id === id), 1)
+        return items.slice()
+      })
+    }
+
     const characterMoveStart = (id, user) => {
       setItems(items => {
         const character = items.find(item => item.id === id)
@@ -137,10 +159,16 @@ function TierList(props) {
       })
     }
 
+    socket.on('character-create', characterCreate)
+    socket.on('character-update', characterUpdate)
+    socket.on('character-delete', characterDelete)
     socket.on('character-move-start', characterMoveStart)
     socket.on('character-move-end', characterMoveEnd)
 
     return () => {
+      socket.off('character-create', characterCreate)
+      socket.off('character-update', characterUpdate)
+      socket.off('character-delete', characterDelete)
       socket.off('character-move-start', characterMoveStart)
       socket.off('character-move-end', characterMoveEnd)
     }

@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
+import { socket } from '../../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrash, faXmark, faFileArrowUp, faFileExcel } from '@fortawesome/free-solid-svg-icons'
 
 function UpdateCharacter(props) {
   const [name, setName] = useState(props.character.name)
   const [url, setUrl] = useState(props.character?.url ? props.character.url : '')
-  const [image, setImage] = useState(props.character.img.startsWith('http') ? props.character.img : `http://localhost:2000/characters/images/${props.character.img}`)
+  const [image, setImage] = useState(props.character.image.startsWith('http') ? props.character.image : `http://localhost:2000/characters/images/${props.character.image}`)
   const [title, setTitle] = useState(props?.anime?.title ? props.anime.title : '')
   const [animeUrl, setAnimeUrl] = useState(props?.anime?.url ? props.anime.url : '')
   const [active, setActive] = useState(true)
@@ -35,6 +36,8 @@ function UpdateCharacter(props) {
         return items.slice()
       })
       props.setEdit(false)
+
+      socket.emit('character-update', { id: props.id, name, url, ...data })
     } catch (err) {
       if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')
@@ -50,6 +53,8 @@ function UpdateCharacter(props) {
         items.splice(items.findIndex(item => item.id === props.id), 1)
         return items.slice()
       })
+
+      socket.emit('character-delete', props.id)
     } catch (err) {
       if (err.response.data.message) return alert(err.response.data.message)
       alert('Server error')

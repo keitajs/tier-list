@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import { socket } from '../../../socket'
 import { Tooltip } from 'react-tooltip'
 import { useDebounce } from 'use-debounce'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -33,6 +34,8 @@ function NewCharacter(props) {
       data.categoryId = props.id
       props.setItems(items => [...items, data])
       props.setShow(false)
+
+      socket.emit('character-create', data)
     } catch (err) {
       if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')

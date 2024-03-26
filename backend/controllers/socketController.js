@@ -20,9 +20,26 @@ export const listEvents = (io, socket) => {
 
 // Karakter
 export const characterEvents = (io, socket) => {
-  socket.on('character-create', () => {})
-  socket.on('character-update', () => {})
-  socket.on('character-delete', (characterId) => {})
+  socket.on('character-create', (character) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('character-create', character)
+  })
+
+  socket.on('character-update', (character) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('character-update', character)
+  })
+  
+  socket.on('character-delete', (characterId) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('character-delete', characterId)
+  })
 
   socket.on('character-move-start', (characterId) => {
     const roomName = socket.getListRoom()
