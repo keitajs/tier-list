@@ -13,6 +13,8 @@ import Item from '../../components/List/TierList/Item'
 import NewCategory from '../../components/List/TierList/NewCategory'
 
 function TierList(props) {
+  const [socketUsers, setSocketUsers] = useState([])
+
   const [title, setTitle] = useState('Betöltés...')
   const [items, setItems] = useState([])
   const [categories, setCategories] = useState([])
@@ -118,6 +120,14 @@ function TierList(props) {
     getTierList(props.selectedList).catch(err => props.history('/list'))
     joinListRoom(props.selectedList)
 
+    const userJoin = (user) => {
+      setSocketUsers(socketUsers => socketUsers.concat(user))
+    }
+
+    const userLeave = (socketId) => {
+      setSocketUsers(socketUsers => socketUsers.filter(user => user.socketId !== socketId))
+    }
+
     const characterCreate = (data) => {
       setItems(items => [...items, data])
     }
@@ -159,6 +169,8 @@ function TierList(props) {
       })
     }
 
+    socket.on('user-join', userJoin)
+    socket.on('user-leave', userLeave)
     socket.on('character-create', characterCreate)
     socket.on('character-update', characterUpdate)
     socket.on('character-delete', characterDelete)
@@ -166,6 +178,8 @@ function TierList(props) {
     socket.on('character-move-end', characterMoveEnd)
 
     return () => {
+      socket.off('user-join', userJoin)
+      socket.off('user-leave', userLeave)
       socket.off('character-create', characterCreate)
       socket.off('character-update', characterUpdate)
       socket.off('character-delete', characterDelete)
@@ -176,7 +190,7 @@ function TierList(props) {
 
   return (
     <div className='select-none w-full mx-auto'>
-      <h1 className='flex items-center justify-between mb-8 px-3 pb-2 text-2xl border-b-2 border-blue-500'>
+      <h1 className='flex items-center justify-between mb-1.5 px-3 pb-2 text-2xl border-b-2 border-blue-500'>
         {title}
         <div className='flex items-center gap-3'>
           <FontAwesomeIcon id='reload' icon={faRotateRight} className='cursor-pointer h-5 opacity-50 hover:opacity-75 transition-opacity' onClick={() => props.history(`/list?id=${props.selectedList}`)} />
@@ -185,6 +199,8 @@ function TierList(props) {
           <Tooltip anchorSelect='#share' place='bottom-end' className='!text-sm !rounded-lg !bg-neutral-950'>Megosztás</Tooltip>
         </div>
       </h1>
+
+      <h3 className='flex items-center gap-2 flex-wrap mx-2 mb-8 opacity-80'>{socketUsers.map(user => <span key={user.id} className='flex items-end'>{user.username}<span className='opacity-40 text-xs'>#{user.id}</span></span>)}</h3>
 
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>

@@ -1,20 +1,27 @@
 // Lista
 export const listEvents = (io, socket) => {
-  socket.on('list-join', (listId) => {
+  socket.on('list-join', async (listId) => {
     if (socket.getListRoom()) return
     const roomName = `list-${listId}`
     
-    console.log(socket.user.username + ' joined room ' + roomName)
     socket.join(roomName)
+
+    const users = (await io.in(roomName).fetchSockets()).map(roomSocket => { return { socketId: roomSocket.id, ...roomSocket.user } }).filter(user => user.socketId !== socket.id)
+    socket.emit('user-join', users)
     socket.broadcast.to(roomName).emit('user-join', socket.user)
   })
 
-  socket.on('list-leave', () => {
+  socket.on('list-leave', async () => {
     const roomName = socket.getListRoom()
     if (!roomName) return
 
     socket.leave(roomName)
-    socket.broadcast.to(roomName).emit('user-leave', socket.user)
+    socket.broadcast.to(roomName).emit('user-leave', socket.id)
+  })
+
+  io.of("/").adapter.on('leave-room', async (room, id) => {
+    if (!room.startsWith('list')) return
+    socket.broadcast.to(room).emit('user-leave', id)
   })
 }
 
