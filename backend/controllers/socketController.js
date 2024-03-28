@@ -1,3 +1,5 @@
+import logger from '../libs/logger.js'
+
 // Lista
 export const listEvents = (io, socket) => {
   socket.on('list-join', async (listId) => {
@@ -5,10 +7,12 @@ export const listEvents = (io, socket) => {
     const roomName = `list-${listId}`
     
     socket.join(roomName)
-
-    const users = (await io.in(roomName).fetchSockets()).map(roomSocket => { return { socketId: roomSocket.id, ...roomSocket.user } }).filter(user => user.socketId !== socket.id)
+    
+    const users = (await io.in(roomName).fetchSockets()).map(roomSocket => roomSocket.user).filter(user => user.id !== socket.user.id)
     socket.emit('user-join', users)
     socket.broadcast.to(roomName).emit('user-join', socket.user)
+
+    logger.socket(`${socket.user.username} joined to room ${roomName}`)
   })
 
   socket.on('list-leave', async () => {
@@ -16,12 +20,6 @@ export const listEvents = (io, socket) => {
     if (!roomName) return
 
     socket.leave(roomName)
-    socket.broadcast.to(roomName).emit('user-leave', socket.id)
-  })
-
-  io.of("/").adapter.on('leave-room', async (room, id) => {
-    if (!room.startsWith('list')) return
-    socket.broadcast.to(room).emit('user-leave', id)
   })
 }
 
@@ -65,9 +63,38 @@ export const characterEvents = (io, socket) => {
 
 // Kategória
 export const categoryEvents = (io, socket) => {
-  socket.on('category-create', () => {})
-  socket.on('category-update', () => {})
-  socket.on('category-delete', () => {})
-  socket.on('category-move-start', () => {})
-  socket.on('category-move-end', () => {})
+  socket.on('category-create', (category) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('category-create', category)
+  })
+
+  socket.on('category-update', (category) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+  
+    socket.broadcast.to(roomName).emit('category-update', category)
+  })
+
+  socket.on('category-delete', (categoryId) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('category-delete', categoryId)
+  })
+
+  socket.on('category-move-start', (categoryId) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('category-move-start', categoryId, socket.user)
+  })
+
+  socket.on('category-move-end', (categoryId, position) => {
+    const roomName = socket.getListRoom()
+    if (!roomName) return
+
+    socket.broadcast.to(roomName).emit('category-move-end', categoryId, position)
+  })
 }

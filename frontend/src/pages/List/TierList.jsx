@@ -36,7 +36,10 @@ function TierList(props) {
       socket.emit('character-move-start', active.id)
       return setActiveItem(active.data.current.item)
     }
-    if (active.data.current?.type === "Category") return setActiveCategory(active.data.current.category)
+    if (active.data.current?.type === "Category") {
+      socket.emit('category-move-start', active.id)
+      return setActiveCategory(active.data.current.category)
+    }
   }
 
   const onDragOver = ({ active, over }) => {
@@ -85,12 +88,14 @@ function TierList(props) {
     }
 
     if (active.data.current?.type === "Category") {
-      if (active.id === over.id) return
+      if (active.id === over.id) return socket.emit('category-move-end', active.id, false)
       
       return setCategories((categories) => {
         const activeIndex = categories.findIndex(category => category.id === active.id)
         const overIndex = categories.findIndex(category => category.id === over.id)
         axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex })
+
+        socket.emit('category-move-end', active.id, overIndex)
         return arrayMove(categories, activeIndex, overIndex)
       })
     }
@@ -110,8 +115,11 @@ function TierList(props) {
 
   const joinListRoom = async (id) => {
     if (!socket.connected) socket.connect()
-
     socket.emit('list-join', id)
+  }
+
+  const leaveListRoom = async () => {
+    if (socket.connected) socket.emit('list-leave')
   }
 
   useEffect(() => {
@@ -124,8 +132,8 @@ function TierList(props) {
       setSocketUsers(socketUsers => socketUsers.concat(user))
     }
 
-    const userLeave = (socketId) => {
-      setSocketUsers(socketUsers => socketUsers.filter(user => user.socketId !== socketId))
+    const userLeave = (id) => {
+      setSocketUsers(socketUsers => socketUsers.filter(user => user.id !== id))
     }
 
     const characterCreate = (data) => {
@@ -169,22 +177,75 @@ function TierList(props) {
       })
     }
 
+    const categoryCreate = (data) => {
+      setCategories(categories => [...categories, data])
+    }
+
+    const categoryUpdate = (data) => {
+      setCategories(categories => {
+        const category = categories.find(category => category.id === data.id)
+        category.name = data.name
+        category.color = data.color
+        return categories.slice()
+      })
+    }
+
+    const categoryDelete = (id) => {
+      setCategories(categories => {
+        categories.splice(categories.findIndex(category => category.id === id), 1)
+        return categories.slice()
+      })
+    }
+
+    const categoryMoveStart = (id, user) => {
+      setCategories(categories => {
+        const category = categories.find(category => category.id === id)
+        category.move = true
+        category.user = user
+        return [...categories]
+      })
+    }
+
+    const categoryMoveEnd = (id, position) => {
+      setCategories(categories => {
+        const activeIndex = categories.findIndex(category => category.id === id)
+        categories[activeIndex].move = false
+        return position ? arrayMove(categories, activeIndex, position) : [...categories]
+      })
+    }
+
     socket.on('user-join', userJoin)
     socket.on('user-leave', userLeave)
+
     socket.on('character-create', characterCreate)
     socket.on('character-update', characterUpdate)
     socket.on('character-delete', characterDelete)
     socket.on('character-move-start', characterMoveStart)
     socket.on('character-move-end', characterMoveEnd)
 
+    socket.on('category-create', categoryCreate)
+    socket.on('category-update', categoryUpdate)
+    socket.on('category-delete', categoryDelete)
+    socket.on('category-move-start', categoryMoveStart)
+    socket.on('category-move-end', categoryMoveEnd)
+
     return () => {
       socket.off('user-join', userJoin)
       socket.off('user-leave', userLeave)
+
       socket.off('character-create', characterCreate)
       socket.off('character-update', characterUpdate)
       socket.off('character-delete', characterDelete)
       socket.off('character-move-start', characterMoveStart)
       socket.off('character-move-end', characterMoveEnd)
+
+      socket.off('category-create', categoryCreate)
+      socket.off('category-update', categoryUpdate)
+      socket.off('category-delete', categoryDelete)
+      socket.off('category-move-start', categoryMoveStart)
+      socket.off('category-move-end', categoryMoveEnd)
+
+      leaveListRoom()
     }
   }, [props, props.selectedList])
 
@@ -205,7 +266,7 @@ function TierList(props) {
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
           <div className='rounded-2xl'>
-            {categories.filter(category => category.name).map(category => <Category key={category.id} permission={permission} id={category.id} name={category.name} color={category.color} items={items.filter(item => item.categoryId === category.id)} setItems={setItems} setCategories={setCategories} selectedList={props.selectedList} />)}
+            {categories.filter(category => category.name).map(category => <Category key={category.id} permission={permission} id={category.id} name={category.name} color={category.color} category={category} items={items.filter(item => item.categoryId === category.id)} setItems={setItems} setCategories={setCategories} selectedList={props.selectedList} />)}
           </div>
 
           {permission.edit ?

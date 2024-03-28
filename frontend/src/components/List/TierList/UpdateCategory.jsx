@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { socket } from '../../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faXmark, faTrash } from '@fortawesome/free-solid-svg-icons'
 
@@ -20,6 +21,8 @@ function UpdateCategory(props) {
         category.color = color
         return categories.slice()
       })
+
+      socket.emit('category-update', { id: props.id, name, color })
     } catch (err) {
       if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')
@@ -35,6 +38,8 @@ function UpdateCategory(props) {
         categories.splice(categories.findIndex(category => category.id === props.id), 1)
         return categories.slice()
       })
+
+      socket.emit('category-delete', props.id)
     } catch (err) {
       if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')

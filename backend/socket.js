@@ -45,4 +45,12 @@ export const createSocket = (server) => {
       }, 5000)
     })
   })
+
+  io.of("/").adapter.on('leave-room', async (room, id) => {
+    if (!room.startsWith('list')) return
+    const user = io.of('/').sockets.get(id).user
+
+    io.to(room).emit('user-leave', user.id)
+    logger.socket(`${user.username} left from room ${room}`)
+  })
 }

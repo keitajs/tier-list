@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { socket } from '../../../socket'
 import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +18,8 @@ function NewCategory(props) {
 
       props.setCategories(categories => [...categories, data])
       props.setShow(false)
+
+      socket.emit('category-create', data)
     } catch (err) {
       if (err?.response?.data?.message) return alert(err.response.data.message)
       alert('Server error')
