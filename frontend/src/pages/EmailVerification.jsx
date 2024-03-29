@@ -1,0 +1,61 @@
+import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
+
+function EmailVerification(props) {
+  const [searchParams] = useSearchParams()
+  const [verify, setVerify] = useState(null)
+  const [msg, setMsg] = useState('')
+
+  const getLogged = async (history) => {
+    const { data } = await axios.get('http://localhost:2000/logged')
+    if (!data) return history('/')
+
+    await axios.get('http://localhost:2000/user/token/refresh')
+    setVerify(0)
+  }
+
+  const verifyEmail = async (history, searchParams) => {
+    const token = searchParams.get('token')
+    if (!token) history('/')
+
+    try {
+      const { data } = await axios.post('http://localhost:2000/user/email/verify', { token })
+      setVerify(1)
+      setMsg(data.message)
+    } catch (error) {
+      setVerify(2)
+      setMsg(error.response.data.message)
+    }
+  }
+
+  useEffect(() => {
+    if (verify !== 0) return
+    verifyEmail(props.history, searchParams)
+  }, [verify, props, searchParams])
+
+  useEffect(() => {
+    document.title = 'Email hitelesítés | Tier List'
+    getLogged(props.history)
+  }, [props])
+
+  return (
+    <div className='flex items-center justify-center w-svw h-svh'>
+      {verify === 0 ?
+        <div className='flex gap-4 items-center justify-center w-svw h-svh text-xl'>
+          <div className='w-7 h-7 border-2 border-transparent border-x-white rounded-full animate-spin'></div>
+          Email hitelesítése...
+        </div>
+      : 
+      <div className={`flex items-center justify-center text-xl ${verify === 1 ? 'text-white' : 'text-red-200'}`}>
+        <FontAwesomeIcon icon={verify === 1 ? faCheck : faXmark} className={`absolute h-12 opacity-10 ${verify === 1 ? 'input-check-anim' : 'input-error-anim'}`} />
+        {msg}
+      </div>
+      }
+    </div>
+  )
+}
+
+export default EmailVerification

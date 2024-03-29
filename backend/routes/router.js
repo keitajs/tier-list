@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, verifyEmail, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken, refreshToken } from '../controllers/verifyToken.js'
 import multer from 'multer'
@@ -37,6 +37,7 @@ router.patch('/user/avatar', verifyToken, uploadAvatarImage.single('avatar'), up
 router.delete('/user/avatar', verifyToken, deleteAvatar)
 router.patch('/user/email', verifyToken, updateEmail)
 router.patch('/user/password', verifyToken, updatePassword)
+router.post('/user/email/verify', verifyToken, verifyEmail)
 
 // Lista útvonalak
 router.get('/lists/sidebar', verifyToken, getSidebarLists)

@@ -9,11 +9,12 @@ import categories from '../models/category.js'
 import characters from '../models/character.js'
 import animes from '../models/anime.js'
 import updates from '../models/update.js'
+import moment from 'moment'
 import path from 'path'
 import fs from 'fs'
 import { Op, fn, col } from 'sequelize'
 import { Errors } from '../libs/errors.js'
-import moment from 'moment'
+import { sendMail } from '../libs/resend.js'
 
 const updateActivity = async (userId, listId) => {
   try {
@@ -75,8 +76,11 @@ export const Register = async (req, res) => {
 
     // Jelszó titkosítás, felhasználó létrehozás
     const hashedPassword = await bcrypt.hash(password, 10)
-    await users.create({ username, email, password: hashedPassword, verifyToken: rndstr({ length: 54 }) + Date.now().toString().slice(0, 10) })
+    const verifyToken = rndstr({ length: 54 }) + Date.now().toString().slice(0, 10)
+    await users.create({ username, email, password: hashedPassword, verifyToken })
 
+    // Email küldése
+    await sendMail(email, 'Sikeres regisztráció', 'libs/resend_templates/verifyEmail.html', { username, title: 'Sikeres regisztráció!', link: `http://localhost:3000/email-verification?token=${verifyToken}` })
     res.send({ message: 'Sikeres regisztráció!' })
   } catch (err) {
     if (!err) return
@@ -258,6 +262,25 @@ export const updatePassword = async (req, res) => {
     await users.update({ password: hashedPassword }, { where: { id: req.id } })
 
     res.send({ message: 'Sikeres jelszó módosítás!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.body
+    
+    const user = await users.findOne({ where: { id: req.id } })
+    if (!user.verifyToken) return res.status(400).send({ message: 'Az email címed már hitelesítve van!' })
+    if (user.verifyToken !== token) return res.status(400).send({ message: 'Az email címed hitelesítése ezen linken keresztül nem hitelesíthető!' })
+
+    user.verifyToken = null
+    user.save()
+
+    res.send({ message: 'Sikeresen hitelesítetted az email címedet!' })
   } catch (err) {
     if (!err) return
     logger.error(err)

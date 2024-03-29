@@ -7,6 +7,7 @@ import './css/App.css'
 import Home from './pages/Home'
 import List from './pages/List'
 import Profile from './pages/Profile'
+import EmailVerification from './pages/EmailVerification'
 
 axios.defaults.withCredentials = true
 window.oncontextmenu = () => { return false }
@@ -41,6 +42,7 @@ function App() {
           <Route path='/register' element={<Navigate to={"/?register=1"} />} />
           <Route path='/list/*' element={<List history={history} />} />
           <Route path='/profile' element={<Profile history={history} />} />
+          <Route path='/email-verification' element={<EmailVerification history={history} />} />
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       }
