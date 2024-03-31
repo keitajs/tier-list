@@ -63,6 +63,10 @@ export const verifyTokenSocket = async (socket, next) => {
       // Felhasználó adatait megkapja a socket
       socket.user = { id, username }
       socket.getListRoom = () => { return Array.from(socket.rooms).find(room => room.startsWith('list')) }
+      socket.getListId = () => {
+        const roomName = socket.getListRoom()
+        return roomName ? Number(roomName.split('-')[1]) : undefined
+      }
       next()
     })
   } catch (error) {

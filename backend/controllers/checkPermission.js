@@ -35,7 +35,7 @@ const hasMinLevel = async (req, res, next, level) => {
     // Ellenőrzi, hogy megadott szintű jogosultsággal rendelkezik-e a felhasználó
     if (!list || !(list.userId === userId || (!list.private && level === 1) || (permission?.value >= level))) return res.status(403).send({ message: 'Nincs jogosultságod!' })
     
-    next()
+    return next()
   } catch (err) {
     if (!err) return
     console.log(err)
