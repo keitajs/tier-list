@@ -11,7 +11,11 @@ function EmailVerification(props) {
 
   const getLogged = async (history) => {
     const { data } = await axios.get('http://localhost:2000/logged')
-    if (!data) return history('/')
+    if (!data) {
+      setVerify(2)
+      setMsg('Email hitelesítés előtt kérlek jelentkezz be!')
+      return
+    }
 
     await axios.get('http://localhost:2000/user/token/refresh')
     setVerify(0)
@@ -42,18 +46,20 @@ function EmailVerification(props) {
   }, [props])
 
   return (
-    <div className='flex items-center justify-center w-svw h-svh'>
+    <div className='flex flex-col items-center justify-center w-svw h-svh'>
       {verify === 0 ?
         <div className='flex gap-4 items-center justify-center w-svw h-svh text-xl'>
           <div className='w-7 h-7 border-2 border-transparent border-x-white rounded-full animate-spin'></div>
           Email hitelesítése...
         </div>
       : 
-      <div className={`flex items-center justify-center text-xl ${verify === 1 ? 'text-white' : 'text-red-200'}`}>
-        <FontAwesomeIcon icon={verify === 1 ? faCheck : faXmark} className={`absolute h-12 opacity-10 ${verify === 1 ? 'input-check-anim' : 'input-error-anim'}`} />
-        {msg}
-      </div>
+        <div className={`flex items-center justify-center text-xl ${verify === 1 ? 'text-white' : 'text-red-200'}`}>
+          <FontAwesomeIcon icon={verify === 1 ? faCheck : faXmark} className={`absolute h-12 opacity-10 ${verify === 1 ? 'input-check-anim' : 'input-error-anim'}`} />
+          {msg}
+        </div>
       }
+
+      <button onClick={() => props.history('/')} className='w-max mt-4 px-8 py-1.5 rounded-lg bg-neutral-600 hover:bg-neutral-500 transition-colors'>Vissza a főoldalra</button>
     </div>
   )
 }

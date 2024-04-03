@@ -74,7 +74,7 @@ export const Register = async (req, res) => {
     // Ha vannak hibás adatok, akkor visszaküldi a felhasználónak
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
-    // Jelszó titkosítás, felhasználó létrehozás
+    // Jelszó titkosítás, email verify token és felhasználó létrehozás
     const hashedPassword = await bcrypt.hash(password, 10)
     const verifyToken = rndstr({ length: 54 }) + Date.now().toString().slice(0, 10)
     await users.create({ username, email, password: hashedPassword, verifyToken })
@@ -222,7 +222,7 @@ export const updateEmail = async (req, res) => {
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
     // Jelszó ellenőrzés
-    const user = await users.findOne({ where: { id: req.id }, attributes: [ 'password' ] })
+    const user = await users.findOne({ where: { id: req.id }, attributes: [ 'username', 'password' ] })
     const passMatch = await bcrypt.compare(password, user.password)
     if (!passMatch) errors.push('password', 'Hibás jelszó!')
     
@@ -232,7 +232,12 @@ export const updateEmail = async (req, res) => {
 
     if (errors.check) return res.status(400).send({ errors: errors.get() })
     
-    await users.update({ email }, { where: { id: req.id } })
+    // Új email verification token generálás és felhasználó update
+    const verifyToken = rndstr({ length: 54 }) + Date.now().toString().slice(0, 10)
+    await users.update({ email, verifyToken }, { where: { id: req.id } })
+
+    // Email küldése
+    await sendMail(email, 'Sikeres email módosítás', 'libs/resend_templates/verifyEmail.html', { username: user.username, title: 'Email módosítás', link: `http://localhost:3000/email-verification?token=${verifyToken}` })
     res.send({ message: 'Sikeres email módosítás!' })
   } catch (err) {
     if (!err) return
