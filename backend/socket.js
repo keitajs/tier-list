@@ -26,8 +26,8 @@ export const createSocket = (server) => {
     logger.socket(`User connected :: ${socket.user.username} # ${socket.user.id}`)
 
     listEvents(io, socket)
-    characterEvents(io, socket)
-    categoryEvents(io, socket)
+    characterEvents(socket)
+    categoryEvents(socket)
 
     socket.on('disconnect', () => {
       logger.socket(`User disconnected :: ${socket.user.username} # ${socket.user.id}`)

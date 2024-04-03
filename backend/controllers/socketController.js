@@ -57,7 +57,7 @@ const broadcastMoveEvent = async (socket, event, data) => {
 }
 
 // Karakter
-export const characterEvents = (io, socket) => {
+export const characterEvents = (socket) => {
   socket.on('character-create', async (character) => broadcastEditEvent(socket, 'character-create', character))
   socket.on('character-update', async (character) => broadcastEditEvent(socket, 'character-update', character))
   socket.on('character-delete', async (characterId) => broadcastEditEvent(socket, 'character-delete', characterId))
@@ -66,7 +66,7 @@ export const characterEvents = (io, socket) => {
 }
 
 // Kategória
-export const categoryEvents = (io, socket) => {
+export const categoryEvents = (socket) => {
   socket.on('category-create', async (category) => broadcastEditEvent(socket, 'category-create', category))
   socket.on('category-update', async (category) => broadcastEditEvent(socket, 'category-update', category))
   socket.on('category-delete', async (categoryId) => broadcastEditEvent(socket, 'category-delete', categoryId))
