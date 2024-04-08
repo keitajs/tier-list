@@ -1,8 +1,17 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 function ContentB(props) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!props.center) return
+
+    const timeout = setTimeout(props.nextPage, ref.current.textContent.length * 100)
+    return () => clearTimeout(timeout)
+  }, [props])
+
   return (
-    <div className={`absolute flex flex-col mx-6 ${props.left ? 'translate-x-[60%]' : props.right ? '-translate-x-[60%]' : ''} transition-all ${!props.center ? 'scale-50 opacity-0 pointer-events-none select-none' : ''}`}>
+    <div ref={ref} className={`absolute flex flex-col mx-6 ${props.left ? 'translate-x-[60%]' : props.right ? '-translate-x-[60%]' : ''} transition-all ${!props.center ? 'scale-50 opacity-0 pointer-events-none select-none' : ''}`}>
       <h2 className='relative text-xl lg:text-3xl font-semibold w-max mb-5 pb-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-2/5 after:h-0.5 after:rounded-lg after:bg-blue-500'>Készíts listát barátaiddal!</h2>
       <p className='my-1 leading-5 text-base lg:text-lg'>A listák beállításaiban jogosultságokat adhatsz barátaidnak, amivel engedélyezheted számukra a megtekintését vagy akár a közös szerkesztését is!</p>
       <p className='my-1 leading-5 text-base lg:text-lg'>Azonnal láthatod a mások által végrehajtott újításokat, ezzel hatékonyabbá téve a csapatmunkát!</p>

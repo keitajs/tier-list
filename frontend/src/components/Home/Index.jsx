@@ -24,7 +24,7 @@ function Home(props) {
       <div className='flex flex-col justify-center select-none'><FontAwesomeIcon icon={faChevronLeft} onClick={previousPage} className='cursor-pointer h-8 p-4 opacity-75 hover:opacity-100 transition-opacity' /></div>
       
       <div className='relative w-full h-max lg:h-screen flex items-center justify-center'>
-        { contents.map((Content, i) => <Content key={i} logged={props.logged} history={props.history} left={i === contentIds[0]} center={i === contentIds[1]} right={i === contentIds[2]} setActive={props.setActive} />) }
+        { contents.map((Content, i) => <Content key={i} logged={props.logged} history={props.history} left={i === contentIds[0]} center={i === contentIds[1]} right={i === contentIds[2]} nextPage={nextPage} setActive={props.setActive} />) }
       </div>
       
       <div className='flex flex-col justify-center select-none'><FontAwesomeIcon icon={faChevronRight} onClick={nextPage} className='cursor-pointer h-8 p-4 opacity-75 hover:opacity-100 transition-opacity' /></div>
