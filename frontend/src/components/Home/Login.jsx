@@ -22,6 +22,7 @@ function Login(props) {
       setTimeout(() => {
         socket.connect()
         props.history('/list')
+        window.location.reload()
       }, 2500)
     }).catch(err => {
       const { errors } = err.response.data
