@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { socket } from '../../socket'
 import { Tooltip } from 'react-tooltip'
@@ -261,7 +262,7 @@ function TierList(props) {
         </div>
       </h1>
 
-      <h3 className='flex items-center gap-2 flex-wrap mx-2 mb-8 opacity-80'>{socketUsers.map(user => <span key={user.id} className='flex items-end'>{user.username}<span className='opacity-40 text-xs'>#{user.id}</span></span>)}</h3>
+      <h3 className='flex items-center gap-2 flex-wrap mx-2 mb-8 opacity-80'>{socketUsers.map(user => <Link to={`/profile?user=${user.username}`} key={user.id} className='flex items-end'>{user.username}<span className='opacity-40 text-xs'>#{user.id}</span></Link>)}</h3>
 
       <DndContext sensors={sensors} modifiers={[restrictToWindowEdges]} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragOver={onDragOver}>
         <SortableContext items={categoryIds} strategy={verticalListSortingStrategy}>
