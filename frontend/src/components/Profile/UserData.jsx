@@ -16,7 +16,7 @@ function UserData(props) {
     <div className='flex flex-col justify-between lg:grow px-4 rounded-3xl bg-neutral-900/85'>
       <div className='flex items-center justify-center gap-2 py-3 border-b-2 border-blue-500 text-3xl'>
         {props?.user?.username ? props.user.username : 'Betöltés...'}
-        <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('username')} className='cursor-pointer absolute right-7 h-4 opacity-25 hover:opacity-50 transition-opacity' />
+        {props.params ? <></> : <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('username')} className='cursor-pointer absolute right-7 h-4 opacity-25 hover:opacity-50 transition-opacity' />}
       </div>
       
       <div className='flex flex-col gap-1.5 my-3 2xl:text-lg text-base grow'>
@@ -30,7 +30,7 @@ function UserData(props) {
         <div className='flex flex-wrap items-center justify-between'>
           <p className='flex items-center gap-2'>
             Email
-            <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('email')} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />
+            {props.params ? <></> : <FontAwesomeIcon icon={faEdit} onClick={() => props.setEdit('email')} className='cursor-pointer h-3.5 opacity-25 hover:opacity-50 transition-opacity' />}
           </p>
           <p className={`text-right ${props.params ? 'blur-sm overflow-hidden select-none' : ''}`}>{props.user.email}</p>
         </div>
@@ -52,10 +52,12 @@ function UserData(props) {
         <div className='flex flex-wrap items-center justify-between'>Regisztráció ideje <p className='text-right'>{moment(props.user.registerDate).locale('hu').format('L LTS')}</p></div>
       </div>
 
-      <div className='relative flex flex-col gap-2 mb-4'>
-        <button onClick={() => props.setEdit('password')} className='py-1 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>Jelszó módosítás</button>
-        <button onClick={Logout} className='py-1 rounded-lg bg-rose-700 hover:bg-rose-600 transition-colors'>Kijelentkezés</button>
-      </div>
+      {props.params ? <></> : 
+        <div className='relative flex flex-col gap-2 mb-4'>
+          <button onClick={() => props.setEdit('password')} className='py-1 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>Jelszó módosítás</button>
+          <button onClick={Logout} className='py-1 rounded-lg bg-rose-700 hover:bg-rose-600 transition-colors'>Kijelentkezés</button>
+        </div>
+      }
     </div>
   )
 }
