@@ -280,7 +280,7 @@ export const verifyEmail = async (req, res) => {
     
     const user = await users.findOne({ where: { id: req.id } })
     if (!user.verifyToken) return res.status(400).send({ message: 'Az email címed már hitelesítve van!' })
-    if (user.verifyToken !== token) return res.status(400).send({ message: 'Az email címed hitelesítése ezen linken keresztül nem hitelesíthető!' })
+    if (user.verifyToken !== token) return res.status(400).send({ message: 'Az email címed ezen linken keresztül nem hitelesíthető!' })
 
     user.verifyToken = null
     user.save()

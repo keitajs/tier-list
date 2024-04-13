@@ -9,7 +9,7 @@ function EmailVerification(props) {
   const [verify, setVerify] = useState(null)
   const [msg, setMsg] = useState('')
 
-  const getLogged = async (history) => {
+  const getLogged = async () => {
     const { data } = await axios.get('http://localhost:2000/logged')
     if (!data) {
       setVerify(2)
@@ -23,7 +23,6 @@ function EmailVerification(props) {
 
   const verifyEmail = async (history, searchParams) => {
     const token = searchParams.get('token')
-    if (!token) history('/')
 
     try {
       const { data } = await axios.post('http://localhost:2000/user/email/verify', { token })
@@ -42,7 +41,7 @@ function EmailVerification(props) {
 
   useEffect(() => {
     document.title = 'Email hitelesítés | Tier List'
-    getLogged(props.history)
+    getLogged()
   }, [props])
 
   return (
