@@ -40,9 +40,11 @@ function Sidebar(props) {
           <NavItem text={'Listák'} icon={faList} pathname={'/list'} />
         </div>
 
-        <div className='flex flex-col gap-0.5 w-52 py-2 rounded-xl bg-neutral-900 overflow-hidden opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity'>
-          {lists.map(list => <ListItem key={list.id} list={list} history={props.history} />)}
-        </div>
+        {lists && lists.length > 0 ?
+          <div className='flex flex-col gap-0.5 w-52 py-2 rounded-xl bg-neutral-900 overflow-hidden opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity'>
+            {lists.map(list => <ListItem key={list.id} list={list} history={props.history} />)}
+          </div>
+        : <></>}
 
         <button onClick={Logout} className='absolute left-5 bottom-5 flex items-center text-red-500 hover:text-red-400 transition-all'>
           <FontAwesomeIcon icon={faRightFromBracket} className='mr-3' />
