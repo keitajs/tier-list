@@ -342,7 +342,7 @@ export const getUserData = async (req, res) => {
         model: updates,
         attributes: []
       },
-      group: ['listId'],
+      group: ['id'],
       order: [['totalUpdates', 'DESC']],
       subQuery: false,
       limit: 10
