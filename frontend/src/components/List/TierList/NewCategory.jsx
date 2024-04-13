@@ -16,7 +16,7 @@ function NewCategory(props) {
     try {
       const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/categories/create`, { name, color })
 
-      props.setCategories(categories => [...categories, data])
+      props.setCategories(categories => [...categories, {...data, id: `${data.id}cat`}])
       props.setShow(false)
 
       socket.emit('category-create', data)

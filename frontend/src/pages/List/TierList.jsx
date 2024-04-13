@@ -178,7 +178,7 @@ function TierList(props) {
     }
 
     const categoryCreate = (data) => {
-      setCategories(categories => [...categories, data])
+      setCategories(categories => [...categories, {...data, id: `${data.id}cat`}])
     }
 
     const categoryUpdate = (data) => {
