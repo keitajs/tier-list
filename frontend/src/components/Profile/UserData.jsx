@@ -4,7 +4,7 @@ import { socket } from '../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
-import 'moment/locale/hu'
+import 'moment/dist/locale/hu'
 
 function UserData(props) {
   const Logout = () => {

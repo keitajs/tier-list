@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
-import 'moment/locale/hu'
+import 'moment/dist/locale/hu'
 
 function ListItem(props) {
   return (
