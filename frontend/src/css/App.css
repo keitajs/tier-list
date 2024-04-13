@@ -109,3 +109,16 @@
     opacity: 1;
   }
 }
+
+.home-content-anim::after {
+  animation: homeContentAnim var(--time) linear;
+}
+
+@keyframes homeContentAnim {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}

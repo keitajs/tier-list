@@ -5,10 +5,11 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import ContentA from './Contents/ContentA'
 import ContentB from './Contents/ContentB'
 import ContentC from './Contents/ContentC'
+import ContentD from './Contents/ContentD'
 
 function Home(props) {
   const [contentIds, setContentIds] = useState([0, 1, 2])
-  const [contents] = useState([ContentA, ContentB, ContentC])
+  const [contents] = useState([ContentA, ContentB, ContentC, ContentD])
   
   // Contentek közötti lapozás
   const nextPage = () => setContentIds([cIndex(contentIds[0] + 1), cIndex(contentIds[1] + 1), cIndex(contentIds[2] + 1)])
