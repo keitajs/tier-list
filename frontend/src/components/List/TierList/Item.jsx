@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 import { isMobile } from 'react-device-detect'
@@ -26,7 +27,7 @@ function Item(props) {
   }
 
   return (
-    <div ref={props.permission?.move && !props.character.move ? setNodeRef : null} className='relative flex rounded-2xl overflow-hidden' style={style}>
+    <div ref={props.permission?.move && !props.character.move ? setNodeRef : null} onContextMenu={(e) => { e.preventDefault(); return false }} className='relative flex rounded-2xl overflow-hidden' style={style}>
       {props.character.move ?
       <div className='absolute inset-0 flex flex-col items-center justify-center z-20 bg-black/75'>
         <FontAwesomeIcon icon={faUpDownLeftRight} className='h-3/5 opacity-25' />
@@ -34,7 +35,7 @@ function Item(props) {
       </div>
       : <></>}
       <div {...attributes} {...listeners} onClick={() => openItem('onclick')} onContextMenu={() => openItem('context')} className={`flex items-center justify-center lg:h-32 md:h-28 h-24 aspect-[3/4] ml-0.5 bg-neutral-700/15 overflow-hidden relative after:content-[""] after:absolute after:inset-0 after:rounded-2xl after:border-2 after:border-transparent hover:after:border-neutral-400 after:transition-all ${props.permission?.move && !props.character.move && isDragging ? 'cursor-grabbing opacity-50' : 'cursor-grab'} ${opened || isDragging ? 'hover:after:border-transparent rounded-s-2xl' : 'rounded-2xl'} ${props.character.move ? 'grayscale' : ''} transition-all`}>
-        <img src={props.character.image.startsWith('http') ? props.character.image : `http://localhost:2000/characters/images/${props.character.image}`} alt="" className='w-full h-full object-cover' />
+        <img src={props.character.image.startsWith('http') ? props.character.image : `${axios.defaults.baseURL}/characters/images/${props.character.image}`} alt="" className='w-full h-full object-cover' />
       </div>
       <div className={`relative flex flex-col justify-between select-text ${opened ? 'w-64 px-2' : 'w-0 px-0'} lg:h-32 md:h-28 h-24 py-1 bg-neutral-700/60 rounded-e-2xl transition-all overflow-hidden`}>
         {edit ? <UpdateCharacter id={props.id} character={props.character} anime={props?.anime} setEdit={setEdit} setItems={props.setItems} selectedList={props.selectedList} /> : <>
