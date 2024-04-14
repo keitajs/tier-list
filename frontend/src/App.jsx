@@ -10,15 +10,15 @@ import Profile from './pages/Profile'
 import EmailVerification from './pages/EmailVerification'
 
 axios.defaults.withCredentials = true
-window.oncontextmenu = () => { return false }
+axios.defaults.baseURL = 'http://localhost:2000'
 
 function App() {
   const history = useNavigate()
   const [logged, setLogged] = useState(null)
 
   const tryConnect = async () => {
-    const { data } = await axios.get('http://localhost:2000/logged')
-    if (data) await axios.get('http://localhost:2000/user/token/refresh')
+    const { data } = await axios.get('/logged')
+    if (data) await axios.get('/user/token/refresh')
     setLogged(data)
 
     if (data && !socket.connected) socket.connect()

@@ -25,7 +25,7 @@ function Register(props) {
   const Register = (e) => {
     if (nameMsg !== '' || emailMsg !== '' || passwor2Msg !== '' || passwor2Msg !== '') return
 
-    axios.post('http://localhost:2000/register', { username, password, email, }).then(res => {
+    axios.post('/register', { username, password, email, }).then(res => {
       setMsg(res.data.message)
       setTimeout(() => props.setActive(1), 2500)
     }).catch(err => {

@@ -29,7 +29,7 @@ function NewCharacter(props) {
       formData.append('anime', JSON.stringify({ title, url: animeUrl }))
       formData.append('image', image)
 
-      const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/characters/create`, formData)
+      const { data } = await axios.post(`/lists/${props.selectedList}/characters/create`, formData)
 
       data.categoryId = props.id
       props.setItems(items => [...items, data])

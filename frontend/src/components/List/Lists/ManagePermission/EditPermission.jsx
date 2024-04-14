@@ -10,7 +10,7 @@ function EditPermission(props) {
 
   const createPermission = async () => {
     try {
-      const { data } = await axios.post(`http://localhost:2000/lists/${props.activeList.id}/permissions/create`, { username: name, permission })
+      const { data } = await axios.post(`/lists/${props.activeList.id}/permissions/create`, { username: name, permission })
       
       // A jelenleg aktív szerkesztési folyamatot null-ra (nincsre) állítja
       props.setActive(null)
@@ -31,7 +31,7 @@ function EditPermission(props) {
 
   const updatePermission = async () => {
     try {
-      await axios.patch(`http://localhost:2000/lists/${props.activeList.id}/permissions/update/${props.active.user.id}`, { value: permission })
+      await axios.patch(`/lists/${props.activeList.id}/permissions/update/${props.active.user.id}`, { value: permission })
 
       // A jelenleg aktív szerkesztési folyamatot null-ra (nincsre) állítja
       props.setActive(null)
@@ -50,7 +50,7 @@ function EditPermission(props) {
 
   const removePermission = async () => {
     try {
-      await axios.delete(`http://localhost:2000/lists/${props.activeList.id}/permissions/remove/${props.active.user.id}`)
+      await axios.delete(`/lists/${props.activeList.id}/permissions/remove/${props.active.user.id}`)
       
       // A jelenleg aktív szerkesztési folyamatot null-ra (nincsre) állítja
       props.setActive(null)

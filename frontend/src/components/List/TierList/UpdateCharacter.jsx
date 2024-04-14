@@ -7,7 +7,7 @@ import { faSave, faTrash, faXmark, faFileArrowUp, faFileExcel } from '@fortaweso
 function UpdateCharacter(props) {
   const [name, setName] = useState(props.character.name)
   const [url, setUrl] = useState(props.character?.url ? props.character.url : '')
-  const [image, setImage] = useState(props.character.image.startsWith('http') ? props.character.image : `http://localhost:2000/characters/images/${props.character.image}`)
+  const [image, setImage] = useState(props.character.image.startsWith('http') ? props.character.image : `${axios.defaults.baseURL}/characters/images/${props.character.image}`)
   const [title, setTitle] = useState(props?.anime?.title ? props.anime.title : '')
   const [animeUrl, setAnimeUrl] = useState(props?.anime?.url ? props.anime.url : '')
   const [active, setActive] = useState(true)
@@ -25,7 +25,7 @@ function UpdateCharacter(props) {
       formData.append('anime', JSON.stringify({ title, url: animeUrl }))
       formData.append('image', image)
 
-      const { data } = await axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${props.id}/update`, formData)
+      const { data } = await axios.patch(`/lists/${props.selectedList}/characters/${props.id}/update`, formData)
 
       props.setItems(items => {
         const item = items.find(x => x.id === props.id)
@@ -47,7 +47,7 @@ function UpdateCharacter(props) {
 
   const removeCharacter = async () => {
     try {
-      await axios.delete(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(props.id)}/remove`)
+      await axios.delete(`/lists/${props.selectedList}/characters/${parseInt(props.id)}/remove`)
 
       props.setItems(items => {
         items.splice(items.findIndex(item => item.id === props.id), 1)

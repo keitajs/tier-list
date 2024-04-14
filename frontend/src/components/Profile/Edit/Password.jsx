@@ -14,7 +14,7 @@ function Password(props) {
     if (Object.values(errors).find(x => !!x)) return
 
     try {
-      await axios.patch('http://localhost:2000/user/password', { password, currentPassword })
+      await axios.patch('/user/password', { password, currentPassword })
       props.setEdit(null)
     } catch (err) {
       const { errors: results } = err?.response?.data

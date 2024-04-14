@@ -14,7 +14,7 @@ function Lists(props) {
   const [activeList, setActiveList] = useState(null)
 
   const getUserLists = async () => {
-    const { data } = await axios.get('http://localhost:2000/user/lists')
+    const { data } = await axios.get('/user/lists')
     setLists(data)
   }
 

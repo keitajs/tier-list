@@ -12,7 +12,7 @@ function Email(props) {
     if (Object.values(errors).find(x => !!x)) return
 
     try {
-      await axios.patch('http://localhost:2000/user/email', { email, password })
+      await axios.patch('/user/email', { email, password })
       props.setEdit(null)
       props.setUser(user => {
         user.email = email

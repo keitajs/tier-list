@@ -13,7 +13,7 @@ function OtherLists(props) {
   const [shared, setShared] = useState(true)
 
   const getLists = async (shared, query) => {
-    const { data } = await axios.get(shared ? 'http://localhost:2000/lists/shared' : `http://localhost:2000/lists/public${query ? `?q=${query}` : ''}`)
+    const { data } = await axios.get(shared ? '/lists/shared' : `/lists/public${query ? `?q=${query}` : ''}`)
     setLists(data)
   }
 

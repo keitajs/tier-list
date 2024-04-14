@@ -15,7 +15,7 @@ function Avatar(props) {
       const formData = new FormData()
       formData.append('avatar', image)
 
-      const { data } = await axios.patch('http://localhost:2000/user/avatar', formData)
+      const { data } = await axios.patch('/user/avatar', formData)
 
       props.setEdit(null)
       props.setUser(user => {
@@ -31,7 +31,7 @@ function Avatar(props) {
 
   const remove = async () => {
     try {
-      const { data } = await axios.delete('http://localhost:2000/user/avatar')
+      const { data } = await axios.delete('/user/avatar')
       
       props.setEdit(null)
       props.setUser(user => {

@@ -11,11 +11,11 @@ function Sidebar(props) {
 
   const Logout = () => {
     socket.disconnect()
-    axios.delete('http://localhost:2000/logout').then(() => props.history('/'))
+    axios.delete('/logout').then(() => props.history('/'))
   }
 
   const getLists = async () => {
-    const { data } = await axios.get('http://localhost:2000/lists/sidebar')
+    const { data } = await axios.get('/lists/sidebar')
     setLists(data)
   }
 

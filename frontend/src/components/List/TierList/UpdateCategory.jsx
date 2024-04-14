@@ -12,7 +12,7 @@ function UpdateCategory(props) {
     if (!name) return
 
     try {
-      await axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(props.id)}/update`, { name, color })
+      await axios.patch(`/lists/${props.selectedList}/categories/${parseInt(props.id)}/update`, { name, color })
 
       props.setEdit(false)
       props.setCategories(categories => {
@@ -32,7 +32,7 @@ function UpdateCategory(props) {
 
   const removeCategory = async () => {
     try {
-      await axios.delete(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(props.id)}/remove`)
+      await axios.delete(`/lists/${props.selectedList}/categories/${parseInt(props.id)}/remove`)
 
       props.setCategories(categories => {
         categories.splice(categories.findIndex(category => category.id === props.id), 1)

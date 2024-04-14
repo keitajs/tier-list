@@ -17,7 +17,7 @@ function Login(props) {
   const Login = (e) => {
     if (nameMsg !== '' || passwordMsg !== '') return
 
-    axios.post('http://localhost:2000/login', { username, password }).then(res => {
+    axios.post('/login', { username, password }).then(res => {
       setMsg(res.data.message)
       setTimeout(() => {
         socket.connect()

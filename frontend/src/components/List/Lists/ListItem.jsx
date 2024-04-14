@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
@@ -13,7 +14,7 @@ function ListItem(props) {
       </div>
       <div className={`flex items-center text-sm ${props.list?.updates ? 'w-full sm:w-auto' : ''}`}>
         {props.list?.updates ? <div className='flex items-center'>
-          <div className='w-5 h-5 rounded-full overflow-hidden mr-2'><img src={`http://localhost:2000/user/images/${props.list.updates[0].user.avatar}`} alt="" className='w-full h-full object-cover' /></div>
+          <div className='w-5 h-5 rounded-full overflow-hidden mr-2'><img src={`${axios.defaults.baseURL}/user/images/${props.list.updates[0].user.avatar}`} alt="" className='w-full h-full object-cover' /></div>
           <p className='w-full text-left'>
             <span className='text-blue-500 opacity-75'>{props.list.updates[0].user.username}</span>
             <span className='opacity-40'> frissítette ekkor: </span>

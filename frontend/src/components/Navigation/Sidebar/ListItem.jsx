@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire } from '@fortawesome/free-solid-svg-icons'
 
@@ -8,7 +9,7 @@ function ListItem(props) {
       <div className='flex items-center justify-center w-4'><FontAwesomeIcon icon={[faEllipsis, faCheck, faDumpsterFire][props.list.status - 1]} className={['text-white', 'text-emerald-500', 'text-red-500'][props.list.status - 1]} /></div>
       <div className='mr-auto truncate'>{props.list.name}</div>
       <div className='w-5 h-5 rounded-full overflow-hidden'>
-        <img src={`http://localhost:2000/user/images/${props.list.updates[0].user.avatar}`} alt="" className='w-full h-full object-cover' />
+        <img src={`${axios.defaults.baseURL}/user/images/${props.list.updates[0].user.avatar}`} alt="" className='w-full h-full object-cover' />
       </div>
     </button>
   )

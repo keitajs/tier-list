@@ -10,14 +10,14 @@ function EmailVerification(props) {
   const [msg, setMsg] = useState('')
 
   const getLogged = async () => {
-    const { data } = await axios.get('http://localhost:2000/logged')
+    const { data } = await axios.get('/logged')
     if (!data) {
       setVerify(2)
       setMsg('Email hitelesítés előtt kérlek jelentkezz be!')
       return
     }
 
-    await axios.get('http://localhost:2000/user/token/refresh')
+    await axios.get('/user/token/refresh')
     setVerify(0)
   }
 
@@ -25,7 +25,7 @@ function EmailVerification(props) {
     const token = searchParams.get('token')
 
     try {
-      const { data } = await axios.post('http://localhost:2000/user/email/verify', { token })
+      const { data } = await axios.post('/user/email/verify', { token })
       setVerify(1)
       setMsg(data.message)
     } catch (error) {

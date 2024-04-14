@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faArrowsUpDownLeftRight, faPen, faUserPen, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -8,7 +9,7 @@ function PermissionItem(props) {
       <div className='flex items-center gap-3 overflow-hidden text-xl'>
         <div className='truncate'>{props.user.username}</div>
         <div className='w-6 h-6 rounded-full overflow-hidden'>
-          <img src={`http://localhost:2000/user/images/${props.user.avatar}`} alt="" className='w-full h-full object-cover' />
+          <img src={`${axios.defaults.baseURL}/user/images/${props.user.avatar}`} alt="" className='w-full h-full object-cover' />
         </div>
       </div>
       <div className='hidden sm:flex items-center gap-2 text-sm opacity-40'>

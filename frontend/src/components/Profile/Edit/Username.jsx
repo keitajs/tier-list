@@ -11,7 +11,7 @@ function Username(props) {
     if (Object.values(errors).find(x => !!x)) return
 
     try {
-      await axios.patch('http://localhost:2000/user/username', { username: name })
+      await axios.patch('/user/username', { username: name })
       props.setEdit(null)
       props.setUser(user => {
         user.username = name

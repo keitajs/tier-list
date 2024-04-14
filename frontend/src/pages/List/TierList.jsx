@@ -85,7 +85,7 @@ function TierList(props) {
       const categoryId = parseInt(activeItem.categoryId)
 
       socket.emit('character-move-end', active.id, categoryId, position)
-      return axios.patch(`http://localhost:2000/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId })
+      return axios.patch(`/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId })
     }
 
     if (active.data.current?.type === "Category") {
@@ -94,7 +94,7 @@ function TierList(props) {
       return setCategories((categories) => {
         const activeIndex = categories.findIndex(category => category.id === active.id)
         const overIndex = categories.findIndex(category => category.id === over.id)
-        axios.patch(`http://localhost:2000/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex })
+        axios.patch(`/lists/${props.selectedList}/categories/${parseInt(active.id)}/move`, { position: overIndex })
 
         socket.emit('category-move-end', active.id, overIndex)
         return arrayMove(categories, activeIndex, overIndex)
@@ -103,7 +103,7 @@ function TierList(props) {
   }
 
   const getTierList = async (id) => {
-    const { data: { list, permission } } = await axios.get(`http://localhost:2000/user/lists/${id}`)
+    const { data: { list, permission } } = await axios.get(`/user/lists/${id}`)
 
     setTitle(list.name)
     setCategories(list.categories.map(category => { return { id: `${category.id}cat`, name: category.name, color: category.color } }))

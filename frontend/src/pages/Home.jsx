@@ -13,7 +13,7 @@ function Home(props) {
   const [logged, setLogged] = useState(false)
   
   const getLogged = async () => {
-    const { data } = await axios.get('http://localhost:2000/logged')
+    const { data } = await axios.get('/logged')
     setLogged(data)
   }
 

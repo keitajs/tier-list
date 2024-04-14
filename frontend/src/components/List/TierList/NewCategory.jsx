@@ -14,7 +14,7 @@ function NewCategory(props) {
     if (Object.values(errors).find(x => !!x)) return
 
     try {
-      const { data } = await axios.post(`http://localhost:2000/lists/${props.selectedList}/categories/create`, { name, color })
+      const { data } = await axios.post(`/lists/${props.selectedList}/categories/create`, { name, color })
 
       props.setCategories(categories => [...categories, {...data, id: `${data.id}cat`}])
       props.setShow(false)

@@ -11,7 +11,7 @@ function ManageList(props) {
 
   const createList = async () => {
     try {
-      const { data } = await axios.post('http://localhost:2000/lists/create', { name, description, status, visible })
+      const { data } = await axios.post('/lists/create', { name, description, status, visible })
 
       // Hozzáadja és beállítja aktívnak az új listát
       props.setLists(lists => { return [...lists, { ...data, permissions: [] }] })
@@ -21,7 +21,7 @@ function ManageList(props) {
 
   const updateList = async () => {
     try {
-      await axios.patch(`http://localhost:2000/lists/${props.activeList.id}/update`, { name, description, status, visible })
+      await axios.patch(`/lists/${props.activeList.id}/update`, { name, description, status, visible })
 
       // Módosítja az adatokat a változókban
       props.setLists(lists => {
@@ -38,7 +38,7 @@ function ManageList(props) {
 
   const removeList = async () => {
     try {
-      await axios.delete(`http://localhost:2000/lists/${props.activeList.id}/remove`)
+      await axios.delete(`/lists/${props.activeList.id}/remove`)
 
       // Törli a listát a többi közül
       props.setLists(lists => {

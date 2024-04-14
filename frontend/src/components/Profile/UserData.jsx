@@ -9,7 +9,7 @@ import 'moment/dist/locale/hu'
 function UserData(props) {
   const Logout = () => {
     socket.disconnect()
-    axios.delete('http://localhost:2000/logout').then(() => props.history('/'))
+    axios.delete('h/logout').then(() => props.history('/'))
   }
 
   return (

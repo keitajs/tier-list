@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowUpRightFromSquare, faPlus, faMinus, faClose } from '@fortawesome/free-solid-svg-icons'
@@ -46,7 +47,7 @@ function Characters(props) {
             <div key={character.id} className='flex'>
               <div onClick={() => setFull(null)} onWheel={zoomScroll} className={`z-40 fixed inset-0 flex items-center justify-center bg-neutral-950/60 ${full === character.id ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'} transition-opacity`}>
                 <div style={{height: `${zoom*100}%`}} onClick={zoomClick} className={`${zoom > 0.5 ? 'cursor-zoom-out' : 'cursor-zoom-in'} aspect-[3/4] rounded-2xl overflow-hidden transition-all ${full === character.id ? 'scale-100' : 'scale-0'}`}>
-                  <img src={character.image.startsWith('http') ? character.image : `http://localhost:2000/characters/images/${character.image}`} alt="" className='w-full h-full object-cover' />
+                  <img src={character.image.startsWith('http') ? character.image : `${axios.defaults.baseURL}/characters/images/${character.image}`} alt="" className='w-full h-full object-cover' />
                 </div>
                 <button onClick={() => setFull(null)} className='absolute top-4 right-5 opacity-25 hover:opacity-100 transition-opacity'><FontAwesomeIcon icon={faClose} className='h-8' /></button>
                 <div className='absolute bottom-4 right-5 flex flex-col rounded-lg bg-neutral-700/50'>
@@ -56,7 +57,7 @@ function Characters(props) {
               </div>
 
               <button onClick={() => setFull(character.id)} className='h-32 w-24 rounded-2xl overflow-hidden'>
-                <img src={character.image.startsWith('http') ? character.image : `http://localhost:2000/characters/images/${character.image}`} alt="" className='w-full h-full object-cover' />
+                <img src={character.image.startsWith('http') ? character.image : `${axios.defaults.baseURL}/characters/images/${character.image}`} alt="" className='w-full h-full object-cover' />
               </button>
               <div className='flex flex-col justify-center grow w-1/2'>
                 <Link to={character.url} target='_blank' className='group truncate flex items-center gap-1.5 text-xl leading-6 w-full lg:w-max ml-2'>
