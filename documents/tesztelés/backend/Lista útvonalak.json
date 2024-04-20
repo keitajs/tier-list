@@ -1,0 +1,123 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Lista útvonalak",
+    "collectionId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+    "dateExported": "2024-04-20T15:53:00.471Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "c34f388e-39a2-4639-b54c-6d64c2d5c903",
+            "colId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+            "containerId": "",
+            "name": "Sidebar listák lekérés",
+            "url": "http://localhost:2000/lists/sidebar",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-04-20T15:47:34.401Z",
+            "modified": "2024-04-20T15:47:34.401Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI4MDAyLCJleHAiOjE3MTQyMzI4MDJ9.t7JSkMOHpDUJ8TWuQoRXSPd1CxiCiKlrOKS8otYsMMM"
+                }
+            ]
+        },
+        {
+            "_id": "49c04a78-2dc2-4abc-8f17-2ad5bd6fadb7",
+            "colId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+            "containerId": "",
+            "name": "Megosztott listák lekérés",
+            "url": "http://localhost:2000/lists/shared",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-04-20T15:48:03.490Z",
+            "modified": "2024-04-20T15:48:03.490Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI4MDAyLCJleHAiOjE3MTQyMzI4MDJ9.t7JSkMOHpDUJ8TWuQoRXSPd1CxiCiKlrOKS8otYsMMM"
+                }
+            ]
+        },
+        {
+            "_id": "7299a0f4-048a-4a94-90c1-ed6be7ed387e",
+            "colId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+            "containerId": "",
+            "name": "Publikus listák lekérés",
+            "url": "http://localhost:2000/lists/public",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-04-20T15:48:38.973Z",
+            "modified": "2024-04-20T15:48:38.973Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI4MDAyLCJleHAiOjE3MTQyMzI4MDJ9.t7JSkMOHpDUJ8TWuQoRXSPd1CxiCiKlrOKS8otYsMMM"
+                }
+            ]
+        },
+        {
+            "_id": "73dfcb1b-bf18-456b-bd51-f5f083b15ba3",
+            "colId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+            "containerId": "",
+            "name": "Lista létrehozás",
+            "url": "http://localhost:2000/lists/create",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-04-20T15:50:31.974Z",
+            "modified": "2024-04-20T15:50:31.974Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI4MDAyLCJleHAiOjE3MTQyMzI4MDJ9.t7JSkMOHpDUJ8TWuQoRXSPd1CxiCiKlrOKS8otYsMMM"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Új lista\",\n  \"description\": \"Ez egy teszt lista\",\n  \"status\": 1,\n  \"visible\": true\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "6d8f3dbf-6815-4a5e-b700-2c2128660657",
+            "colId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+            "containerId": "",
+            "name": "Lista módosítás",
+            "url": "http://localhost:2000/lists/18/update",
+            "method": "PATCH",
+            "sortNum": 50000,
+            "created": "2024-04-20T15:52:12.224Z",
+            "modified": "2024-04-20T15:52:12.224Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI4MDAyLCJleHAiOjE3MTQyMzI4MDJ9.t7JSkMOHpDUJ8TWuQoRXSPd1CxiCiKlrOKS8otYsMMM"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Teszt lista\",\n  \"description\": \"Módosított leírás\",\n  \"status\": 2,\n  \"visible\": false\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "7cfd9285-a8f6-4c85-ac9b-d9627b92d31a",
+            "colId": "ccb276c4-daa9-49d8-89b3-edc23b5757f0",
+            "containerId": "",
+            "name": "Lista törlés",
+            "url": "http://localhost:2000/lists/18/remove",
+            "method": "DELETE",
+            "sortNum": 60000,
+            "created": "2024-04-20T15:52:47.471Z",
+            "modified": "2024-04-20T15:52:47.471Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI4MDAyLCJleHAiOjE3MTQyMzI4MDJ9.t7JSkMOHpDUJ8TWuQoRXSPd1CxiCiKlrOKS8otYsMMM"
+                }
+            ]
+        }
+    ],
+    "ref": "yEfn_1jNACGpG8R7UwPevLPFboa1KXGFbh3PvreTb2P4YcuR3eta2neLDfEiOZpqmmRTD7i3z8hWncN0RhKNxg"
+}

@@ -1,0 +1,287 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Felhasználó útvonalak",
+    "collectionId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+    "dateExported": "2024-04-20T15:34:55.276Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "a68e9355-2709-40ba-8b99-e323dd32f530",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Gyökér útvonal",
+            "url": "http://localhost:2000",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-04-20T15:04:16.387Z",
+            "modified": "2024-04-20T15:04:16.387Z",
+            "headers": []
+        },
+        {
+            "_id": "31222716-59b5-40cc-94e2-d04c9cc1f038",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Bejelentkezési állapot lekérés",
+            "url": "http://localhost:2000/logged",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-04-20T15:05:36.032Z",
+            "modified": "2024-04-20T15:05:36.032Z",
+            "headers": []
+        },
+        {
+            "_id": "14d2ce37-a388-4698-b808-92417b8ba770",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Regisztráció",
+            "url": "http://localhost:2000/register",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-04-20T15:07:32.779Z",
+            "modified": "2024-04-20T15:07:32.779Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"test-user\",\n  \"email\": \"dominikegersdorfer@gmail.com\",\n  \"password\": \"Admin123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "18bd4c91-f571-48eb-a404-86588d60d6a7",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Bejelentkezés",
+            "url": "http://localhost:2000/login",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-04-20T15:09:02.427Z",
+            "modified": "2024-04-20T15:09:02.427Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"test-user\",\n  \"password\": \"Admin123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "4d2796c6-69d1-48b7-b0d0-d993efeac7ed",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Kijelentkezés",
+            "url": "http://localhost:2000/logout",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2024-04-20T15:11:35.164Z",
+            "modified": "2024-04-20T15:11:35.164Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MTM2MjU3MzMsImV4cCI6MTcxNDIzMDUzM30.CxS482ZIrDfFnSn6naYWfQjX05t6zX7aYCpaaXcOkAI"
+                }
+            ]
+        },
+        {
+            "_id": "05b9c97b-07d2-4d89-a606-a814c7c70d0e",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Felhasználói adatok lekérés",
+            "url": "http://localhost:2000/user/data",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2024-04-20T15:16:23.917Z",
+            "modified": "2024-04-20T15:16:23.917Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MTM2MjYxNDEsImV4cCI6MTcxNDIzMDk0MX0.qTVMwmQQMrYjUGwETobjsCkVxXrP694qcLlacUd_u4c"
+                }
+            ]
+        },
+        {
+            "_id": "64ce0faa-0d0b-479c-a994-55a1d052afa4",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Új token generálás",
+            "url": "http://localhost:2000/user/token/refresh",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-04-20T15:18:01.463Z",
+            "modified": "2024-04-20T15:18:01.463Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MTM2MjYxNDEsImV4cCI6MTcxNDIzMDk0MX0.qTVMwmQQMrYjUGwETobjsCkVxXrP694qcLlacUd_u4c"
+                }
+            ]
+        },
+        {
+            "_id": "ef31f893-9ccd-4ba2-a353-3fb3cd1c39a4",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Felhasználó listáinak lekérés",
+            "url": "http://localhost:2000/user/lists",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-04-20T15:18:45.803Z",
+            "modified": "2024-04-20T15:18:45.803Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MTM2MjYyNjUsImV4cCI6MTcxNDIzMTA2NX0.T6dsQT6TFGtHZpxYjuhXF-3LM05NgC6jSvtqWj4ezOw"
+                }
+            ]
+        },
+        {
+            "_id": "88cbe21a-4e9d-4421-a0d5-b63346a53ee3",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Lista lekérdezés",
+            "url": "http://localhost:2000/user/lists/17",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2024-04-20T15:20:06.000Z",
+            "modified": "2024-04-20T15:20:06.000Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MTM2MjYyNjUsImV4cCI6MTcxNDIzMTA2NX0.T6dsQT6TFGtHZpxYjuhXF-3LM05NgC6jSvtqWj4ezOw"
+                }
+            ]
+        },
+        {
+            "_id": "8eaddded-206d-450c-ae4e-5c4a0609c9d2",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Felhasználónév módosítás",
+            "url": "http://localhost:2000/user/username",
+            "method": "PATCH",
+            "sortNum": 100000,
+            "created": "2024-04-20T15:21:11.202Z",
+            "modified": "2024-04-20T15:21:11.202Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXIiLCJpYXQiOjE3MTM2MjYyNjUsImV4cCI6MTcxNDIzMTA2NX0.T6dsQT6TFGtHZpxYjuhXF-3LM05NgC6jSvtqWj4ezOw"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"test-username\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "396cfc15-f359-40d8-972f-fc601d7f0cf9",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Profilkép módosítás",
+            "url": "http://localhost:2000/user/avatar",
+            "method": "PATCH",
+            "sortNum": 110000,
+            "created": "2024-04-20T15:25:19.593Z",
+            "modified": "2024-04-20T15:25:19.593Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI2NjE5LCJleHAiOjE3MTQyMzE0MTl9.BicNl5XuO8EEUfAfM5GxeZtb33ckuALj1Y2GI8lJyxw"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [],
+                "files": [
+                    {
+                        "name": "avatar",
+                        "value": "d:\\Codes\\tier-list\\backend\\images\\characters\\IMG_20230603_214315.jpg-1706988578668.jpg"
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "0f4e84d7-f2f6-467e-bb06-5b3575318b14",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Profilkép törlés",
+            "url": "http://localhost:2000/user/avatar",
+            "method": "DELETE",
+            "sortNum": 120000,
+            "created": "2024-04-20T15:26:14.210Z",
+            "modified": "2024-04-20T15:26:14.210Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI2NjE5LCJleHAiOjE3MTQyMzE0MTl9.BicNl5XuO8EEUfAfM5GxeZtb33ckuALj1Y2GI8lJyxw"
+                }
+            ]
+        },
+        {
+            "_id": "a62ee2ae-bc93-4b13-9e61-1cb34fb251b1",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Email módosítás",
+            "url": "http://localhost:2000/user/email",
+            "method": "PATCH",
+            "sortNum": 130000,
+            "created": "2024-04-20T15:28:19.245Z",
+            "modified": "2024-04-20T15:28:19.245Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI2NjE5LCJleHAiOjE3MTQyMzE0MTl9.BicNl5XuO8EEUfAfM5GxeZtb33ckuALj1Y2GI8lJyxw"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"dominikegersdorfer@gmail.com\",\n  \"password\": \"Admin123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "ada3b1a6-0d94-4856-8627-00f0a2ee5687",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Jelszó módosítás",
+            "url": "http://localhost:2000/user/password",
+            "method": "PATCH",
+            "sortNum": 140000,
+            "created": "2024-04-20T15:30:10.824Z",
+            "modified": "2024-04-20T15:30:10.824Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI2NjE5LCJleHAiOjE3MTQyMzE0MTl9.BicNl5XuO8EEUfAfM5GxeZtb33ckuALj1Y2GI8lJyxw"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"password\": \"Admin1234\",\n  \"currentPassword\": \"Admin123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "9437f9ff-f536-443e-bcd2-4b84a9618809",
+            "colId": "d10cd8fd-7765-4c11-b9a1-a7efaae382e0",
+            "containerId": "",
+            "name": "Email hitelesítés",
+            "url": "http://localhost:2000/user/email/verify",
+            "method": "POST",
+            "sortNum": 150000,
+            "created": "2024-04-20T15:31:16.334Z",
+            "modified": "2024-04-20T15:31:16.334Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNjI2NjE5LCJleHAiOjE3MTQyMzE0MTl9.BicNl5XuO8EEUfAfM5GxeZtb33ckuALj1Y2GI8lJyxw"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"token\": \"g3tflfydvftxgut37tkn94pcbxjvjayokwpp0b7bdyvyiixkuuen6c1713626889\"\n}",
+                "form": []
+            }
+        }
+    ],
+    "ref": "bYz5WvjkSc1-maK2cSzXK1zJ7BcfRugiYbo65072V3eajWqPZcQ7hhgk0fxOrjSU9ecJlW9D9Rd6nQW9b3DJpg"
+}
