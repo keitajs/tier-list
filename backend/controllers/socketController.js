@@ -15,6 +15,7 @@ export const listEvents = (io, socket) => {
     if (socket.getListRoom()) return
     const roomName = `list-${listId}`
     
+    // Jogosultság ellenőrzés
     const permission = await hasAnyPermission(req(socket.user.id, listId), res, next)
     if (!permission) return
 
@@ -35,6 +36,7 @@ export const listEvents = (io, socket) => {
   })
 }
 
+// Továbbítja a szerkesztési adatokat a szobában lévő felhasználóknak
 const broadcastEditEvent = async (socket, event, data) => {
   const roomName = socket.getListRoom()
   if (!roomName) return
@@ -45,6 +47,7 @@ const broadcastEditEvent = async (socket, event, data) => {
   socket.broadcast.to(roomName).emit(event, data)
 }
 
+// Továbbítja a mozgatási adatokat a szobában lévő felhasználóknak
 const broadcastMoveEvent = async (socket, event, data) => {
   const roomName = socket.getListRoom()
   if (!roomName) return

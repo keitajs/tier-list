@@ -122,6 +122,7 @@ export const Login = async (req, res) => {
 
 export const Logout = async (req, res) => {
   try {
+    // accessToken-t törli a sütikből
     const accessToken = req.cookies.accessToken
     if (!accessToken) return res.status(400).send({ message: 'Nem vagy bejelentkezve!' })
 
@@ -138,6 +139,7 @@ export const Logout = async (req, res) => {
 
 export const Logged = async (req, res) => {
   try {
+    // Visszaadja, hogy a felhasználó be van-e jelentkezve
     const token = req.cookies.accessToken
     if (!token) return res.send(false)
 
@@ -187,6 +189,7 @@ export const updateUsername = async (req, res) => {
 
 export const updateAvatar = async (req, res) => {
   try {
+    // Profilkép feltöltés
     const avatar = req.file
     const errors = new Errors()
 
@@ -204,6 +207,7 @@ export const updateAvatar = async (req, res) => {
 
 export const deleteAvatar = async (req, res) => {
   try {
+    // Profilkép törlés
     await users.update({ avatar: 'dummy.png' }, { where: { id: req.id } })
     res.send({ message: 'Sikeres profilkép törlés!', file: 'dummy.png' })
   } catch (err) {
@@ -276,6 +280,7 @@ export const updatePassword = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
   try {
+    // Email hitelesítés
     const { token } = req.body
     
     const user = await users.findOne({ where: { id: req.id } })
@@ -405,6 +410,7 @@ export const getUserList = async (req, res) => {
 
 export const getUserLists = async (req, res) => {
   try {
+    // Felhasználó összes listája
     const results = await lists.findAll({
       where: {
         userId: req.id
@@ -556,6 +562,7 @@ export const createList = async (req, res) => {
 
 export const updateList = async (req, res) => {
   try {
+    // Lista adatok módosítása
     const { id: listId } = req.params
     const { name, description, status, visible } = req.body
     await lists.update({ name, description, status, private: !visible }, { where: { id: listId, userId: req.id } })
@@ -571,6 +578,7 @@ export const updateList = async (req, res) => {
 
 export const removeList = async (req, res) => {
   try {
+    // Lista törlése
     await lists.destroy({ where: { id: req.params.id, userId: req.id } })
     res.send({ message: 'Sikeresen törölted a listát!' })
   } catch (err) {
