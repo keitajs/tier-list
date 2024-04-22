@@ -1,0 +1,94 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Lista kategória útvonalak",
+    "collectionId": "da2c4ac5-7559-408a-ad2b-e0d2f79f3e8e",
+    "dateExported": "2024-04-22T13:34:51.567Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "5fdc340b-02d4-4a3c-a49f-ce9792f7f8b5",
+            "colId": "da2c4ac5-7559-408a-ad2b-e0d2f79f3e8e",
+            "containerId": "",
+            "name": "Kategória hozzáadás",
+            "url": "http://localhost:2000/lists/17/categories/create",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-22T13:30:49.674Z",
+            "modified": "2024-04-22T13:30:49.674Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"test category\",\n  \"color\": \"#ffffff\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "229c14e9-5f2a-489f-ad2b-cc297342428c",
+            "colId": "da2c4ac5-7559-408a-ad2b-e0d2f79f3e8e",
+            "containerId": "",
+            "name": "Kategória mozgatás",
+            "url": "http://localhost:2000/lists/17/categories/70/move",
+            "method": "PATCH",
+            "sortNum": 20000,
+            "created": "2024-04-22T13:32:32.695Z",
+            "modified": "2024-04-22T13:32:32.695Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"position\": 1\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "89c603e3-8848-4c00-a741-d1d480005d11",
+            "colId": "da2c4ac5-7559-408a-ad2b-e0d2f79f3e8e",
+            "containerId": "",
+            "name": "Kategória módosítás",
+            "url": "http://localhost:2000/lists/17/categories/70/update",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-04-22T13:33:42.888Z",
+            "modified": "2024-04-22T13:33:42.888Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"test\",\n  \"color\": \"#000000\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "a9129897-83b9-4800-882b-404412084372",
+            "colId": "da2c4ac5-7559-408a-ad2b-e0d2f79f3e8e",
+            "containerId": "",
+            "name": "Kategória törlés",
+            "url": "http://localhost:2000/lists/17/categories/70/remove",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-04-22T13:34:32.187Z",
+            "modified": "2024-04-22T13:34:32.187Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ]
+        }
+    ],
+    "ref": "zVeVGZptUILS0IQq2Lv0RQN7oD-eRW2dxTcrVTALo01Gw9CAJYTWpFEvcBY4tz1Ioa-b-CxJM9fZcaxr8XcyXg"
+}

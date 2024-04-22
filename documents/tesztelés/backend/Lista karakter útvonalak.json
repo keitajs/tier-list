@@ -1,0 +1,122 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Lista karakter útvonalak",
+    "collectionId": "255f5ed3-d668-4b4f-9c30-14ff39b36615",
+    "dateExported": "2024-04-22T13:47:35.504Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "3b7a219c-749f-441f-b078-352f248ac0a2",
+            "colId": "255f5ed3-d668-4b4f-9c30-14ff39b36615",
+            "containerId": "",
+            "name": "Karakter létrehozás",
+            "url": "http://localhost:2000/lists/17/characters/create",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-22T13:41:31.380Z",
+            "modified": "2024-04-22T13:41:31.380Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "character",
+                        "value": "{\"name\": \"Akame\", \"url\": \"https://myanimelist.net/character/63351\"}"
+                    },
+                    {
+                        "name": "anime",
+                        "value": "{\"title\": \"Akame ga Kill!\", \"url\": \"https://myanimelist.net/anime/22199\"}"
+                    }
+                ],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "d:\\Codes\\tier-list\\backend\\images\\characters\\Screenshot_2023-07-11-00-03-09-49_50ef9f5a0f3fc24b6f0ffc8843167fe4.jpg-1706980587519.jpg"
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "9bf99ee9-375d-4d97-a273-3fceb59f6040",
+            "colId": "255f5ed3-d668-4b4f-9c30-14ff39b36615",
+            "containerId": "",
+            "name": "Karakter áthelyezés",
+            "url": "http://localhost:2000/lists/17/characters/56/move",
+            "method": "PATCH",
+            "sortNum": 20000,
+            "created": "2024-04-22T13:43:12.417Z",
+            "modified": "2024-04-22T13:43:12.417Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"position\": 1,\n  \"categoryId\": 71\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "94040b7c-8a4e-4c2d-ae5d-e7d3b4a42efe",
+            "colId": "255f5ed3-d668-4b4f-9c30-14ff39b36615",
+            "containerId": "",
+            "name": "Karakter módosítás",
+            "url": "http://localhost:2000/lists/17/characters/56/update",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-04-22T13:45:49.369Z",
+            "modified": "2024-04-22T13:45:49.369Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "character",
+                        "value": "{\"name\": \"Akame\", \"url\": \"https://myanimelist.net/character/63351\"}"
+                    },
+                    {
+                        "name": "anime",
+                        "value": "{\"title\": \"Akame ga Kill!\", \"url\": \"https://myanimelist.net/anime/22199\"}"
+                    },
+                    {
+                        "name": "image",
+                        "value": "https://cdn.myanimelist.net/images/characters/8/253095.jpg"
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "a379d377-0849-453f-89ba-4868c2d3d5a3",
+            "colId": "255f5ed3-d668-4b4f-9c30-14ff39b36615",
+            "containerId": "",
+            "name": "Karakter törlés",
+            "url": "http://localhost:2000/lists/17/characters/56/remove",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-04-22T13:47:26.318Z",
+            "modified": "2024-04-22T13:47:26.318Z",
+            "headers": [
+                {
+                    "name": "Cookie",
+                    "value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXJuYW1lIiwiaWF0IjoxNzEzNzkyMDM2LCJleHAiOjE3MTQzOTY4MzZ9.Q_jJJJwrgNZEWdDLfus7W9ZF7HCMwjYOC9uJr9Vba38"
+                }
+            ]
+        }
+    ],
+    "ref": "Qu2oAwP3ZmOjk3x7wRelSEQkzSMG_ReK3bGiy3meH3BmAhAJBo2OVtkJsJRi5pHOJYmz7GVyckYApYGBxbilkQ"
+}

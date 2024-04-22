@@ -1,0 +1,35 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Fájl lekérés útvonalak",
+    "collectionId": "b27338c4-e6f4-43bd-a2e9-7625c0d365b7",
+    "dateExported": "2024-04-22T13:49:22.340Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "f1fc704e-d58d-4842-a26a-d81b4d55417f",
+            "colId": "b27338c4-e6f4-43bd-a2e9-7625c0d365b7",
+            "containerId": "",
+            "name": "Profilkép lekérés",
+            "url": "http://localhost:2000/user/images/1.jpg",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-04-22T13:48:35.500Z",
+            "modified": "2024-04-22T13:48:35.500Z",
+            "headers": []
+        },
+        {
+            "_id": "f197a13e-9369-40eb-9366-d86ee3d0c93e",
+            "colId": "b27338c4-e6f4-43bd-a2e9-7625c0d365b7",
+            "containerId": "",
+            "name": "Karakter kép lekérés",
+            "url": "http://localhost:2000/characters/images/Screenshot_2023-07-11-00-03-09-49_50ef9f5a0f3fc24b6f0ffc8843167fe4.jpg-1706980587519.jpg",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-04-22T13:49:17.011Z",
+            "modified": "2024-04-22T13:49:17.011Z",
+            "headers": []
+        }
+    ],
+    "ref": "kkDzjjYo26sO_ZF6PoW8aj3sQqt5oINmySzRhJYg3Up2iT13_qge4s48v-FR3Cj5hoiZsCECQr_qYXQMyClCaQ"
+}
