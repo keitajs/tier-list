@@ -37,8 +37,8 @@ const updateActivity = async (userId, listId) => {
 
 export const getAvatarImage = async (req, res) => {
   // Felhasználó profilképek lekérése
-  const filePath = `${path.resolve()}/images/avatars/${req.params.filename}`
-  if (!fs.existsSync(filePath)) res.status(404).send({ message: 'Nem található kép!' })
+  let filePath = `${path.resolve()}/images/avatars/${req.params.filename}`
+  if (!fs.existsSync(filePath)) filePath = `${path.resolve()}/images/avatars/dummy.png`
 
   res.sendFile(filePath)
 }
