@@ -37,7 +37,7 @@ function NewCharacter(props) {
 
       socket.emit('character-create', data)
     } catch (err) {
-      if (err?.response?.data?.message) return alert(err.response.data.message)
+      if (err?.response?.data) return setErrors(errors => ({...errors, image: 'Nem kép vagy több mint 5 MB!' }))
       alert('Server error')
       console.log(err)
     }
@@ -85,22 +85,22 @@ function NewCharacter(props) {
     if (options?.allowEmpty && !value) return setErrors(errors => { return {...errors, [key]: '' } })
     if (!value) return setErrors(errors => { return {...errors, [key]: 'Üres mező!' } })
     if (options?.url) try { new URL(value) } catch { return setErrors(errors => { return {...errors, [key]: 'Nem megfelelő URL formátum!' } })}
-    setErrors(errors => { return {...errors, [key]: '' } })
+    if (!options?.image) setErrors(errors => { return {...errors, [key]: '' } })
   }
 
   const onImageLoad = (e) => {
-    if (!file || !image) return
+    if (!file || !image || errors.image === 'Nem kép vagy több mint 5 MB!') return
     setErrors(errors => ({...errors, image: '' }))
   }
 
   const onImageError = (e) => {
     if (!image) return
-    setErrors(errors => ({...errors, image: "Az URL-en nincs elérhető kép!" }))
+    setErrors(errors => ({...errors, image: 'Az URL-en nincs elérhető kép!' }))
   }
 
   useEffect(() => handleErrors({ name }), [name])
   useEffect(() => handleErrors({ url }, { url: true, allowEmpty: true }), [url])
-  useEffect(() => handleErrors({ image }), [image])
+  useEffect(() => handleErrors({ image }, { image: true }), [image])
   useEffect(() => handleErrors({ animeUrl }, { url: true, allowEmpty: true }), [animeUrl])
 
   useEffect(() => {

@@ -15,8 +15,25 @@ const avatarImageStorage = multer.diskStorage({ destination: 'images/avatars/', 
   cb(null, `${req.id}${path.extname(file.originalname)}`)
 } })
 
-const uploadCharacterImage = multer({ storage: characterImageStorage })
-const uploadAvatarImage = multer({ storage: avatarImageStorage })
+const checkFileType = function (file, cb) {
+  const fileTypes = /jpg|jpeg|png|webp|avif|gif|svg/
+  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase())
+  const mimeType = fileTypes.test(file.mimetype)
+
+  if (mimeType && extName) return cb(null, true)
+  cb("A feltöltött fájl nem kép!")
+}
+
+const uploadCharacterImage = multer({
+  storage: characterImageStorage,
+  limits: { fileSize: 5000000 },
+  fileFilter: (req, file, cb) => checkFileType(file, cb)
+})
+const uploadAvatarImage = multer({
+  storage: avatarImageStorage,
+  limits: { fileSize: 5000000 },
+  fileFilter: (req, file, cb) => checkFileType(file, cb)
+})
 
 // Útvonalak
 router.get('/', (req, res) => { res.send({ message: 'Tier List backend API' }) })
