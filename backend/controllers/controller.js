@@ -548,6 +548,7 @@ export const createList = async (req, res) => {
       { name: 'A', position: 1, color: '#880000', listId: list.id },
       { name: 'B', position: 2, color: '#888800', listId: list.id },
       { name: 'C', position: 3, color: '#008800', listId: list.id },
+      { name: 'D', position: 4, color: '#008888', listId: list.id },
       { listId: list.id }
     ])
 
