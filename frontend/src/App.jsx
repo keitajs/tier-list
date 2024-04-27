@@ -16,6 +16,7 @@ function App() {
   const history = useNavigate()
   const [logged, setLogged] = useState(null)
 
+  // Token frissítés és socket csatlakozás
   const tryConnect = async () => {
     const { data } = await axios.get('/logged')
     if (data) await axios.get('/user/token/refresh')

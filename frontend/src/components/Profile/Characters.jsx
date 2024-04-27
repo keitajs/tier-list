@@ -9,14 +9,17 @@ function Characters(props) {
   const [zoom, setZoom] = useState(0.5)
   const maxCount = useMemo(() => Math.max(...props.characters.map((character) => character.count)), [props.characters])
 
+  // Nagyítás / kicsinyítés
   const zoomIn = () => setZoom(zoom => zoom + 0.05 <= 1.25 ? zoom + 0.05 : 1.25)
   const zoomOut = () => setZoom(zoom => zoom - 0.05 >= 0.25 ? zoom - 0.05 : 0.25)
 
+  // Görgetés zoom
   const zoomScroll = (e) => {
     if (e.deltaY < 0) return zoomIn()
     zoomOut()
   }
 
+  // Képre kattintás nagyítás / kicsinyítés
   const zoomClick = (e) => {
     e.stopPropagation()
     setZoom(zoom => {
@@ -25,12 +28,14 @@ function Characters(props) {
     })
   }
 
+  // Görgetés letiltása
   const preventScroll = (e) => {
     e.preventDefault()
     e.stopPropagation()
     return false
   }
 
+  // Képnézegető megnyitásakor letiltja a görgetést
   useEffect(() => {
     if (!full) return setZoom(0.5)
 

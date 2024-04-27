@@ -13,6 +13,7 @@ function Lists(props) {
   const [lists, setLists] = useState(null)
   const [activeList, setActiveList] = useState(null)
 
+  // Felhasználó listáinak lekérése
   const getUserLists = async () => {
     const { data } = await axios.get('/user/lists')
     setLists(data)

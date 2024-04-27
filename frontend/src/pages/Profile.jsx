@@ -19,6 +19,7 @@ function Profile(props) {
   const [weeklyActivies, setWeeklyActivies] = useState([])
   const [edit, setEdit] = useState(null)
 
+  // Felhasználói adatok lekérése
   const getUserData = async (username) => {
     const { data } = await axios.get(`/user/data${username ? `?user=${username}` : ''}`)
     

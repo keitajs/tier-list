@@ -14,14 +14,17 @@ import Item from '../../components/List/TierList/Item'
 import NewCategory from '../../components/List/TierList/NewCategory'
 
 function TierList(props) {
+  // Socket IO felhasználók
   const [socketUsers, setSocketUsers] = useState([])
 
+  // Lista adatok
   const [title, setTitle] = useState('Betöltés...')
   const [items, setItems] = useState([])
   const [categories, setCategories] = useState([])
   const [permission, setPermission] = useState({ move: true, edit: true, admin: true })
   const [create, setCreate] = useState(false)
 
+  // Mozgatáshoz szükséges adatok
   const [activeItem, setActiveItem] = useState(null)
   const [activeCategory, setActiveCategory] = useState(null)
   const categoryIds = useMemo(() => categories.map(category => category.id), [categories])
@@ -31,6 +34,7 @@ function TierList(props) {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
+  // Karakter / Kategória mozgatás kezdete
   const onDragStart = ({ active }) => {
     if (!permission.move) return
     if (active.data.current?.type === "Item") {
@@ -43,12 +47,14 @@ function TierList(props) {
     }
   }
 
+  // Karakter / Kategória ráhúzás egy másik elemre
   const onDragOver = ({ active, over }) => {
     if (!permission.move) return
     if (!over) return
     if (active.id === over.id) return
     if (active.data.current?.type !== "Item") return
 
+    // Karakter áthelyezés
     if (over.data.current?.type === "Item") {
       return setItems((items) => {
         const activeIndex = items.findIndex((t) => t.id === active.id)
@@ -62,6 +68,7 @@ function TierList(props) {
       })
     }
 
+    // Kategória áthelyezés
     if (over.data.current?.type === "Category") {
       return setItems((items) => {
         const activeIndex = items.findIndex((t) => t.id === active.id)
@@ -71,6 +78,7 @@ function TierList(props) {
     }
   }
 
+  // Karakter / Kategória mozgatás vége
   const onDragEnd = ({ active, over }) => {
     if (!permission.move) return
     setActiveItem(null)
@@ -78,6 +86,7 @@ function TierList(props) {
     
     if (!over) return
 
+    // Karakter mozgatás mentése 
     if (active.data.current?.type === "Item") {
       const activeItem = items.find(item => item.id === active.id)
       const firstItem = items.find(item => activeItem.categoryId === item.categoryId)
@@ -88,6 +97,7 @@ function TierList(props) {
       return axios.patch(`/lists/${props.selectedList}/characters/${parseInt(active.id)}/move`, { position, categoryId })
     }
 
+    // Kategória mozgatás mentése
     if (active.data.current?.type === "Category") {
       if (active.id === over.id) return socket.emit('category-move-end', active.id, false)
       
@@ -102,6 +112,7 @@ function TierList(props) {
     }
   }
 
+  // Tier List adatok lekérése
   const getTierList = async (id) => {
     const { data: { list, permission } } = await axios.get(`/user/lists/${id}`)
 
@@ -114,11 +125,13 @@ function TierList(props) {
     document.title = `${list.name} - Listák | Tier List`
   }
 
+  // Csatlakozás socket szobához
   const joinListRoom = async (id) => {
     if (!socket.connected) socket.connect()
     socket.emit('list-join', id)
   }
 
+  // Kilépés socket szobából
   const leaveListRoom = async () => {
     if (socket.connected) socket.emit('list-leave')
   }
@@ -129,18 +142,24 @@ function TierList(props) {
     getTierList(props.selectedList).catch(err => props.history('/list'))
     joinListRoom(props.selectedList)
 
+    // Socket IO függvények
+
+    // Felhasználó belépés
     const userJoin = (user) => {
       setSocketUsers(socketUsers => socketUsers.concat(user))
     }
 
+    // Felhasználó kilépés
     const userLeave = (id) => {
       setSocketUsers(socketUsers => socketUsers.filter(user => user.id !== id))
     }
 
+    // Karakter létrehozás
     const characterCreate = (data) => {
       setItems(items => [...items, data])
     }
 
+    // Karakter módosítás
     const characterUpdate = (data) => {
       setItems(items => {
         const item = items.find(x => x.id === data.id)
@@ -152,6 +171,7 @@ function TierList(props) {
       })
     }
 
+    // Karakter törlés
     const characterDelete = (id) => {
       setItems(items => {
         items.splice(items.findIndex(item => item.id === id), 1)
@@ -159,6 +179,7 @@ function TierList(props) {
       })
     }
 
+    // Karakter mozgatás kezdése
     const characterMoveStart = (id, user) => {
       setItems(items => {
         const character = items.find(item => item.id === id)
@@ -168,6 +189,7 @@ function TierList(props) {
       })
     }
 
+    // Karakter mozgatás vége
     const characterMoveEnd = (id, category, position) => {
       setItems((items) => {
         const activeIndex = items.findIndex(item => item.id === id)
@@ -178,10 +200,12 @@ function TierList(props) {
       })
     }
 
+    // Kategória létrehozás
     const categoryCreate = (data) => {
       setCategories(categories => [...categories, {...data, id: `${data.id}cat`}])
     }
 
+    // Kategória módosítás
     const categoryUpdate = (data) => {
       setCategories(categories => {
         const category = categories.find(category => category.id === data.id)
@@ -191,6 +215,7 @@ function TierList(props) {
       })
     }
 
+    // Kategória törlés
     const categoryDelete = (id) => {
       setCategories(categories => {
         categories.splice(categories.findIndex(category => category.id === id), 1)
@@ -198,6 +223,7 @@ function TierList(props) {
       })
     }
 
+    // Kategória mozgatás kezdése
     const categoryMoveStart = (id, user) => {
       setCategories(categories => {
         const category = categories.find(category => category.id === id)
@@ -207,6 +233,7 @@ function TierList(props) {
       })
     }
 
+    // Kategória mozgatás vége
     const categoryMoveEnd = (id, position) => {
       setCategories(categories => {
         const activeIndex = categories.findIndex(category => category.id === id)
@@ -215,6 +242,7 @@ function TierList(props) {
       })
     }
 
+    // Socket IO eventek
     socket.on('user-join', userJoin)
     socket.on('user-leave', userLeave)
 

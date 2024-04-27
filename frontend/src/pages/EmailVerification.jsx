@@ -9,6 +9,7 @@ function EmailVerification(props) {
   const [verify, setVerify] = useState(null)
   const [msg, setMsg] = useState('')
 
+  // Bejelentkezés ellenőrzés
   const getLogged = async () => {
     const { data } = await axios.get('/logged')
     if (!data) {
@@ -21,6 +22,7 @@ function EmailVerification(props) {
     setVerify(0)
   }
 
+  // Email hitelesítés
   const verifyEmail = async (history, searchParams) => {
     const token = searchParams.get('token')
 

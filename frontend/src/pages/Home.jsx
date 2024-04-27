@@ -12,6 +12,7 @@ function Home(props) {
   const [active, setActive] = useState(0)
   const [logged, setLogged] = useState(false)
   
+  // Bejelentkezési állapot lekérése
   const getLogged = async () => {
     const { data } = await axios.get('/logged')
     setLogged(data)
@@ -22,6 +23,7 @@ function Home(props) {
   }, [])
 
   useEffect(() => {
+    // Paraméterek
     const loginParam = searchParams.get('login')
     const registerParam = searchParams.get('register')
 
@@ -30,6 +32,7 @@ function Home(props) {
   }, [searchParams])
 
   useEffect(() => {
+    // Oldal cím beállítása
     if (logged) setActive(0)
 
     searchParams.delete('login')

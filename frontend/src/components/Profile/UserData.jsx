@@ -7,6 +7,7 @@ import moment from 'moment'
 import 'moment/dist/locale/hu'
 
 function UserData(props) {
+  // Kijelentkezés
   const Logout = () => {
     socket.disconnect()
     axios.delete('/logout').then(() => props.history('/'))

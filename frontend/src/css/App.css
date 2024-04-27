@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ✔ és ✖ animációk */
 .input-check-anim {
   animation: inputCheckAnimation 0.3s ease;
 }
@@ -46,6 +47,7 @@
   }
 }
 
+/* Sikeres bejelentkezés / regisztráció */
 .success-box-anim {
   animation: successBoxAnim 0.3s ease;
 }
@@ -110,6 +112,7 @@
   }
 }
 
+/* Főoldal tartalom cím alatti vonal animáció */
 .home-content-anim::after {
   animation: homeContentAnim var(--time) linear;
 }
