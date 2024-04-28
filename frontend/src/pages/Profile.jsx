@@ -34,7 +34,10 @@ function Profile(props) {
     const username = searchParams.get('user')
     if (username) setParams(true)
 
-    getUserData(username).catch(err => props.history('/'))
+    getUserData(username).catch(err => {
+      setParams(false)
+      props.history('/profile')
+    })
   }, [props, searchParams])
 
   return (

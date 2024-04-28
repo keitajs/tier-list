@@ -303,6 +303,7 @@ export const getUserData = async (req, res) => {
     const { user: username } = req.query
 
     const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'status', 'registerDate'] })
+    if (!user) return res.status(404).send({ message: 'A keresett felhasználó nem található!' })
     if (username) user.email = 'hiddenmail@tl.hu'
 
     // A felhasználó heti aktivitása
