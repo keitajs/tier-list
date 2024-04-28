@@ -31,6 +31,7 @@ function Email(props) {
     }
   }
 
+  // Input mezők változásainak kezelése
   useEffect(() => {
     if (!email) return setErrors(errors => { return { ...errors, email: 'Üres mező!' } })
     if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email)) return setErrors(errors => { return { ...errors, email: 'Hibás formátum!' } })
@@ -43,6 +44,7 @@ function Email(props) {
     setErrors(errors => { return { ...errors, password: false } })
   }, [password])
 
+  // Megjelenéskor mezők ürítése
   useEffect(() => {
     if (!props.hide) {
       setEmail('')

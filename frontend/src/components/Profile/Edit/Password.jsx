@@ -10,6 +10,7 @@ function Password(props) {
   const [showPass, setShowPass] = useState(false)
   const [errors, setErrors] = useState({})
 
+  // Jelszó módosítás
   const update = async () => {
     if (Object.values(errors).find(x => !!x)) return
 
@@ -29,6 +30,7 @@ function Password(props) {
     }
   }
 
+  // Input mezők változásainak kezelése
   useEffect(() => {
     if (password !== passwor2) setErrors(errors => { return { ...errors, passwor2: 'Két jelszó nem egyezik!' } })
     else if (passwor2 !== '') setErrors(errors => { return { ...errors, passwor2: false } })
@@ -48,6 +50,7 @@ function Password(props) {
     setErrors(errors => { return {...errors, currentPassword: false } })
   }, [currentPassword])
 
+  // Megjelenéskor mezők ürítése
   useEffect(() => {
     if (!props.hide) {
       setPassword('')

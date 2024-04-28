@@ -8,6 +8,7 @@ function UpdateCategory(props) {
   const [name, setName] = useState(props.name)
   const [color, setColor] = useState(props.color)
 
+  // Kategória módosítás
   const updateCategory = async () => {
     if (!name) return
 
@@ -30,6 +31,7 @@ function UpdateCategory(props) {
     }
   }
 
+  // Kategória törlés
   const removeCategory = async () => {
     try {
       await axios.delete(`/lists/${props.selectedList}/categories/${parseInt(props.id)}/remove`)

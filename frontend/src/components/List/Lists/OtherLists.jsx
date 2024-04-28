@@ -12,6 +12,7 @@ function OtherLists(props) {
   const [lists, setLists] = useState([])
   const [shared, setShared] = useState(true)
 
+  // Listák lekérése
   const getLists = async (shared, query) => {
     const { data } = await axios.get(shared ? '/lists/shared' : `/lists/public${query ? `?q=${query}` : ''}`)
     setLists(data)

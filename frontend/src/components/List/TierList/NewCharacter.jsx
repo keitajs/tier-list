@@ -20,6 +20,7 @@ function NewCharacter(props) {
 
   const [errors, setErrors] = useState({})
 
+  // Karakter létrehozás
   const createItem = async () => {
     if (Object.values(errors).find(x => !!x)) return
 
@@ -43,6 +44,7 @@ function NewCharacter(props) {
     }
   }
 
+  // Mezők kitöltése keresőből választott karakter adataival
   const fillInputs = async (id) => {
     const { data } = await (await fetch(`https://api.jikan.moe/v4/characters/${id}/full`)).json()
     const anime = data.anime.find(anime => anime.role === 'Main')?.anime || data.anime[0]?.anime || data.manga.find(manga => manga.role === 'Main')?.manga || data.manga[0]?.manga || { title: '', url: '' }
@@ -57,6 +59,7 @@ function NewCharacter(props) {
     setResults([])
   }
 
+  // Jikan API keresés
   const searchResults = async (query) => {
     if (query.length < 4) return setResults([])
 
@@ -68,6 +71,7 @@ function NewCharacter(props) {
     }
   }
 
+  // Képfeltöltés és törlés
   const fileUpload = () => {
     if (file) {
       setFile('')
@@ -77,6 +81,7 @@ function NewCharacter(props) {
     }
   }
 
+  // Hibák kezelése
   const handleErrors = (object, options) => {
     const keys = Object.keys(object)
     const key = keys[0]

@@ -22,6 +22,7 @@ function Item(props) {
     transform: CSS.Transform.toString(transform)
   }
 
+  // Item kinyithatóság ellenőrzése
   const openItem = (e) => {
     if (!isDragging && ((e === 'context' && !isMobile) || (e === 'onclick' && isMobile))) return setOpened(!opened)
   }

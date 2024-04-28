@@ -9,6 +9,7 @@ function Avatar(props) {
   const [error, setError] = useState('')
   const fileInput = useRef(null)
 
+  // Profilkép módosítás
   const update = async () => {
     if (!file || !image) return
 
@@ -28,6 +29,7 @@ function Avatar(props) {
     }
   }
 
+  // Profilkép eltávolítás
   const remove = async () => {
     try {
       const { data } = await axios.delete('/user/avatar')
@@ -44,6 +46,7 @@ function Avatar(props) {
     }
   }
 
+  // Képfeltöltés és törlés
   const fileUpload = () => {
     if (file) {
       setImage('')
@@ -53,6 +56,7 @@ function Avatar(props) {
     }
   }
 
+  // Megjelenéskor mezők ürítése
   useEffect(() => {
     if (!props.hide) {
       setFile('')

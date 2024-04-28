@@ -9,11 +9,13 @@ import ListItem from './Sidebar/ListItem'
 function Sidebar(props) {
   const [lists, setLists] = useState([])
 
+  // Kijelentkezés
   const Logout = () => {
     socket.disconnect()
     axios.delete('/logout').then(() => props.history('/'))
   }
 
+  // Sidebar listák lekérése
   const getLists = async () => {
     const { data } = await axios.get('/lists/sidebar')
     setLists(data)

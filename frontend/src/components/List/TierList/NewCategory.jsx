@@ -10,6 +10,7 @@ function NewCategory(props) {
   const [color, setColor] = useState('')
   const [errors, setErrors] = useState({})
 
+  // Kategória létrehozás
   const createCategory = async () => {
     if (Object.values(errors).find(x => !!x)) return
 
@@ -27,6 +28,7 @@ function NewCategory(props) {
     }
   }
 
+  // Megjelenő szöveg színének eldöntése háttérszín alapján
   const isLight = (color) => {
     const c = color.substring(1)
     const rgb = parseInt(c, 16)
@@ -37,11 +39,13 @@ function NewCategory(props) {
     return luma < 150
   }
 
+  // Input mező változásának kezelése
   useEffect(() => {
     if (!name) return setErrors(errors => { return {...errors, name: 'Üres mező!' } })
     setErrors(errors => { return {...errors, name: false } })
   }, [name])
 
+  // Megjelenéskor mezők ürítése
   useEffect(() => {
     setName('')
     setColor('#3b82f6')

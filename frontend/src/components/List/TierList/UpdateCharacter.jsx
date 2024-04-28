@@ -16,6 +16,7 @@ function UpdateCharacter(props) {
 
   const [errors, setErrors] = useState({})
 
+  // Karakter módosítás
   const updateCharacter = async () => {
     if (Object.values(errors).find(x => !!x)) return
 
@@ -45,6 +46,7 @@ function UpdateCharacter(props) {
     }
   }
 
+  // Karakter törlés
   const removeCharacter = async () => {
     try {
       await axios.delete(`/lists/${props.selectedList}/characters/${parseInt(props.id)}/remove`)
@@ -62,6 +64,7 @@ function UpdateCharacter(props) {
     }
   }
 
+  // Képfeltöltés és törlés
   const fileUpload = () => {
     if (file) {
       setFile('')
@@ -71,6 +74,7 @@ function UpdateCharacter(props) {
     }
   }
 
+  // Hibák kezelése
   const handleErrors = (object, options) => {
     const keys = Object.keys(object)
     const key = keys[0]

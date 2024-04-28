@@ -7,6 +7,7 @@ function Username(props) {
   const [name, setName] = useState('')
   const [errors, setErrors] = useState({})
 
+  // Felhasználónév módosítás
   const update = async () => {
     if (Object.values(errors).find(x => !!x)) return
 
@@ -24,12 +25,14 @@ function Username(props) {
     }
   }
 
+  // Input mező változásának kezelése
   useEffect(() => {
     if (!name) return setErrors(errors => { return {...errors, name: 'Üres mező!' } })
     if (name === props.user.username) return setErrors(errors => { return {...errors, name: 'Jelenleg is ez a neved!' } })
     setErrors(errors => { return {...errors, name: false } })
   }, [name, props.user.username])
 
+  // Megjelenéskor mezők ürítése
   useEffect(() => {
     if (!props.hide) setName('')
   }, [props.hide])

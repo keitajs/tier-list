@@ -18,6 +18,7 @@ function Category(props) {
   }
   const itemIds = useMemo(() => props.items.map(item => item.id), [props.items])
 
+  // Megjelenő szöveg színének eldöntése háttérszín alapján
   const isLight = (color) => {
     const c = color.substring(1)
     const rgb = parseInt(c, 16)
