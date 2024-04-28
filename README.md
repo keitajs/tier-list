@@ -10,19 +10,19 @@ A backend telepítése és futtatása előtt szükséges beállítani a .env fá
 
 ```dotenv
 # Backend portja
-PORT=2000
+PORT=<port>
 
 # Adatbázis adatok
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=
-DB_NAME=tier-list
+DB_HOST=<database_host>
+DB_USER=<database_username>
+DB_PASS=<database_password>
+DB_NAME=<database_name>
 
 # JWT Token
-ACCESS_SECRET=xdAKLSDmcalscemA4cmJMCum4c5jskCM
+ACCESS_SECRET=<access_token_secret>
 
 # Resend Kulcs
-RESEND_KEY=re_4DRKtUsP_Hma4jULpQXoCay5kwRjy8NMm
+RESEND_KEY=<resend_api_key>
 ```
 
 ## Telepítés
@@ -50,7 +50,7 @@ bun run build
 bun serve
 
 # Development
-bun run dev
+bun dev
 ```
 
 #### Backend
@@ -60,10 +60,10 @@ cd ./backend
 bun install
 
 # Production
-bun run start
+bun start
 
 # Development
-bun run dev
+bun dev
 ```
 
 ### Docker
