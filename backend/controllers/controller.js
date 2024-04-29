@@ -175,10 +175,10 @@ export const updateUsername = async (req, res) => {
     if (checkUsername) errors.push('username', 'A megadott felhasználónév már foglalt!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
     
-    await users.update({ username }, { where: { id: req.id } })
-
-    // Új accessToken, ezáltal nem lesz kijelentkezve
+    // Új accessToken és felhasználónév módosítás
     const accessToken = jwt.sign({ id: req.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
+    await users.update({ username, accessToken }, { where: { id: req.id } })
+
     res.cookie('accessToken', accessToken, { maxAge: 7*24*60*60*1000, httpOnly: true, sameSite: 'None', secure: true })
     res.send({ message: 'Sikeres felhasználónév módosítás!' })
   } catch (err) {
