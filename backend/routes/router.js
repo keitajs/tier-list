@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, verifyEmail, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken, refreshToken } from '../controllers/verifyToken.js'
+import { checkImage } from '../controllers/checkImage.js'
 import multer from 'multer'
 import path from 'path'
 
@@ -12,28 +13,11 @@ const characterImageStorage = multer.diskStorage({ destination: 'images/characte
   cb(null, `${path.basename(file.originalname)}-${Date.now()}${path.extname(file.originalname)}`)
 } })
 const avatarImageStorage = multer.diskStorage({ destination: 'images/avatars/', filename: (req, file, cb) => {
-  cb(null, `${req.id}${path.extname(file.originalname)}`)
+  cb(null, `${req.id}${Date.now()}${path.extname(file.originalname)}`)
 } })
 
-const checkFileType = function (file, cb) {
-  const fileTypes = /jpg|jpeg|png|webp|avif|gif|svg/
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase())
-  const mimeType = fileTypes.test(file.mimetype)
-
-  if (mimeType && extName) return cb(null, true)
-  cb("A feltöltött fájl nem kép!")
-}
-
-const uploadCharacterImage = multer({
-  storage: characterImageStorage,
-  limits: { fileSize: 5000000 },
-  fileFilter: (req, file, cb) => checkFileType(file, cb)
-})
-const uploadAvatarImage = multer({
-  storage: avatarImageStorage,
-  limits: { fileSize: 5000000 },
-  fileFilter: (req, file, cb) => checkFileType(file, cb)
-})
+const uploadCharacterImage = multer({ storage: characterImageStorage })
+const uploadAvatarImage = multer({ storage: avatarImageStorage })
 
 // Útvonalak
 router.get('/', (req, res) => { res.send({ message: 'Tier List backend API' }) })
@@ -50,7 +34,7 @@ router.get('/user/token/refresh', verifyToken, refreshToken)
 router.get('/user/lists', verifyToken, getUserLists)
 router.get('/user/lists/:id', verifyToken, hasAnyPermission, getUserList)
 router.patch('/user/username', verifyToken, updateUsername)
-router.patch('/user/avatar', verifyToken, uploadAvatarImage.single('avatar'), updateAvatar)
+router.patch('/user/avatar', verifyToken, uploadAvatarImage.single('avatar'), checkImage, updateAvatar)
 router.delete('/user/avatar', verifyToken, deleteAvatar)
 router.patch('/user/email', verifyToken, updateEmail)
 router.patch('/user/password', verifyToken, updatePassword)
@@ -76,9 +60,9 @@ router.patch('/lists/:id/categories/:categoryId/update', verifyToken, hasEditPer
 router.delete('/lists/:id/categories/:categoryId/remove', verifyToken, hasEditPermission, isInList, removeCategory)
 
 // Lista karakter útvonalak
-router.post('/lists/:id/characters/create', verifyToken, hasEditPermission, uploadCharacterImage.single('image'), createCharacter)
+router.post('/lists/:id/characters/create', verifyToken, hasEditPermission, uploadCharacterImage.single('image'), checkImage, createCharacter)
 router.patch('/lists/:id/characters/:characterId/move', verifyToken, hasMovePermission, isInList, moveCharacter)
-router.patch('/lists/:id/characters/:characterId/update', verifyToken, hasEditPermission, isInList, uploadCharacterImage.single('image'), updateCharacter)
+router.patch('/lists/:id/characters/:characterId/update', verifyToken, hasEditPermission, isInList, uploadCharacterImage.single('image'), checkImage, updateCharacter)
 router.delete('/lists/:id/characters/:characterId/remove', verifyToken, hasEditPermission, isInList, removeCharacter)
 
 // Fájl lekérés útvonalak
