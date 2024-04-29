@@ -1,13 +1,16 @@
 import path from 'path'
+import fs from 'fs'
 import { unlink } from 'fs/promises'
 
 export const checkImage = (req, res, next) => {
   const returnError = async (message) => {
-    await unlink(path.resolve() + '/' + req.file.path)
+    const filePath = path.resolve() + '/' + req.file?.path
+
+    if (fs.existsSync(filePath)) await unlink(filePath)
     return res.status(400).send({ message })
   }
 
-  if (!req.file) return returnError('Nincs fájl feltöltve!')
+  if (!req.file) return next()
   if (req.file.size > 5000000) return returnError('A fájl nagyobb mint 5 MB!')
 
   const fileTypes = /jpg|jpeg|png|webp|avif|gif|svg/
