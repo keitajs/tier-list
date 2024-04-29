@@ -25,7 +25,7 @@ function Avatar(props) {
         return { ...user }
       })
     } catch (err) {
-      setError('A feltöltött fájl nem kép vagy nagyobb mint 5 MB!')
+      setError(err.response.data.message)
     }
   }
 

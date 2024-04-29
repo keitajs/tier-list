@@ -12,6 +12,7 @@ import updates from '../models/update.js'
 import moment from 'moment'
 import path from 'path'
 import fs from 'fs'
+import { unlink } from 'fs/promises'
 import { Op, fn, col } from 'sequelize'
 import { Errors } from '../libs/errors.js'
 import { sendMail } from '../libs/resend.js'
@@ -196,7 +197,12 @@ export const updateAvatar = async (req, res) => {
     if (!avatar) errors.push('avatar', 'Tölts fel egy képet!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
-    await users.update({ avatar: avatar.filename }, { where: { id: req.id } })
+    const user = await users.findOne({ where: { id: req.id } })
+    const oldAvatar = path.resolve() + '/images/avatars/' + user.avatar
+    if (fs.existsSync(oldAvatar) && user.avatar !== 'dummy.png') await unlink(oldAvatar)
+    user.avatar = avatar.filename
+    user.save()
+
     res.send({ message: 'Sikeres profilkép módosítás!', file: avatar.filename })
   } catch (err) {
     if (!err) return
@@ -208,7 +214,12 @@ export const updateAvatar = async (req, res) => {
 export const deleteAvatar = async (req, res) => {
   try {
     // Profilkép törlés
-    await users.update({ avatar: 'dummy.png' }, { where: { id: req.id } })
+    const user = await users.findOne({ where: { id: req.id } })
+    const oldAvatar = path.resolve() + '/images/avatars/' + user.avatar
+    if (fs.existsSync(oldAvatar) && user.avatar !== 'dummy.png') await unlink(oldAvatar)
+    user.avatar = 'dummy.png'
+    user.save()
+
     res.send({ message: 'Sikeres profilkép törlés!', file: 'dummy.png' })
   } catch (err) {
     if (!err) return

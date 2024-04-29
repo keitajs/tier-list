@@ -38,7 +38,7 @@ function NewCharacter(props) {
 
       socket.emit('character-create', data)
     } catch (err) {
-      if (err?.response?.data) return setErrors(errors => ({...errors, image: 'Nem kép vagy több mint 5 MB!' }))
+      if (err?.response?.data) return setErrors(errors => ({ ...errors, image: err.response.data.message }))
       alert('Server error')
       console.log(err)
     }
@@ -94,7 +94,7 @@ function NewCharacter(props) {
   }
 
   const onImageLoad = (e) => {
-    if (!file || !image || errors.image === 'Nem kép vagy több mint 5 MB!') return
+    if (!file && !image || errors.image === 'Nincs fájl feltöltve!' || errors.image === 'A fájl nagyobb mint 5 MB!' || errors.image === 'A fájl nem kép!') return
     setErrors(errors => ({...errors, image: '' }))
   }
 
