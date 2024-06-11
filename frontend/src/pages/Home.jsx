@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import Index from '../components/Home/Index'
 import Login from '../components/Home/Login'
@@ -8,8 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 
 function Home(props) {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(props.active)
   const [logged, setLogged] = useState(false)
   
   // Bejelentkezési állapot lekérése
@@ -23,35 +21,22 @@ function Home(props) {
   }, [])
 
   useEffect(() => {
-    // Paraméterek
-    const loginParam = searchParams.get('login')
-    const registerParam = searchParams.get('register')
-
-    if (loginParam) return setActive(1)
-    if (registerParam) return setActive(2)
-  }, [searchParams])
-
-  useEffect(() => {
     // Oldal cím beállítása
     if (logged) setActive(0)
 
-    searchParams.delete('login')
-    searchParams.delete('register')
-
     if (logged || active <= 0) {
       document.title = 'Tier List'
+      props.history('/', { replace: false })
     }
     else if (active === 1) {
       document.title = 'Bejelentkezés | Tier List'
-      searchParams.append('login', 1)
+      props.history('/login', { replace: false })
     }
     else if (active === 2) {
       document.title = 'Regisztráció | Tier List'
-      searchParams.append('register', 1)
+      props.history('/register', { replace: false })
     }
-
-    setSearchParams(searchParams)
-  }, [active, logged, searchParams, setSearchParams])
+  }, [active, logged])
 
   return (
     <div className='w-screen h-screen flex flex-col lg:flex-row overflow-hidden'>

@@ -38,9 +38,9 @@ function App() {
         </div>
       :
         <Routes>
-          <Route path='/' element={<Home history={history} />} />
-          <Route path='/login' element={<Navigate to={"/?login=1"} />} />
-          <Route path='/register' element={<Navigate to={"/?register=1"} />} />
+          <Route path='/' element={<Home history={history} active={0} />} />
+          <Route path='/login' element={<Home history={history} active={1} />} />
+          <Route path='/register' element={<Home history={history} active={2} />} />
           <Route path='/list/*' element={<List history={history} />} />
           <Route path='/profile' element={<Profile history={history} />} />
           <Route path='/email-verification' element={<EmailVerification history={history} />} />
