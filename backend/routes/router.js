@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, verifyEmail, getUserData, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, verifyEmail, getUserData, getUserDataByUsername, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken, refreshToken } from '../controllers/verifyToken.js'
 import { checkImage } from '../controllers/checkImage.js'
@@ -29,6 +29,7 @@ router.post('/login', Login)
 router.delete('/logout', Logout)
 
 router.get('/user/data', verifyToken, getUserData)
+router.get('/user/data/:username', getUserDataByUsername)
 router.get('/user/token/refresh', verifyToken, refreshToken)
 
 router.get('/user/lists', verifyToken, getUserLists)

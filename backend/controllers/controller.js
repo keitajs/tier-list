@@ -309,12 +309,12 @@ export const verifyEmail = async (req, res) => {
   }
 }
 
-export const getUserData = async (req, res) => {
+const getUserProfileData = async (_user) => {
   try {
-    const { user: username } = req.query
+    const { id, username } = _user
 
-    const user = await users.findOne({ where: username ? { username } : { id: req.id }, attributes: ['id', 'username', 'email', 'avatar', 'status', 'registerDate'] })
-    if (!user) return res.status(404).send({ message: 'A keresett felhasználó nem található!' })
+    const user = await users.findOne({ where: username ? { username } : { id }, attributes: ['id', 'username', 'email', 'avatar', 'status', 'registerDate'] })
+    if (!user) return { error: 'A keresett felhasználó nem található!' }
     if (username) user.email = 'hiddenmail@tl.hu'
 
     // A felhasználó heti aktivitása
@@ -365,7 +365,7 @@ export const getUserData = async (req, res) => {
       limit: 10
     })
 
-    res.send({
+    return {
       user,
       weeklyActivies,
       list: {
@@ -382,12 +382,24 @@ export const getUserData = async (req, res) => {
         },
         mostUpdated: mostUpdatedLists
       }
-    })
-  } catch (err) {
-    if (!err) return
-    logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    }
+  } catch (error) {
+    return { error }
   }
+}
+
+export const getUserData = async (req, res) => {
+  const data = await getUserProfileData({ id: req.id })
+  if (data.error) return res.send({ error: data.error })
+
+  res.send(data)
+}
+
+export const getUserDataByUsername = async (req, res) => {
+  const data = await getUserProfileData({ username: req.params.username })
+  if (data.error) return res.send({ error: data.error })
+
+  res.send(data)
 }
 
 export const getUserList = async (req, res) => {

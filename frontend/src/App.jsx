@@ -21,6 +21,7 @@ function App() {
         <Route path='/register' element={<Home history={history} active={2} />} />
         <Route path='/list/*' element={<List history={history} />} />
         <Route path='/profile' element={<Profile history={history} />} />
+        <Route path='/profile/:username' element={<Profile history={history} />} />
         <Route path='/email-verification' element={<EmailVerification history={history} />} />
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>

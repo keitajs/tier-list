@@ -45,6 +45,8 @@ function TierList({ selectedList, setSelectedList, history }) {
   }
 
   useEffect(() => {
+    joinListRoom(selectedList)
+    
     // Socket IO függvények
 
     // Felhasználó belépés
@@ -186,7 +188,6 @@ function TierList({ selectedList, setSelectedList, history }) {
     if (listId) setSelectedList(listId)
 
     getTierList(listId).catch(() => history('/list'))
-    joinListRoom(listId)
   }, [searchParams])
 
   return (
@@ -201,7 +202,7 @@ function TierList({ selectedList, setSelectedList, history }) {
         </div>
       </h1>
 
-      <h3 className='flex items-center gap-2 flex-wrap mx-2 mb-8 opacity-80'>{socketUsers.map(user => <Link to={`/profile?user=${user.username}`} key={user.id} className='flex items-end'>{user.username}<span className='opacity-40 text-xs'>#{user.id}</span></Link>)}</h3>
+      <h3 className='flex items-center gap-2 flex-wrap mx-2 mb-8 opacity-80'>{socketUsers.map(user => <Link to={`/profile/${user.username}`} key={user.id} className='flex items-end'>{user.username}<span className='opacity-40 text-xs'>#{user.id}</span></Link>)}</h3>
 
       <List selectedList={selectedList} items={items} setItems={setItems} categories={categories} setCategories={setCategories} permission={permission} />
     </div>
