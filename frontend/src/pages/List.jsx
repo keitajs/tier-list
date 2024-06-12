@@ -14,7 +14,7 @@ function List(props) {
       <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
         <Routes>
           <Route path='/' element={<Lists history={props.history} setSelectedList={setSelectedList} />} />
-          <Route path='/editor' element={<TierList history={props.history} selectedList={selectedList} />} />
+          <Route path='/editor' element={<TierList history={props.history} selectedList={selectedList} setSelectedList={setSelectedList} />} />
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       </div>
