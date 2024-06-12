@@ -1,18 +1,11 @@
 import React from 'react'
-import axios from 'axios'
-import { socket } from '../../socket'
+import { logout } from '../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import 'moment/dist/locale/hu'
 
 function UserData(props) {
-  // Kijelentkezés
-  const Logout = () => {
-    socket.disconnect()
-    axios.delete('/logout').then(() => props.history('/'))
-  }
-
   return (
     <div className='flex flex-col justify-between lg:grow px-4 rounded-3xl bg-neutral-900/85'>
       <div className='flex items-center justify-center gap-2 py-3 border-b-2 border-blue-500 text-3xl'>
@@ -56,7 +49,7 @@ function UserData(props) {
       {props.params ? <></> : 
         <div className='relative flex flex-col gap-2 mb-4'>
           <button onClick={() => props.setEdit('password')} className='py-1 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>Jelszó módosítás</button>
-          <button onClick={Logout} className='py-1 rounded-lg bg-rose-700 hover:bg-rose-600 transition-colors'>Kijelentkezés</button>
+          <button onClick={() => logout({ redirect: '/', history: props.history })} className='py-1 rounded-lg bg-rose-700 hover:bg-rose-600 transition-colors'>Kijelentkezés</button>
         </div>
       }
     </div>

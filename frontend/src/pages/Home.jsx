@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { refreshToken } from '../user'
 import Index from '../components/Home/Index'
 import Login from '../components/Home/Login'
 import Register from '../components/Home/Register'
@@ -12,12 +12,11 @@ function Home(props) {
   
   // Bejelentkezési állapot lekérése
   const getLogged = async () => {
-    const { data } = await axios.get('/logged')
-    setLogged(data)
+    setLogged(await refreshToken())
   }
 
   useEffect(() => {
-    getLogged().catch(() => setLogged(false))
+    getLogged()
   }, [])
 
   useEffect(() => {

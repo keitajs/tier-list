@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
-
+import { register } from '../../user'
 import Username from './Register/Username'
 import Email from './Register/Email'
 import Password from './Register/Password'
@@ -22,23 +21,24 @@ function Register(props) {
   const [passwor2, setPasswor2] = useState('')
   const [passwor2Msg, setPasswor2Msg] = useState('Add meg újra a jelszót!')
 
-  const Register = (e) => {
+  const handleErrors = (errors) => {
+    setPassword('')
+    setPasswordMsg('Adj meg egy jelszót!')
+    setPasswor2('')
+    setPasswor2Msg('Adj meg egy jelszót!')
+    if (errors.username) setNameMsg(errors.username)
+    if (errors.email) setEmailMsg(errors.email)
+    if (errors.password) setPasswordMsg(errors.password)
+  }
+
+  const Register = async (e) => {
     if (nameMsg !== '' || emailMsg !== '' || passwor2Msg !== '' || passwor2Msg !== '') return
 
-    axios.post('/register', { username, password, email, }).then(res => {
-      setMsg(res.data.message)
-      setTimeout(() => props.setActive(1), 2500)
-    }).catch(err => {
-      const { errors } = err.response.data
+    const data = await register(username, email, password)
+    if (data.errors) return handleErrors(data.errors)
 
-      setPassword('')
-      setPasswordMsg('Adj meg egy jelszót!')
-      setPasswor2('')
-      setPasswor2Msg('Adj meg egy jelszót!')
-      if (errors.username) setNameMsg(errors.username)
-      if (errors.email) setEmailMsg(errors.email)
-      if (errors.password) setPasswordMsg(errors.password)
-    })
+    setMsg(data.message)
+    setTimeout(() => props.setActive(1), 2500)
   }
 
   return (

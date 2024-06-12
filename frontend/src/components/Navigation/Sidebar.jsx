@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { socket } from '../../socket'
+import { logout } from '../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faHome, faUser, faList, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import NavItem from './Sidebar/NavItem'
@@ -8,12 +8,6 @@ import ListItem from './Sidebar/ListItem'
 
 function Sidebar(props) {
   const [lists, setLists] = useState([])
-
-  // Kijelentkezés
-  const Logout = () => {
-    socket.disconnect()
-    axios.delete('/logout').then(() => props.history('/'))
-  }
 
   // Sidebar listák lekérése
   const getLists = async () => {
@@ -48,7 +42,7 @@ function Sidebar(props) {
           </div>
         : <></>}
 
-        <button onClick={Logout} className='absolute left-5 bottom-5 flex items-center text-red-500 hover:text-red-400 transition-all'>
+        <button onClick={() => logout({ redirect: '/', history: props.history })} className='absolute left-5 bottom-5 flex items-center text-red-500 hover:text-red-400 transition-all'>
           <FontAwesomeIcon icon={faRightFromBracket} className='mr-3' />
           <div className='text-xl opacity-0 group-hover:opacity-100 transition-opacity'>Kijelentkezés</div>
         </button>

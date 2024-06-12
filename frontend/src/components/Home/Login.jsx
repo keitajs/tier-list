@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
-import { socket } from '../../socket'
+import { login } from '../../user'
 import Username from './Login/Username'
 import Password from './Login/Password'
 import SuccessMsg from '../Form/SuccessMsg'
@@ -14,24 +13,21 @@ function Login(props) {
   const [password, setPassword] = useState('')
   const [passwordMsg, setPasswordMsg] = useState('Adj meg egy jelszót!')
 
-  const Login = (e) => {
+  const handleErrors = (errors) => {
+    setPassword('')
+    setPasswordMsg('Adj meg egy jelszót!')
+    if (errors.username) setNameMsg(errors.username)
+    if (errors.password) setPasswordMsg(errors.password)
+  }
+
+  const Login = async (e) => {
     if (nameMsg !== '' || passwordMsg !== '') return
 
-    axios.post('/login', { username, password }).then(res => {
-      setMsg(res.data.message)
-      setTimeout(() => {
-        socket.connect()
-        props.history('/list')
-        window.location.reload()
-      }, 2500)
-    }).catch(err => {
-      const { errors } = err.response.data
+    const data = await login(username, password)
+    if (data.errors) return handleErrors(data.errors)
 
-      setPassword('')
-      setPasswordMsg('Adj meg egy jelszót!')
-      if (errors.username) setNameMsg(errors.username)
-      if (errors.password) setPasswordMsg(errors.password)
-    })
+    setMsg(data.message)
+    setTimeout(() => props.history('/list'), 2500)
   }
 
   return (
