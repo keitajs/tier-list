@@ -32,7 +32,7 @@ function Profile(props) {
 
   useEffect(() => {
     const username = searchParams.get('user')
-    if (username) setParams(true)
+    setParams(!!username)
 
     getUserData(username).catch(err => {
       if (!params) return props.history('/')
