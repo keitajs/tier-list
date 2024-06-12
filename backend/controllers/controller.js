@@ -73,7 +73,7 @@ export const Register = async (req, res) => {
     }
     
     // Ha vannak hibás adatok, akkor visszaküldi a felhasználónak
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     // Jelszó titkosítás, email verify token és felhasználó létrehozás
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -97,15 +97,15 @@ export const Login = async (req, res) => {
 
     // Adatok ellenőrzése
     errors.empty({ username, password }, 'Üres mező!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     const user = await users.findOne({ where: { username }, attributes: [ 'id', 'username', 'email', 'password' ] })
     if (!user) errors.push('username', 'A felhasználó nem található!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     const passMatch = await bcrypt.compare(password, user.password)
     if (!passMatch) errors.push('password', 'Hibás jelszó!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     // accessToken létrehozás
     const accessToken = jwt.sign({ id: user.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
