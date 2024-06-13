@@ -22,7 +22,7 @@ export const verifyToken = async (req, res, next) => {
     })
   } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.sendStatus(500)
   }
 }
@@ -35,9 +35,9 @@ export const refreshToken = async (req, res) => {
     
     res.cookie('accessToken', accessToken, { maxAge: 7*24*60*60*1000, httpOnly: true, sameSite: 'None', secure: true })
     res.status(200).send({ message: 'Token frissítve.' })
-  } catch (error) {
+  } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     res.sendStatus(500)
   }
 }
@@ -69,9 +69,9 @@ export const verifyTokenSocket = async (socket, next) => {
       }
       next()
     })
-  } catch (error) {
+  } catch (err) {
     if (!err) return
-    console.log(err)
+    logger.error(err)
     socket.disconnect()
   }
 }
