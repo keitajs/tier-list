@@ -33,21 +33,12 @@ function TierList({ selectedList, setSelectedList, history }) {
     document.title = `${list.name} - Listák | Tier List`
   }
 
-  // Csatlakozás socket szobához
-  const joinListRoom = async (id) => {
-    if (!socket.connected) socket.connect()
-    socket.emit('list-join', id)
-  }
-
-  // Kilépés socket szobából
-  const leaveListRoom = async () => {
-    if (socket.connected) socket.emit('list-leave')
-  }
-
   useEffect(() => {
-    joinListRoom(selectedList)
-    
-    // Socket IO függvények
+    // * Socket IO függvények
+    // Csatlakozáskor belép a lista szobájába
+    const onConnect = () => {
+      socket.emit('list-join', selectedList)
+    }
 
     // Felhasználó belépés
     const userJoin = (user) => {
@@ -147,7 +138,10 @@ function TierList({ selectedList, setSelectedList, history }) {
       })
     }
 
-    // Socket IO eventek
+    // * Socket IO eventek
+    socket.connect()
+    socket.on('connect', onConnect)
+
     socket.on('user-join', userJoin)
     socket.on('user-leave', userLeave)
 
@@ -164,6 +158,8 @@ function TierList({ selectedList, setSelectedList, history }) {
     socket.on('category-move-end', categoryMoveEnd)
 
     return () => {
+      socket.off('connect', onConnect)
+
       socket.off('user-join', userJoin)
       socket.off('user-leave', userLeave)
 
@@ -179,7 +175,8 @@ function TierList({ selectedList, setSelectedList, history }) {
       socket.off('category-move-start', categoryMoveStart)
       socket.off('category-move-end', categoryMoveEnd)
 
-      leaveListRoom()
+      socket.emit('list-leave')
+      socket.disconnect()
     }
   }, [selectedList])
 
