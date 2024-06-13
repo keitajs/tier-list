@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { login } from '../../user'
 import Username from './Login/Username'
 import Password from './Login/Password'
 import SuccessMsg from '../Form/SuccessMsg'
 
 function Login(props) {
+  const [searchParams] = useSearchParams()
   const [msg, setMsg] = useState('')
+  const [text, setText] = useState('')
 
   const [username, setUsername] = useState('')
   const [nameMsg, setNameMsg] = useState('Adj meg egy felhasználónevet!')
@@ -26,8 +29,11 @@ function Login(props) {
     const data = await login(username, password)
     if (data.errors) return handleErrors(data.errors)
 
+    const redirectURI = searchParams.get('redirect')
+
     setMsg(data.message)
-    setTimeout(() => props.history('/list'), 2500)
+    setText(`Másodperceken belül átirányítunk ${redirectURI ? 'az előző oldalra' : 'a listáidhoz'}`)
+    setTimeout(() => props.history(redirectURI ? redirectURI : '/list'), 2500)
   }
 
   return (
@@ -43,7 +49,7 @@ function Login(props) {
         <button onClick={() => props.setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
       </div>
 
-      {msg === '' ? <></> : <SuccessMsg msg={msg} text={'Másodperceken belül átirányítunk a listáidhoz'} />}
+      {msg === '' ? <></> : <SuccessMsg msg={msg} text={text} />}
     </div>
   )
 }

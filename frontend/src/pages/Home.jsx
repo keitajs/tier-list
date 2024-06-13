@@ -25,15 +25,15 @@ function Home(props) {
 
     if (logged || active <= 0) {
       document.title = 'Tier List'
-      props.history('/', { replace: false })
+      props.history('/' + window.location.search)
     }
     else if (active === 1) {
       document.title = 'Bejelentkezés | Tier List'
-      props.history('/login', { replace: false })
+      props.history('/login' + window.location.search)
     }
     else if (active === 2) {
       document.title = 'Regisztráció | Tier List'
-      props.history('/register', { replace: false })
+      props.history('/register' + window.location.search)
     }
   }, [active, logged])
 
