@@ -45,7 +45,7 @@ function Profile({ history }) {
 
   return (
     <div className='min-h-screen p-6'>
-      <Navigation history={history} />
+      <Navigation history={history} loading={!user.username} />
 
       <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
         <div className='flex flex-col gap-6 relative lg:fixed lg:right-6 lg:top-6 lg:bottom-6 w-full lg:w-1/5 mb-3 lg:mb-0'>

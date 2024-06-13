@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { logout } from '../../user'
+import { logout, getLoginStatus } from '../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faHome, faUser, faList, faRightFromBracket, faRightToBracket } from '@fortawesome/free-solid-svg-icons'
 import NavItem from './Sidebar/NavItem'
 import ListItem from './Sidebar/ListItem'
 
-function Sidebar({ logged, history }) {
+function Sidebar({ logged, history, loading }) {
   const [lists, setLists] = useState([])
 
   // Sidebar listák lekérése
@@ -16,8 +16,8 @@ function Sidebar({ logged, history }) {
   }
 
   useEffect(() => {
-    if (logged) getLists().catch(err => console.log(err))
-  }, [logged])
+    if (logged && !loading) getLists().catch(err => console.log(err))
+  }, [logged, loading])
 
   return (
     <div className='group fixed left-0 top-0 bottom-0 w-max rounded-e-3xl bg-neutral-800 shadow-lg overflow-hidden z-50 hidden sm:inline'>

@@ -4,7 +4,7 @@ import Sidebar from './Navigation/Sidebar'
 import ListNavbar from './Navigation/ListNavbar'
 import MobileNavbar from './Navigation/MobileNavbar'
 
-function Navigation(props) {
+function Navigation({ history, selectedList, loading }) {
   const [logged, setLogged] = useState(false)
 
   const getLogged = async () => {
@@ -17,9 +17,9 @@ function Navigation(props) {
 
   return (
     <>
-      <Sidebar logged={logged} history={props.history} />
-      <ListNavbar logged={logged} selectedList={props.selectedList} />
-      <MobileNavbar logged={logged} selectedList={props.selectedList} />
+      <Sidebar logged={logged} history={history} loading={loading} />
+      <MobileNavbar logged={logged} selectedList={selectedList} />
+      <ListNavbar logged={logged} selectedList={selectedList} />
     </>
   )
 }
