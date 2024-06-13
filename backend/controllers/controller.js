@@ -159,7 +159,7 @@ export const Logged = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -186,7 +186,7 @@ export const updateUsername = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -209,7 +209,7 @@ export const updateAvatar = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -226,7 +226,7 @@ export const deleteAvatar = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -260,7 +260,7 @@ export const updateEmail = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -288,7 +288,7 @@ export const updatePassword = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -308,7 +308,7 @@ export const verifyEmail = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.sendStatus(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
   }
 }
 
