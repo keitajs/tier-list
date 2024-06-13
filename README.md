@@ -4,7 +4,7 @@ Az oldal Vite környezetben, React pluginnal készült frontenddel és Node JS b
 
 ## Környezeti változók (.env)
 
-A backend telepítése és futtatása előtt szükséges beállítani a .env fájl tartalmát. Ez a fájl alapértelmezetten megtalálható a repository-ban, de amennyiben törölné a Github, akkor a .env.example átnevezésével is ugyanazt az eredményt érjük el.
+A backend futtatása előtt szükséges beállítani a .env fájl tartalmát. A .env.example fájlban is megtaláljuk ezeket az adatokat.
 
 ### .env tartalma
 
