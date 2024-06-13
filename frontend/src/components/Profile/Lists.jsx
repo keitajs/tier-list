@@ -10,7 +10,7 @@ function Lists(props) {
       {props?.lists.length > 0 ?
         <div className='flex flex-col gap-2.5 mt-3 items-center justify-center'>
           {props.lists.map(list =>
-            <Link key={list.id} to={`/list?id=${list.id}`} className={`flex flex-col lg:flex-row items-center justify-between w-full px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all ${props.params && list.private ? 'pointer-events-none' : ''}`}>
+            <Link key={list.id} to={`/list/editor?id=${list.id}`} className={`flex flex-col lg:flex-row items-center justify-between w-full px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all ${props.params && list.private ? 'pointer-events-none' : ''}`}>
               <div className='flex items-center gap-3 text-xl w-full lg:w-auto'>
                 {list.name}
                 {list.private ? <FontAwesomeIcon icon={faLock} className='opacity-25 h-4 w-4' /> : <></>}
