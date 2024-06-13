@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import axios from 'axios'
-import { socket } from '../../socket'
+import { socket, connect } from '../../socket'
 import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotateRight, faShare } from '@fortawesome/free-solid-svg-icons'
@@ -139,7 +139,9 @@ function TierList({ selectedList, setSelectedList, history }) {
     }
 
     // * Socket IO eventek
-    socket.connect()
+    if (socket.connected) onConnect()
+
+    connect()
     socket.on('connect', onConnect)
 
     socket.on('user-join', userJoin)
@@ -176,7 +178,6 @@ function TierList({ selectedList, setSelectedList, history }) {
       socket.off('category-move-end', categoryMoveEnd)
 
       socket.emit('list-leave')
-      socket.disconnect()
     }
   }, [selectedList])
 

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { connect, disconnect } from './socket'
 
 export const getLoginStatus = async () => {
   try {
@@ -27,6 +28,8 @@ export const login = async (username, password) => {
   try {
     const { data } = await axios.post('/login', { username, password })
     if (data.errors) return { errors }
+
+    connect()
     return { message: data.message }
   } catch (error) {
     console.error(error)
@@ -47,6 +50,7 @@ export const register = async (username, email, password) => {
 
 export const logout = async ({ redirect, history }) => {
   try {
+    disconnect()
     axios.delete('/logout').then(redirect ? () => history(redirect) : () => {})
   } catch (error) {
     console.error(error)

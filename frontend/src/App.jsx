@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { connect } from './socket'
 import './css/App.css'
 
 import Home from './pages/Home'
@@ -12,6 +14,10 @@ axios.defaults.baseURL = 'http://localhost:2000'
 
 function App() {
   const history = useNavigate()
+
+  useEffect(() => {
+    connect()
+  }, [])
 
   return (
     <div className='text-white bg-neutral-800 min-h-screen'>
