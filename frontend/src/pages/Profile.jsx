@@ -60,7 +60,7 @@ function Profile(props) {
       </div>
 
       <Username hide={edit !== 'username'} user={user} setUser={setUser} setEdit={setEdit} />
-      <Avatar hide={edit !== 'avatar'} setUser={setUser} setEdit={setEdit} />
+      <Avatar hide={edit !== 'avatar'} avatar={user.avatar} setUser={setUser} setEdit={setEdit} />
       <Email hide={edit !== 'email'} user={user} setUser={setUser} setEdit={setEdit} />
       <Password hide={edit !== 'password'} setEdit={setEdit} />
     </div>

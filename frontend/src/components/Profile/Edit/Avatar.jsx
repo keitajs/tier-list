@@ -49,7 +49,7 @@ function Avatar(props) {
   // Képfeltöltés és törlés
   const fileUpload = () => {
     if (file) {
-      setImage('')
+      setImage(props.avatar)
       setFile('')
     } else {
       fileInput.current.click()
@@ -60,7 +60,7 @@ function Avatar(props) {
   useEffect(() => {
     if (!props.hide) {
       setFile('')
-      setImage('')
+      setImage(props.avatar)
       setError('')
     }
   }, [props.hide])
@@ -73,13 +73,13 @@ function Avatar(props) {
         </div>
 
         <div className='relative flex items-center justify-center w-64 aspect-square rounded-xl bg-neutral-700/50 overflow-hidden'>
-          <img src={file ? URL.createObjectURL(image) : image} alt="" className={`w-full h-full object-cover ${!image ? 'opacity-0' : 'opacity-100'}`} />
+          <img src={file ? URL.createObjectURL(image) : `${axios.defaults.baseURL}/user/images/${image}`} alt="" className={`w-full h-full object-cover ${!image ? 'opacity-0' : 'opacity-100'}`} />
         </div>
 
         <div className='flex flex-col gap-2 text-lg mt-2.5'>
           <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
           <button onClick={fileUpload} className='flex items-center justify-between gap-3 w-64 px-2.5 py-0.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
-            Feltöltés <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
+            Feltöltés {file ? 'törlése' : ''} <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
           </button>
 
           <button onClick={remove} className='flex items-center justify-between gap-3 w-64 px-2.5 py-0.5 rounded-lg bg-neutral-700 hover:bg-rose-700 transition-colors'>
