@@ -100,7 +100,7 @@ export const Login = async (req, res) => {
     errors.empty({ username, password }, 'Üres mező!')
     if (errors.check) return res.send({ errors: errors.get() })
 
-    const user = await users.findOne({ where: { username }, attributes: [ 'id', 'username', 'email', 'password' ] })
+    const user = await users.findOne({ where: { [Op.or]: { username, email: username } }, attributes: [ 'id', 'username', 'email', 'password' ] })
     if (!user) errors.push('username', 'A felhasználó nem található!')
     if (errors.check) return res.send({ errors: errors.get() })
 
@@ -109,7 +109,7 @@ export const Login = async (req, res) => {
     if (errors.check) return res.send({ errors: errors.get() })
 
     // accessToken létrehozás
-    const accessToken = jwt.sign({ id: user.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
+    const accessToken = jwt.sign({ id: user.id, username: user.username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
     user.accessToken = accessToken
     await user.save()
 
