@@ -73,7 +73,7 @@ function Avatar(props) {
         </div>
 
         <div className='relative flex items-center justify-center w-64 aspect-square rounded-xl bg-neutral-700/50 overflow-hidden'>
-          <img src={file ? URL.createObjectURL(image) : `${axios.defaults.baseURL}/user/images/${image}`} alt="" className={`w-full h-full object-cover ${!image ? 'opacity-0' : 'opacity-100'}`} />
+          <img src={file ? URL.createObjectURL(image) : image ? `${axios.defaults.baseURL}/user/images/${image}` : ''} alt="" className={`w-full h-full object-cover ${!image ? 'opacity-0' : 'opacity-100'}`} />
         </div>
 
         <div className='flex flex-col gap-2 text-lg mt-2.5'>
