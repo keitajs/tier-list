@@ -29,6 +29,12 @@ class Errors {
         this.push(key, message)
   }
 
+  username = (usernames, message) => {
+    for (const [key, val] of Object.entries(usernames))
+      if (!UsernameTest(val))
+        this.push(key, message)
+  }
+
   // Email ellenőrzés
   email = (emails, message) => {
     for (const [key, val] of Object.entries(emails))
@@ -42,10 +48,20 @@ class Errors {
       if (!PasswordTest(val))
         this.push(key, message)
   }
+
+  number = (numbers, message) => {
+    for (const [key, val] of Object.entries(numbers))
+      if (!NumberTest(val))
+        this.push(key, message)
+  }
 }
 
 const EmptyTest = (value) => {
   return !value || value === '' || value.length === 0
+}
+
+const UsernameTest = (username) => {
+  return /^[^ \!\"#\$%&'\(\)\*\+,\/:;<=>\?@\[\\\]\^`\{\|\}~]+$/gm.test(username)
 }
 
 const EmailTest = (email) => {
@@ -54,6 +70,10 @@ const EmailTest = (email) => {
 
 const PasswordTest = (password) => {
   return password.length >= 8
+}
+
+const NumberTest = (number) => {
+  return typeof number === "string" && !isNaN(Number(number)) || typeof number === "number"
 }
 
 export { Errors, EmptyTest, EmailTest, PasswordTest }

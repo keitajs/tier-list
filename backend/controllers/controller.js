@@ -59,6 +59,7 @@ export const Register = async (req, res) => {
 
     // Adatok ellenőrzése
     errors.empty({ username, email, password }, 'Üres mező!')
+    errors.username({ username }, 'Nem megfelelő formátum!')
     errors.email({ email }, 'Nem megfelelő formátum!')
     errors.password({ password }, 'A jelszavadnak legalább 8 karakter hosszúnak kell lenni!')
     
@@ -168,6 +169,7 @@ export const updateUsername = async (req, res) => {
     const errors = new Errors()
 
     errors.empty({ username }, 'Üres mező!')
+    errors.username({ username }, 'Nem megfelelő formátum!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
     // Ellenőrzi, hogy az új felhasználónévvel már van-e felhasználó
@@ -234,6 +236,7 @@ export const updateEmail = async (req, res) => {
     const errors = new Errors()
     
     errors.empty({ email, password }, 'Üres mező!')
+    errors.email({ email }, 'Nem megfelelő formátum!')
     if (errors.check) return res.status(400).send({ errors: errors.get() })
 
     // Jelszó ellenőrzés

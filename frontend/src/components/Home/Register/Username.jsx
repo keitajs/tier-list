@@ -7,6 +7,7 @@ function Username(props) {
     props.setUsername(value)
 
     if (value === '') return props.setNameMsg('Adj meg egy felhasználónevet!')
+    if (!/^[^ \!\"#\$%&'\(\)\*\+,\/:;<=>\?@\[\\\]\^`\{\|\}~]+$/gm.test(value)) return props.setNameMsg('A felhasználóneved nem tartalmazhat speciális karaktereket és szóközöket!')
     props.setNameMsg('')
   }
 

@@ -28,6 +28,7 @@ function Username(props) {
   // Input mező változásának kezelése
   useEffect(() => {
     if (!name) return setErrors(errors => { return {...errors, name: 'Üres mező!' } })
+    if (!/^[^ \!\"#\$%&'\(\)\*\+,\/:;<=>\?@\[\\\]\^`\{\|\}~]+$/gm.test(name)) return props.setNameMsg('A felhasználóneved nem tartalmazhat speciális karaktereket és szóközöket!')
     if (name === props.user.username) return setErrors(errors => { return {...errors, name: 'Jelenleg is ez a neved!' } })
     setErrors(errors => { return {...errors, name: false } })
   }, [name, props.user.username])
