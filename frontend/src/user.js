@@ -27,21 +27,43 @@ export const refreshToken = async () => {
 export const login = async (username, password) => {
   try {
     const { data } = await axios.post('/login', { username, password })
-    if (data.errors) return { errors }
+    if (data.errors) return { errors: data.errors }
 
     connect()
-    return { message: data.message }
+    return data
   } catch (error) {
     console.error(error)
     return false
   }
 }
 
-export const register = async (username, email, password) => {
+export const register = async (username, password, emailId) => {
   try {
-    const { data } = await axios.post('/register', { username, email, password })
-    if (data.errors) return { errors }
-    return { message: data.message }
+    const { data } = await axios.post('/register', { username, password, emailId })
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+export const sendVerificationCode = async (email) => {
+  try {
+    const { data } = await axios.post('/register/email', { email })
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+export const verifyEmail = async (email, code) => {
+  try {
+    const { data } = await axios.post('/register/email/verify', { email, code })
+    if (data.errors) return { errors: data.errors }
+    return data
   } catch (error) {
     console.error(error)
     return false

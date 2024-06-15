@@ -17,7 +17,7 @@ function Input(props) {
         {props.type === 'password' ? <button onClick={() => setShowPass(!showPass)} className='flex items-center px-2'><FontAwesomeIcon icon={showPass ? faEyeSlash : faEye} className='h-3' /></button> : <></>}
       </div>
       <div className='relative'>
-        <input type={props.type === 'password' ? (showPass ? 'text' : 'password') : props.type} name={props.name} id={props.name} className={`w-64 px-3 pr-10 py-2 bg-neutral-700/75 rounded-lg outline-none`} value={props.value} onChange={props.onChange} />
+        <input type={props.type === 'password' ? (showPass ? 'text' : 'password') : props.type} name={props.name} id={props.name} className={`w-64 px-3 pr-10 py-2 bg-neutral-700/75 rounded-lg outline-none`} value={props.value} onChange={props.onChange} disabled={props.disabled} />
         <div className='absolute top-1/2 right-4 -translate-y-1/2 flex items-center'>
           <FontAwesomeIcon icon={props.message ? faXmark : faCheck} className={props.message ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} />
         </div>

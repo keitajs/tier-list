@@ -10,7 +10,7 @@ function Username(props) {
   }
 
   return (
-    <Input name='username' label='Felhasználónév vagy email' type='text' value={props.username} message={props.nameMsg} onChange={usernameChange} />
+    <Input name='username' label='Felhasználónév' type='text' value={props.username} message={props.nameMsg} onChange={usernameChange} />
   )
 }
 

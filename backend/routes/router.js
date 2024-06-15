@@ -1,5 +1,6 @@
 import { Router } from 'express'
-import { getAvatarImage, getCharacterImage, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, verifyEmail, getUserData, getUserDataByUsername, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { getCharacterImage, getUserList, getUserLists, getSidebarLists, getSharedLists, getPublicLists, createList, updateList, removeList, createPermission, updatePermission, removePermission, createCharacter, moveCharacter, updateCharacter, removeCharacter, createCategory, moveCategory, updateCategory, removeCategory } from '../controllers/controller.js'
+import { getAvatarImage, registerEmail, verifyEmail, Register, Login, Logout, Logged, updateUsername, updateAvatar, deleteAvatar, updateEmail, updatePassword, getUserData, getUserDataByUsername } from '../controllers/user-controller.js'
 import { hasAnyPermission, hasMovePermission, hasEditPermission, isAdmin, isInList } from '../controllers/checkPermission.js'
 import { verifyToken, refreshToken } from '../controllers/verifyToken.js'
 import { checkImage } from '../controllers/checkImage.js'
@@ -24,6 +25,8 @@ router.get('/', (req, res) => { res.send({ message: 'Tier List backend API' }) }
 
 // Felhasználó útvonalak
 router.get('/logged', Logged)
+router.post('/register/email', registerEmail)
+router.post('/register/email/verify', verifyEmail)
 router.post('/register', Register)
 router.post('/login', Login)
 router.delete('/logout', Logout)
@@ -39,7 +42,6 @@ router.patch('/user/avatar', verifyToken, uploadAvatarImage.single('avatar'), ch
 router.delete('/user/avatar', verifyToken, deleteAvatar)
 router.patch('/user/email', verifyToken, updateEmail)
 router.patch('/user/password', verifyToken, updatePassword)
-router.post('/user/email/verify', verifyToken, verifyEmail)
 
 // Lista útvonalak
 router.get('/lists/sidebar', verifyToken, getSidebarLists)

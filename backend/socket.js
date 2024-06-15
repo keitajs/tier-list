@@ -2,7 +2,7 @@ import cp from 'cookie-parser'
 import users from './models/user.js'
 import logger from './libs/logger.js'
 import { Server } from 'socket.io'
-import { listEvents, characterEvents, categoryEvents } from './controllers/socketController.js'
+import { listEvents, characterEvents, categoryEvents } from './controllers/socket-controller.js'
 import { verifyTokenSocket } from './controllers/verifyToken.js'
 
 export const createSocket = (server) => {

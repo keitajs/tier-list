@@ -12,7 +12,7 @@ function Email(props) {
   }
 
   return (
-    <Input name='email' label='Email' type='email' value={props.email} message={props.emailMsg} onChange={emailChange} />
+    <Input name='email' label='Email' type='email' value={props.email} message={props.emailMsg} onChange={emailChange} disabled={props.disabled} />
   )
 }
 
