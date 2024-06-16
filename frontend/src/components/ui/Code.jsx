@@ -1,10 +1,10 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 
-function Code({ code, setCode, error, setError }) {
+export default function Code({ label, value, setValue, error, setError, errors }) {
   const inputRefs = useRef([])
 
   const onChange = (i, value) => {
-    setCode(code => {
+    setValue(code => {
       const maxIndex = (value.length + i > 6 ? 6 : value.length + i)
 
       if (value.length > 1 && i < 6 && code[i + 1] === '') {
@@ -17,30 +17,36 @@ function Code({ code, setCode, error, setError }) {
         if (value && i + 1 < 6) inputRefs.current[i + 1].focus()
       }
 
-      if (!code.includes('')) setError('')
-      else setError('Írd be az üzenetben kapott kódot!')
-
       return [...code]
     })
   }
 
   const onKeyDown = (i, event) => {
-    if (event.key === 'Backspace' && !code[i] && i > 0) {
-      setCode(code => {
+    if (event.key === 'Backspace' && !value[i] && i > 0) {
+      setValue(code => {
         code[i - 1] = ''
-        return [...code];
+        return [...code]
       })
       inputRefs.current[i - 1].focus()
     }
   }
 
+  const handleErrors = () => {
+    if (!value.includes('')) setError('')
+      else setError(errors?.empty || 'Írd be az üzenetben kapott kódot!')
+  }
+
+  useEffect(() => {
+    handleErrors()
+  }, [value])
+
   return (
     <div className="w-64 mt-1.5 lg:mt-6 flex flex-col">
       <div className='flex'>
-        <label className='ml-1 mb-0.5 text-lg'>Hitelesítő kód</label>
+        <label className='ml-1 mb-0.5 text-lg'>{label || 'Hitelesítő kód'}</label>
       </div>
       <div className='flex items-center gap-0.5 rounded-lg overflow-hidden'>
-        {code.map((char, i) => 
+        {value.map((char, i) => 
           <input
             key={i}
             ref={el => inputRefs.current[i] = el}
@@ -58,5 +64,3 @@ function Code({ code, setCode, error, setError }) {
     </div>
   )
 }
-
-export default Code

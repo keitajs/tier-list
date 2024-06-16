@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react'
 import { register, sendVerificationCode, verifyEmail } from '../../user'
-import Email from './Register/Email'
-import Code from './Register/Code'
-import Username from './Register/Username'
-import Password from './Register/Password'
-import Passwor2 from './Register/Passwor2'
+import Email from '../ui/Email'
+import Code from '../ui/Code'
+import Username from '../ui/Username'
+import Password from '../ui/Password'
 import SuccessMsg from '../Form/SuccessMsg'
 
 function Register(props) {
@@ -22,8 +21,8 @@ function Register(props) {
   const [newCode, setNewCode] = useState(0)
   const newCodeRef = useRef(null)
 
-  const [errors, setErrors] = useState({ email: 'Adj meg egy emailt!' })
-  const setError = (field, value) => setErrors({ ...errors, [field]: value })
+  const [errors, setErrors] = useState({})
+  const setError = (field, value) => setErrors(errors => ({ ...errors, [field]: value }))
 
   const handleErrors = (errors) => {
     setPassword('')
@@ -61,7 +60,6 @@ function Register(props) {
       if (data.errors) return setErrors(data.errors)
       
       startNewCodeTimer()
-      setErrors({ code: 'Írd be az üzenetben kapott kódot!' })
       return setStep(step + 1)
     }
 
@@ -71,11 +69,6 @@ function Register(props) {
       if (data.errors) return setErrors(data.errors)
 
       setEmailId(data.emailId)
-      setErrors({
-        username: 'Adj meg egy felhasználónevet!',
-        password: 'Adj meg egy jelszót!',
-        passwor2: 'Add meg újra a jelszót!'
-      })
       return setStep(step + 1)
     }
 
@@ -99,18 +92,18 @@ function Register(props) {
       <div className="form flex flex-col items-center max-w-64">
         {step === 0 ?
         <>
-          <Email email={email} setEmail={setEmail} emailMsg={errors.email} setEmailMsg={(e) => setError('email', e)} />
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} validation={true} />
         </>
         : step === 1 ?
         <>
-          <Email email={email} setEmail={setEmail} emailMsg={errors.email} setEmailMsg={(e) => setError('email', e)} disabled={true} />
-          <Code code={code} setCode={setCode} error={errors.code} setError={(e) => setError('code', e)} />
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} />
+          <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} />
         </>
         :
         <>
-          <Username username={username} setUsername={setUsername} nameMsg={errors.username} setNameMsg={(e) => setError('username', e)} />
-          <Password password={password} passwor2={passwor2} setPassword={setPassword} passwordMsg={errors.password} setPasswordMsg={(e) => setError('password', e)} setPasswor2Msg={(e) => setError('passwor2', e)} active={props.active} />
-          <Passwor2 passwor2={passwor2} password={password} setPasswor2={setPasswor2} passwor2Msg={errors.passwor2} setPasswor2Msg={(e) => setError('passwor2', e)} active={props.active} />
+          <Username value={username} setValue={setUsername} error={errors.username} setError={(e) => setError('username', e)} validation={true} />
+          <Password name={'pass1'} type={'pwc'} value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={props.active} />
+          <Password label={'Jelszó újra'} name={'pass2'} type={'pc'} value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={props.active} />
         </>}
 
         <p className='mt-6 opacity-60 text-sm'>

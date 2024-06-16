@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { login } from '../../user'
-import Username from './Login/Username'
-import Password from './Login/Password'
+import Username from '../ui/Username'
+import Password from '../ui/Password'
 import SuccessMsg from '../Form/SuccessMsg'
 
 function Login(props) {
@@ -11,10 +11,10 @@ function Login(props) {
   const [text, setText] = useState('')
 
   const [username, setUsername] = useState('')
-  const [nameMsg, setNameMsg] = useState('Add meg felhasználóneved vagy email címed!')
+  const [nameMsg, setNameMsg] = useState('')
 
   const [password, setPassword] = useState('')
-  const [passwordMsg, setPasswordMsg] = useState('Adj meg egy jelszót!')
+  const [passwordMsg, setPasswordMsg] = useState('')
 
   const handleErrors = (errors) => {
     setPassword('')
@@ -41,8 +41,8 @@ function Login(props) {
       <h3 className='text-center text-3xl font-bold tracking-wide w-full lg:w-72 pb-2 mb-2 lg:mb-10 border-b-[3px] border-blue-500'>BEJELENTKEZÉS</h3>
 
       <div className="form flex flex-col items-center">
-        <Username username={username} setUsername={setUsername} nameMsg={nameMsg} setNameMsg={setNameMsg} />
-        <Password password={password} setPassword={setPassword} passwordMsg={passwordMsg} setPasswordMsg={setPasswordMsg} active={props.active} />
+        <Username label={'Felhasználónév vagy email'} value={username} setValue={setUsername} error={nameMsg} setError={setNameMsg} validation={false} errors={{ empty: 'Add meg felhasználóneved vagy email címed!' }} />
+        <Password value={password} setValue={setPassword} error={passwordMsg} setError={setPasswordMsg} reset={props.active} />
 
         <button className={`w-full mt-4 lg:mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${nameMsg === '' && passwordMsg === '' ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={Login}>Bejelentkezés</button>
         <button onClick={() => props.setActive(2)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Még nincs felhasználód? Regisztrálj most!</button>
