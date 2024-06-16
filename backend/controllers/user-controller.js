@@ -39,7 +39,7 @@ export const registerEmail = async (req, res) => {
     // Ellenőrzés, hogy az email cím már foglalt-e
     const _email = await emails.findOne({ where: { email } })
     if (_email) {
-      const _user = await users.findOne({ emailId: _email.id })
+      const _user = await users.findOne({ where: { emailId: _email.id } })
       if (_user) return res.send({ errors: { email: 'A megadott email cím már foglalt!' } })
       if (!moment().isAfter(moment(_email.expDate).subtract(process.env.MAILCODE_MINS - 1, 'minutes'))) return res.send({ errors: { email: 'Percenként csak egy hitelesítő kódot kérhetsz!' } })
     }
@@ -109,14 +109,12 @@ export const Register = async (req, res) => {
     if (email.code) return res.send({ errors: { email: 'Az email cím nincs hitelesítve!' } })
     
     // Ellenőrzés, hogy nem-e lett regisztrálva az email címmel
-    const user = await users.findOne({ emailId: email.id })
+    const user = await users.findOne({ where: { emailId: email.id } })
     if (user) return res.send({ errors: { email: 'A megadott email cím már foglalt!' } })
 
     const hashedPassword = await bcrypt.hash(password, 10)
     await users.create({ username, password: hashedPassword, emailId })
 
-    // TODO: Email küldés regisztráció után
-    // await sendMail(email.email, 'Sikeres regisztráció', 'libs/resend_templates/verifyEmail.html', { username, title: 'Sikeres regisztráció!', link: `http://localhost:3000/email-verification?token=${verifyToken}` })
     res.send({ message: 'Sikeres regisztráció!' })
   } catch (err) {
     if (!err) return
@@ -148,7 +146,6 @@ export const Login = async (req, res) => {
         ]
       }
     })
-    console.log(user)
     if (!user) errors.push('username', 'A felhasználó nem található!')
     if (errors.check) return res.send({ errors: errors.get() })
 
@@ -278,38 +275,36 @@ export const deleteAvatar = async (req, res) => {
   }
 }
 
-// ! Teljes átdolgozást igényel
 export const updateEmail = async (req, res) => {
   try {
-    const { email, password } = req.body
+    const { emailId, password } = req.body
     const errors = new Errors()
-    
-    errors.empty({ email, password }, 'Üres mező!')
-    errors.email({ email }, 'Nem megfelelő formátum!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
 
     // Jelszó ellenőrzés
-    const user = await users.findOne({ where: { id: req.id }, attributes: [ 'username', 'password' ] })
+    const user = await users.findOne({ where: { id: req.id }, attributes: [ 'id', 'username', 'password' ] })
     const passMatch = await bcrypt.compare(password, user.password)
     if (!passMatch) errors.push('password', 'Hibás jelszó!')
     
-    // Ellenőrzi, hogy az új e-mail címmel már van-e felhasználó
-    const checkEmail = await users.findOne({ where: { email } })
-    if (checkEmail) errors.push('email', 'A megadott email cím már foglalt!')
+    // Email ellenőrzések
+    const email = await emails.findOne({ where: { id: emailId } })
+    if (!email) errors.push('email', 'Az email cím nem található!')
+    if (email.code) errors.push('email', 'Az email cím nincs hitelesítve!')
 
     if (errors.check) return res.status(400).send({ errors: errors.get() })
     
-    // Új email verification token generálás és felhasználó update
-    const verifyToken = rndstr({ length: 54 }) + Date.now().toString().slice(0, 10)
-    await users.update({ email, verifyToken }, { where: { id: req.id } })
+    // Ellenőrzés, hogy nem-e lett regisztrálva az email címmel
+    const checkEmail = await users.findOne({ where: { emailId } })
+    if (checkEmail) return res.send({ errors: { email: 'A megadott email cím már foglalt!' } })
 
-    // Email küldése
-    await sendMail(email, 'Sikeres email módosítás', 'libs/resend_templates/verifyEmail.html', { username: user.username, title: 'Email módosítás', link: `http://localhost:3000/email-verification?token=${verifyToken}` })
+    // Email cím módosítása
+    user.emailId = emailId
+    await user.save()
+
     res.send({ message: 'Sikeres email módosítás!' })
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ errors: { email: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -348,7 +343,7 @@ const getUserProfileData = async (_user) => {
     const user = await users.findOne({ where: username ? { username } : { id }, attributes: ['id', 'username', 'avatar', 'status', 'registerDate', 'emailId'] })
     if (!user) return { error: 'A keresett felhasználó nem található!' }
 
-    const email = await emails.findOne({ id: user.emailId })
+    const email = await emails.findOne({ where: { id: user.emailId } })
     user.dataValues.email = email && !username ? email.email : 'hiddenmail@tl.hu'
 
     // A felhasználó heti aktivitása
