@@ -11,7 +11,7 @@ function Login(props) {
   const [text, setText] = useState('')
 
   const [username, setUsername] = useState('')
-  const [nameMsg, setNameMsg] = useState('Adj meg egy felhasználónevet!')
+  const [nameMsg, setNameMsg] = useState('Add meg felhasználóneved vagy email címed!')
 
   const [password, setPassword] = useState('')
   const [passwordMsg, setPasswordMsg] = useState('Adj meg egy jelszót!')

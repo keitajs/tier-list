@@ -134,7 +134,21 @@ export const Login = async (req, res) => {
     errors.empty({ username, password }, 'Üres mező!')
     if (errors.check) return res.send({ errors: errors.get() })
 
-    const user = await users.findOne({ where: { username }, attributes: [ 'id', 'username', 'password' ] })
+    const user = await users.findOne({
+      attributes: ['id', 'username', 'password'],
+      include: {
+        model: emails,
+        attributes: ['email'],
+        required: false
+      },
+      where: {
+        [Op.or]: [
+          { username },
+          { '$email.email$': username }
+        ]
+      }
+    })
+    console.log(user)
     if (!user) errors.push('username', 'A felhasználó nem található!')
     if (errors.check) return res.send({ errors: errors.get() })
 
