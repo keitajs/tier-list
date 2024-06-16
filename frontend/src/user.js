@@ -70,6 +70,17 @@ export const verifyEmail = async (email, code) => {
   }
 }
 
+export const updateEmail = async (emailId, password) => {
+  try {
+    const { data } = await axios.patch('/user/email', { emailId, password })
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
 export const logout = async ({ redirect, history }) => {
   try {
     disconnect()

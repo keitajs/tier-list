@@ -1,54 +1,83 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useState, useRef } from 'react'
+import { updateEmail, sendVerificationCode, verifyEmail } from '../../../user'
+import Email from '../../ui/Email'
+import Code from '../../ui/Code'
+import Password from '../../ui/Password'
 
-function Email(props) {
+export default function EmailForm(props) {
+  const [step, setStep] = useState(0)
+
   const [email, setEmail] = useState('')
+  const [code, setCode] = useState(new Array(6).fill(''))
   const [password, setPassword] = useState('')
+
+  const [newCode, setNewCode] = useState(0)
+  const newCodeRef = useRef(null)
+
   const [errors, setErrors] = useState({})
+  const setError = (field, value) => setErrors(errors => ({ ...errors, [field]: value }))
 
-  const update = async () => {
-    if (Object.values(errors).find(x => !!x)) return
+  const getNewCode = async () => {
+    const data = await sendVerificationCode(email)
+    if (data.errors) return console.log(data.errors)
 
-    try {
-      await axios.patch('/user/email', { email, password })
+    startNewCodeTimer()
+  }
+
+  const startNewCodeTimer = () => {
+    if (newCodeRef.current !== null) return
+    setNewCode(60)
+
+    newCodeRef.current = setInterval(() => {
+      setNewCode(newCode => {
+        if (newCode > 1) return newCode - 1
+        clearInterval(newCodeRef.current)
+        newCodeRef.current = null
+        return 0
+      })
+    }, 1000)
+  }
+
+  const nextStep = async () => {
+    // Emailben kapott kód beírása
+    if (step === 0) {
+      const data = await sendVerificationCode(email)
+      if (data.errors) return setErrors(data.errors)
+      
+      startNewCodeTimer()
+      return setStep(step + 1)
+    }
+
+    // Kód hitelesítése és email módosítása
+    if (step === 1) {
+      const data = await verifyEmail(email, code.join(''))
+      if (data.errors) return setErrors(data.errors)
+
+      const result = await updateEmail(data.emailId, password)
+      if (result.errors) return setErrors(result.errors)
+
       props.setEdit(null)
       props.setUser(user => {
         user.email = email
-        return user
+        return { ...user }
       })
-    } catch (err) {
-      const { errors: results } = err?.response?.data
-      if (results) return setErrors(errors => {
-        if (results.password) errors.password = results.password
-        if (results.email) errors.email = results.email
-        return { ...errors }
-      })
-
-      alert('Server error')
-      console.log(err)
     }
   }
 
-  // Input mezők változásainak kezelése
+  // Jelenlegi email címmel való megegyezés ellenőrzése
   useEffect(() => {
-    if (!email) return setErrors(errors => { return { ...errors, email: 'Üres mező!' } })
-    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email)) return setErrors(errors => { return { ...errors, email: 'Hibás formátum!' } })
-    if (email === props.user.email) return setErrors(errors => { return { ...errors, email: 'Jelenleg is ez az email van beállítva!' } })
-    setErrors(errors => { return { ...errors, email: false } })
-  }, [email, props.user.email])
-
-  useEffect(() => {
-    if (!password) return setErrors(errors => { return { ...errors, password: 'Üres mező!' } })
-    setErrors(errors => { return { ...errors, password: false } })
-  }, [password])
+    if (email === props.user.email) setError('email', 'Jelenleg is ez az email címed!')
+  }, [email])
 
   // Megjelenéskor mezők ürítése
   useEffect(() => {
     if (!props.hide) {
+      setStep(0)
       setEmail('')
+      setCode(new Array(6).fill(''))
       setPassword('')
+      setError('code', '')
+      setError('password', '')
     }
   }, [props.hide])
 
@@ -59,33 +88,38 @@ function Email(props) {
           Email módosítás
         </div>
 
-        <div className='flex flex-col text-lg mb-1.5'>
-          <label htmlFor="email" className='ml-1'>Új email</label>
-          <div className='relative'>
-            <input type="text" value={email} maxLength={256} onChange={e => setEmail(e.target.value)} name='email' id='email' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.email ? faXmark : faCheck} className={errors.email ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
-          </div>
-          <span className='text-base ml-1 text-rose-600'>{errors.email}</span>
-        </div>
+        {step === 0 ?
+        <>
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} validation={true} />
+        </>
+        :
+        <>
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} />
+          <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} />
+          <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} />
+        </>}
 
-        <div className='flex flex-col text-lg'>
-          <label htmlFor="password" className='flex ml-1'>
-            Jelszó
-          </label>
-          <div className='relative'>
-            <input type='password' value={password} maxLength={256} onChange={e => setPassword(e.target.value)} name='password' id='password' className='w-72 px-2 py-1 pr-8 text-base placeholder:text-white/25 rounded-lg bg-neutral-700/50 outline-none' />
-            <div className='absolute top-1/2 right-2 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={errors.password ? faXmark : faCheck} className={errors.password ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} /></div>
-          </div>
-          <span className='text-base ml-1 text-rose-600'>{errors.password}</span>
-        </div>
+        <p className='w-64 mt-6 opacity-60 text-sm'>
+          <b>Tipp: </b>
+          {step === 0 ?
+          <>
+            Add meg az új email címed, amire küldeni fogjuk a hitelesítő kódot.
+          </>
+          :
+          <>
+            A megadott címre küldtünk egy hitelesítő kódot.
+            Ha nem kaptad meg, 
+            {" "}{newCode === 0 ? <b onClick={getNewCode} className='cursor-pointer hover:underline'>ide kattintva</b> : <><b>{newCode}</b> másodperc múlva</>}{" "}
+            kérhetsz egy újat.
+          </>
+          }
+        </p>
 
-        <div className='flex gap-2 mt-5'>
-          <button onClick={update} className='w-full py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>Módosítás</button>
-          <button onClick={() => props.setEdit(null)} className='w-full py-1 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+        <div className='flex gap-2 mt-8'>
+          <button onClick={nextStep} className={`w-full py-1.5 rounded-lg ${step === 0 ? 'bg-blue-500' : 'bg-emerald-600'} ${!Object.values(errors).find(x => !!x) ? (step === 0 ? 'hover:bg-blue-400' : 'hover:bg-emerald-500') : 'cursor-not-allowed'} transition-colors`}>{step === 0 ? 'Tovább' : 'Módosítás'}</button>
+          <button onClick={() => props.setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
         </div>
       </div>
     </div>
   )
 }
-
-export default Email
