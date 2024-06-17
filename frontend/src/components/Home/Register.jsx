@@ -4,6 +4,7 @@ import Email from '../ui/Email'
 import Code from '../ui/Code'
 import Username from '../ui/Username'
 import Password from '../ui/Password'
+import Button from '../ui/Button'
 import SuccessMsg from '../Form/SuccessMsg'
 
 function Register(props) {
@@ -124,7 +125,7 @@ function Register(props) {
           }
         </p>
 
-        <button className={`w-full mt-4 lg:mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${!Object.values(errors).find(x => !!x) ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={nextStep}>{step === 2 ? 'Regisztráció befejezése' : 'Tovább'}</button>
+        <Button onClick={nextStep} text='lg' className='mt-4 lg:mt-16' disabled={Object.values(errors).find(x => !!x)}>{step === 2 ? 'Regisztráció befejezése' : 'Tovább'}</Button>
         <button onClick={() => props.setActive(1)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Már van felhasználód? Jelentkezz be itt.</button>
         <button onClick={() => props.setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
       </div>

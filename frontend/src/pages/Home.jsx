@@ -3,6 +3,7 @@ import { refreshToken } from '../user'
 import Index from '../components/Home/Index'
 import Login from '../components/Home/Login'
 import Register from '../components/Home/Register'
+import Button from '../components/ui/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 
@@ -47,7 +48,7 @@ function Home(props) {
         <div className={`hidden lg:flex flex-col mt-5 ${active <= 0 ? 'opacity-0 pointer-events-none select-none translate-y-4' : ''} transition-all`}>
           <div className='flex items-center mb-1 ml-auto'>
             <button onClick={() => setActive(-active)} className='flex items-center'><FontAwesomeIcon icon={faHome} className='mr-4 h-6 opacity-60 hover:opacity-75 transition-opacity' /></button>
-            <button onClick={() => setActive(active === 1 ? 2 : 1)} className='w-max px-8 py-1.5 text-lg rounded-lg bg-blue-500 hover:bg-blue-400 transition-colors'>{Math.abs(active) === 1 ? 'Regisztráció' : 'Bejelentkezés'}</button>
+            <Button onClick={() => setActive(active === 1 ? 2 : 1)} width='max' text='lg'>{Math.abs(active) === 1 ? 'Regisztráció' : 'Bejelentkezés'}</Button>
           </div>
           <button onClick={() => setActive(active === 1 ? 2 : 1)} className='ml-auto text-sm opacity-60 hover:opacity-75 transition-opacity'>{Math.abs(active) === 1 ? 'Még nincs felhasználód? Regisztrálj most!' : 'Már van felhasználód? Jelentkezz be itt.'}</button>
         </div>

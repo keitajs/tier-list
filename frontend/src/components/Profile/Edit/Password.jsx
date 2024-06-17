@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { updatePassword } from '../../../user'
 import Password from '../../ui/Password'
+import Button from '../../ui/Button'
 
 export default function PasswordForm({ hide, setEdit }) {
   const [password, setPassword] = useState('')
@@ -41,8 +42,8 @@ export default function PasswordForm({ hide, setEdit }) {
         <Password label='Jelenlegi jelszó' value={currentPassword} setValue={setCurrentPassword} error={errors.currentPassword} setError={(e) => setError('currentPassword', e)} reset={hide} />
 
         <div className='flex gap-2 mt-7'>
-          <button onClick={update} className='w-full py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>Módosítás</button>
-          <button onClick={() => setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+          <Button onClick={update} color='success' disabled={Object.values(errors).find(x => !!x)}>Módosítás</Button>
+          <Button onClick={() => setEdit(null)} color='danger'>Mégsem</Button>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { login } from '../../user'
 import Username from '../ui/Username'
 import Password from '../ui/Password'
+import Button from '../ui/Button'
 import SuccessMsg from '../Form/SuccessMsg'
 
 function Login(props) {
@@ -42,7 +43,7 @@ function Login(props) {
         <Username label='Felhasználónév vagy email' value={username} setValue={setUsername} error={errors.username} setError={(e) => setError('username', e)} validation={false} errors={{ empty: 'Add meg felhasználóneved vagy email címed!' }} />
         <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} reset={props.active} />
 
-        <button className={`w-full mt-4 lg:mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${!Object.values(errors).find(x => !!x) ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={Login}>Bejelentkezés</button>
+        <Button onClick={Login} text='lg' className='mt-4 lg:mt-16' disabled={Object.values(errors).find(x => !!x)}>Bejelentkezés</Button>
         <button onClick={() => props.setActive(2)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Még nincs felhasználód? Regisztrálj most!</button>
         <button onClick={() => props.setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
       </div>

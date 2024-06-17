@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import { updateAvatar, deleteAvatar } from '../../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileArrowUp, faFileExcel, faTrash } from '@fortawesome/free-solid-svg-icons'
+import Button from '../../ui/Button'
 
 export default function AvatarForm({ hide, avatar, setUser, setEdit }) {
   const [file, setFile] = useState('')
@@ -70,8 +71,8 @@ export default function AvatarForm({ hide, avatar, setUser, setEdit }) {
         {error ? <p className='w-64 mt-4 text-center text-rose-600'>{error}</p> : <></>}
 
         <div className='flex gap-2 mt-5'>
-          <button onClick={update} className='w-full py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>Módosítás</button>
-          <button onClick={() => setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+          <Button onClick={update} color='success' disabled={!file || !image || error}>Módosítás</Button>
+          <Button onClick={() => setEdit(null)} color='danger'>Mégsem</Button>
         </div>
       </div>
     </div>

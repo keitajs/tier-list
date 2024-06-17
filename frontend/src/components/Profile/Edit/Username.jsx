@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { updateUsername } from '../../../user'
 import Username from '../../ui/Username'
+import Button from '../../ui/Button'
 
 export default function UsernameForm({ hide, currentUsername, setUser, setEdit }) {
   const [username, setUsername] = useState('')
@@ -40,8 +41,8 @@ export default function UsernameForm({ hide, currentUsername, setUser, setEdit }
         <Username label='Új felhasználónév' value={username} setValue={setUsername} error={error} setError={setError} validation={true} />
 
         <div className='flex gap-2 mt-7'>
-          <button onClick={update} className={`w-full py-1.5 rounded-lg bg-emerald-600 ${!error ? 'hover:bg-emerald-500' : 'cursor-not-allowed'} transition-colors`}>Módosítás</button>
-          <button onClick={() => setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+          <Button onClick={update} color='success' disabled={error}>Módosítás</Button>
+          <Button onClick={() => setEdit(null)} color='danger'>Mégsem</Button>
         </div>
       </div>
     </div>

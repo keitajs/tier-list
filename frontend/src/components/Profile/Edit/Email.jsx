@@ -3,6 +3,7 @@ import { updateEmail, sendVerificationCode, verifyEmail } from '../../../user'
 import Email from '../../ui/Email'
 import Code from '../../ui/Code'
 import Password from '../../ui/Password'
+import Button from '../../ui/Button'
 
 export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
   const [step, setStep] = useState(0)
@@ -115,8 +116,8 @@ export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
         </p>
 
         <div className='flex gap-2 mt-7'>
-          <button onClick={nextStep} className={`w-full py-1.5 rounded-lg ${step === 0 ? 'bg-blue-500' : 'bg-emerald-600'} ${!Object.values(errors).find(x => !!x) ? (step === 0 ? 'hover:bg-blue-400' : 'hover:bg-emerald-500') : 'cursor-not-allowed'} transition-colors`}>{step === 0 ? 'Tovább' : 'Módosítás'}</button>
-          <button onClick={() => setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+          <Button onClick={nextStep} color={step !== 0 && 'success'} disabled={Object.values(errors).find(x => !!x)}>{step === 0 ? 'Tovább' : 'Módosítás'}</Button>
+          <Button onClick={() => setEdit(null)} color='danger'>Mégsem</Button>
         </div>
       </div>
     </div>
