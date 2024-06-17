@@ -81,10 +81,58 @@ export const updateEmail = async (emailId, password) => {
   }
 }
 
+export const updateUsername = async (username) => {
+  try {
+    const { data } = await axios.patch('/user/username', { username })
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+export const updatePassword = async (password, currentPassword) => {
+  try {
+    const { data } = await axios.patch('/user/password', { password, currentPassword })
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+export const updateAvatar = async (image) => {
+  try {
+    const formData = new FormData()
+    formData.append('avatar', image)
+
+    const { data } = await axios.patch('/user/avatar', formData)
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+export const deleteAvatar = async () => {
+  try {
+    const { data } = await axios.delete('/user/avatar')
+    if (data.errors) return { errors: data.errors }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
 export const logout = async ({ redirect, history }) => {
   try {
     disconnect()
-    axios.delete('/logout').then(redirect ? () => history(redirect) : () => {})
+    await axios.delete('/logout').then(redirect ? () => history(redirect) : () => {})
+    return true
   } catch (error) {
     console.error(error)
     return false

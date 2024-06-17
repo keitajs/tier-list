@@ -4,7 +4,7 @@ import Email from '../../ui/Email'
 import Code from '../../ui/Code'
 import Password from '../../ui/Password'
 
-export default function EmailForm(props) {
+export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
   const [step, setStep] = useState(0)
 
   const [email, setEmail] = useState('')
@@ -56,22 +56,21 @@ export default function EmailForm(props) {
       const result = await updateEmail(data.emailId, password)
       if (result.errors) return setErrors(result.errors)
 
-      props.setEdit(null)
-      props.setUser(user => {
+      setEdit(null)
+      setUser(user => {
         user.email = email
         return { ...user }
       })
     }
   }
 
-  // Jelenlegi email címmel való megegyezés ellenőrzése
   useEffect(() => {
-    if (email === props.user.email) setError('email', 'Jelenleg is ez az email címed!')
-  }, [email])
+    if (email === currentEmail) setError('email', 'Jelenleg is ez az email címed!')
+  }, [email, currentEmail])
 
   // Megjelenéskor mezők ürítése
   useEffect(() => {
-    if (!props.hide) {
+    if (!hide) {
       setStep(0)
       setEmail('')
       setCode(new Array(6).fill(''))
@@ -79,12 +78,12 @@ export default function EmailForm(props) {
       setError('code', '')
       setError('password', '')
     }
-  }, [props.hide])
+  }, [hide])
 
   return (
-    <div className={`z-40 fixed inset-0 flex items-center justify-center bg-neutral-950/60 ${props.hide ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} transition-opacity`}>
+    <div className={`z-40 fixed inset-0 flex items-center justify-center bg-neutral-950/60 ${hide ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} transition-opacity`}>
       <div className='p-4 rounded-2xl bg-neutral-800'>
-        <div className='flex items-center justify-center mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
+        <div className='flex items-center justify-center px-3 pb-2 text-xl border-b-2 border-blue-500'>
           Email módosítás
         </div>
 
@@ -115,9 +114,9 @@ export default function EmailForm(props) {
           }
         </p>
 
-        <div className='flex gap-2 mt-8'>
+        <div className='flex gap-2 mt-7'>
           <button onClick={nextStep} className={`w-full py-1.5 rounded-lg ${step === 0 ? 'bg-blue-500' : 'bg-emerald-600'} ${!Object.values(errors).find(x => !!x) ? (step === 0 ? 'hover:bg-blue-400' : 'hover:bg-emerald-500') : 'cursor-not-allowed'} transition-colors`}>{step === 0 ? 'Tovább' : 'Módosítás'}</button>
-          <button onClick={() => props.setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
+          <button onClick={() => setEdit(null)} className='w-full py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button>
         </div>
       </div>
     </div>

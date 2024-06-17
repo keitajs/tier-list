@@ -62,9 +62,9 @@ function Profile({ history }) {
         </div>
       </div>
 
-      <Username hide={edit !== 'username'} user={user} setUser={setUser} setEdit={setEdit} />
+      <Username hide={edit !== 'username'} currentUsername={user.username} setUser={setUser} setEdit={setEdit} />
+      <Email hide={edit !== 'email'} currentEmail={user.email} setUser={setUser} setEdit={setEdit} />
       <Avatar hide={edit !== 'avatar'} avatar={user.avatar} setUser={setUser} setEdit={setEdit} />
-      <Email hide={edit !== 'email'} user={user} setUser={setUser} setEdit={setEdit} />
       <Password hide={edit !== 'password'} setEdit={setEdit} />
     </div>
   )
