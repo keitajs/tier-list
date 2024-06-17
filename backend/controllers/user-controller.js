@@ -215,12 +215,12 @@ export const updateUsername = async (req, res) => {
 
     errors.empty({ username }, 'Üres mező!')
     errors.username({ username }, 'Nem megfelelő formátum!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     // Ellenőrzi, hogy az új felhasználónévvel már van-e felhasználó
     const checkUsername = await users.findOne({ where: { username } })
     if (checkUsername) errors.push('username', 'A megadott felhasználónév már foglalt!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
     
     // Új accessToken és felhasználónév módosítás
     const accessToken = jwt.sign({ id: req.id, username }, process.env.ACCESS_SECRET, { expiresIn: '7d' })
@@ -231,7 +231,7 @@ export const updateUsername = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ errors: { username: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -242,7 +242,7 @@ export const updateAvatar = async (req, res) => {
     const errors = new Errors()
 
     if (!avatar) errors.push('avatar', 'Tölts fel egy képet!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     const user = await users.findOne({ where: { id: req.id } })
     const oldAvatar = path.resolve() + '/images/avatars/' + user.avatar
@@ -254,7 +254,7 @@ export const updateAvatar = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ errors: { avatar: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -271,7 +271,7 @@ export const deleteAvatar = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ errors: { avatar: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -314,7 +314,7 @@ export const updatePassword = async (req, res) => {
     const errors = new Errors()
 
     errors.empty({ password, currentPassword }, 'Üres mező!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     // Jelenlegi jelszó ellenőrzés
     const user = await users.findOne({ where: { id: req.id }, attributes: [ 'password' ] })
@@ -323,7 +323,7 @@ export const updatePassword = async (req, res) => {
 
     // Új jelszó ellenőrzés
     errors.password({ password }, 'Túl rövid!')
-    if (errors.check) return res.status(400).send({ errors: errors.get() })
+    if (errors.check) return res.send({ errors: errors.get() })
 
     const hashedPassword = await bcrypt.hash(password, 10)
     await users.update({ password: hashedPassword }, { where: { id: req.id } })
@@ -332,7 +332,7 @@ export const updatePassword = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ errors: { password: 'Ismeretlen hiba történt!' } })
   }
 }
 
