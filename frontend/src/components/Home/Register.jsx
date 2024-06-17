@@ -102,8 +102,8 @@ function Register(props) {
         :
         <>
           <Username value={username} setValue={setUsername} error={errors.username} setError={(e) => setError('username', e)} validation={true} />
-          <Password name={'pass1'} type={'pwc'} value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={props.active} />
-          <Password label={'Jelszó újra'} name={'pass2'} type={'pc'} value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={props.active} />
+          <Password name='pass1' type='pwc' value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={props.active} />
+          <Password label='Jelszó újra' name='pass2' type='pc' value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={props.active} />
         </>}
 
         <p className='mt-6 opacity-60 text-sm'>

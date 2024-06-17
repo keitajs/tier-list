@@ -41,7 +41,7 @@ function Login(props) {
       <h3 className='text-center text-3xl font-bold tracking-wide w-full lg:w-72 pb-2 mb-2 lg:mb-10 border-b-[3px] border-blue-500'>BEJELENTKEZÉS</h3>
 
       <div className="form flex flex-col items-center">
-        <Username label={'Felhasználónév vagy email'} value={username} setValue={setUsername} error={nameMsg} setError={setNameMsg} validation={false} errors={{ empty: 'Add meg felhasználóneved vagy email címed!' }} />
+        <Username label='Felhasználónév vagy email' value={username} setValue={setUsername} error={nameMsg} setError={setNameMsg} validation={false} errors={{ empty: 'Add meg felhasználóneved vagy email címed!' }} />
         <Password value={password} setValue={setPassword} error={passwordMsg} setError={setPasswordMsg} reset={props.active} />
 
         <button className={`w-full mt-4 lg:mt-16 py-1.5 text-lg rounded-lg bg-blue-500 ${nameMsg === '' && passwordMsg === '' ? 'hover:bg-blue-400' : 'cursor-not-allowed'} transition-colors`} onClick={Login}>Bejelentkezés</button>
