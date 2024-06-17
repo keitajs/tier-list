@@ -27,9 +27,7 @@ function Register(props) {
   const handleErrors = (errors) => {
     setPassword('')
     setPasswor2('')
-    setErrors(errors)
-    setError('password', errors.password ? errors.password : 'Adj meg egy jelszót!')
-    setError('passwor2', 'Adj meg egy jelszót!')
+    setTimeout(() => setErrors(errors), 0)
   }
 
   const getNewCode = async () => {
@@ -54,6 +52,8 @@ function Register(props) {
   }
 
   const nextStep = async () => {
+    if (Object.values(errors).find(x => !!x)) return
+
     // Emailben kapott kód beírása
     if (step === 0) {
       const data = await sendVerificationCode(email)
@@ -74,8 +74,6 @@ function Register(props) {
 
     // Regisztráció
     if (step === 2) {
-      if (Object.values(errors).find(x => !!x)) return
-
       const data = await register(username, password, emailId)
       if (data.errors) return handleErrors(data.errors)
 
