@@ -7,7 +7,6 @@ import './css/App.css'
 import Home from './pages/Home'
 import List from './pages/List'
 import Profile from './pages/Profile'
-import EmailVerification from './pages/EmailVerification'
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = 'http://localhost:2000'
@@ -28,7 +27,6 @@ function App() {
         <Route path='/list/*' element={<List history={history} />} />
         <Route path='/profile' element={<Profile history={history} />} />
         <Route path='/profile/:username' element={<Profile history={history} />} />
-        <Route path='/email-verification' element={<EmailVerification history={history} />} />
         <Route path="*" element={<Navigate to={"/"} />} />
       </Routes>
     </div>
