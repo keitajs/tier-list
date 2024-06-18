@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import axios from 'axios'
+import { getList } from '../../user'
 import { socket, connect } from '../../socket'
 import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,7 +8,7 @@ import { faRotateRight, faShare } from '@fortawesome/free-solid-svg-icons'
 import { arrayMove } from "@dnd-kit/sortable"
 import List from '../../components/List/TierList/List'
 
-function TierList({ selectedList, setSelectedList, history }) {
+function TierList({ logged, selectedList, setSelectedList, history }) {
   const [searchParams] = useSearchParams()
 
   // Socket IO felhasználók
@@ -21,9 +21,15 @@ function TierList({ selectedList, setSelectedList, history }) {
   const [permission, setPermission] = useState({ move: true, edit: true, admin: true })
 
   // Tier List adatok lekérése
-  const getTierList = async (id) => {
-    const { data: { list, permission } } = await axios.get(`/user/lists/${id}`)
+  const loadList = async () => {
+    // Refresh token és lista adatok lekérése
+    const data = await getList(selectedList)
+    if (data.error || !data) return history('/list')
 
+    // Bejelentkezés nélkül csak publikus listába lehet bejutni
+    const { list, permission } = data
+    if (!logged && list.private) return history('/')
+    
     setTitle(list.name)
     setCategories(list.categories.map(category => { return { id: `${category.id}cat`, name: category.name, color: category.color } }))
     setItems([].concat(...list.categories.map(category => category.characters.map(character => { return { ...character, categoryId: `${category.id}cat`, } }))))
@@ -34,6 +40,9 @@ function TierList({ selectedList, setSelectedList, history }) {
   }
 
   useEffect(() => {
+    if (!selectedList || logged === null) return
+    loadList().catch(err => console.error(err))
+
     // * Socket IO függvények
     // Csatlakozáskor belép a lista szobájába
     const onConnect = () => {
@@ -182,11 +191,15 @@ function TierList({ selectedList, setSelectedList, history }) {
   }, [selectedList])
 
   useEffect(() => {
+    if (logged === null) return
+
     const listId = searchParams.get('id') || selectedList
     if (listId) setSelectedList(listId)
+  }, [searchParams, logged])
 
-    getTierList(listId).catch(() => history('/list'))
-  }, [searchParams])
+  useEffect(() => {
+    document.title = 'Listák | Tier List'
+  }, [])
 
   return (
     <div className='select-none w-full mx-auto'>

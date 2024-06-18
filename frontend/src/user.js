@@ -138,3 +138,25 @@ export const logout = async ({ redirect, history }) => {
     return false
   }
 }
+
+export const getList = async (listId) => {
+  try {
+    const { data } = await axios.get(`/user/lists/${listId}`)
+    if (data.error) return { error: data.error }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+export const getLists = async () => {
+  try {
+    const { data } = await axios.get('/user/lists')
+    if (data.error) return { error: data.error }
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}

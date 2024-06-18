@@ -1,20 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { refreshToken } from '../user'
 import Navigation from '../components/Navigation'
 import Lists from './List/Lists'
 import TierList from './List/TierList'
 
 function List(props) {
   const [selectedList, setSelectedList] = useState(null)
+  const [logged, setLogged] = useState(null)
+
+  const getLogged = async () => {
+    const logged = await refreshToken()
+    setLogged(logged)
+  }
+
+  useEffect(() => {
+    getLogged().catch(err => console.error(err))
+  }, [])
 
   return (
     <div className='min-h-screen p-6'>
-      <Navigation selectedList={selectedList} history={props.history} />
+      <Navigation selectedList={selectedList} loading={logged === null} history={props.history} />
 
       <div className='h-full ml-0 sm:ml-14 mb-16 sm:mb-0'>
         <Routes>
-          <Route path='/' element={<Lists history={props.history} setSelectedList={setSelectedList} />} />
-          <Route path='/editor' element={<TierList history={props.history} selectedList={selectedList} setSelectedList={setSelectedList} />} />
+          <Route path='/' element={<Lists history={props.history} logged={logged} setSelectedList={setSelectedList} />} />
+          <Route path='/editor' element={<TierList history={props.history} logged={logged} selectedList={selectedList} setSelectedList={setSelectedList} />} />
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       </div>
