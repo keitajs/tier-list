@@ -72,7 +72,7 @@ function ManageList(props) {
           {!name ? <div className='absolute top-1/2 right-0 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' /></div> : <></>}
         </div>
         <div className={`flex items-center gap-3 text-sm w-max ${props.activeList ? 'opacity-1 pointer-events-auto' : 'opacity-0 pointer-events-none'} transition-opacity`}>
-          <button onClick={() => {props.setSelectedList(props.activeList.id); props.history('/list/editor')}} className='flex items-center gap-2 opacity-75 hover:opacity-90 transition-opacity'><span className='hidden sm:inline'>Megnyitás</span><FontAwesomeIcon icon={faUpRightFromSquare} /></button>
+          <button onClick={() => props.history(`/list/editor?id=${props.activeList.id}`)} className='flex items-center gap-2 opacity-75 hover:opacity-90 transition-opacity'><span className='hidden sm:inline'>Megnyitás</span><FontAwesomeIcon icon={faUpRightFromSquare} /></button>
           <button onClick={removeList} className='flex items-center gap-2 group text-rose-600 hover:text-rose-500 ml-0 sm:hover:ml-2 transition-all'><div className='hidden sm:inline sm:w-0 sm:group-hover:w-32 sm:max-w-max overflow-hidden transition-all'>Törlés</div><FontAwesomeIcon icon={faTrash} /></button>
         </div>
       </div>
