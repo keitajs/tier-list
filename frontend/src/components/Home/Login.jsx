@@ -4,9 +4,9 @@ import { login } from '../../user'
 import Username from '../ui/Username'
 import Password from '../ui/Password'
 import Button from '../ui/Button'
-import SuccessMsg from '../Form/SuccessMsg'
+import SuccessMsg from './SuccessMsg'
 
-function Login(props) {
+export default function Login(props) {
   const [searchParams] = useSearchParams()
   const [msg, setMsg] = useState('')
   const [text, setText] = useState('')
@@ -52,5 +52,3 @@ function Login(props) {
     </div>
   )
 }
-
-export default Login

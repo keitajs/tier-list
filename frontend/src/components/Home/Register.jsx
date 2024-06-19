@@ -5,9 +5,9 @@ import Code from '../ui/Code'
 import Username from '../ui/Username'
 import Password from '../ui/Password'
 import Button from '../ui/Button'
-import SuccessMsg from '../Form/SuccessMsg'
+import SuccessMsg from './SuccessMsg'
 
-function Register(props) {
+export default function Register(props) {
   const [step, setStep] = useState(0)
   const [msg, setMsg] = useState('')
   const [text, setText] = useState('')
@@ -134,5 +134,3 @@ function Register(props) {
     </div>
   )
 }
-
-export default Register

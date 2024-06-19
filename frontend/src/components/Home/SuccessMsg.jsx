@@ -1,8 +1,7 @@
-import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
-function SuccessMsg(props) {
+export default function SuccessMsg(props) {
   return (
     <div className='absolute inset-0 rounded-3xl bg-neutral-800 overflow-hidden success-box-anim'>
       <div className='flex flex-col items-center justify-center w-full h-full bg-neutral-900/50'>
@@ -19,5 +18,3 @@ function SuccessMsg(props) {
     </div>
   )
 }
-
-export default SuccessMsg
