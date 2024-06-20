@@ -146,17 +146,45 @@ export const getList = async (listId) => {
     return data
   } catch (error) {
     console.error(error)
-    return false
+    return { error: 'Ismeretlen hiba' }
   }
 }
 
-export const getLists = async () => {
+export const getLists = async (query) => {
   try {
-    const { data } = await axios.get('/user/lists')
+    const q = query ? `?q=${query}` : ''
+
+    const { data } = await axios.get('/user/lists' + q)
     if (data.error) return { error: data.error }
     return data
   } catch (error) {
     console.error(error)
-    return false
+    return { error: 'Ismeretlen hiba' }
+  }
+}
+
+export const getSharedLists = async (query) => {
+  try {
+    const q = query ? `?q=${query}` : ''
+
+    const { data } = await axios.get('/lists/shared' + q)
+    if (data.error) return { error: data.error }
+    return data
+  } catch (error) {
+    console.error(error)
+    return { error: 'Ismeretlen hiba' }
+  }
+}
+
+export const getPublicLists = async (query) => {
+  try {
+    const q = query ? `?q=${query}` : ''
+
+    const { data } = await axios.get('/lists/public' + q)
+    if (data.error) return { error: data.error }
+    return data
+  } catch (error) {
+    console.error(error)
+    return { error: 'Ismeretlen hiba' }
   }
 }

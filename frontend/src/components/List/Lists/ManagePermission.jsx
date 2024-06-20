@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import EditPermission from './ManagePermission/EditPermission'
 import PermissionItem from './ManagePermission/PermissionItem'
+import Box from '../../ui/Box'
 
 function ManagePermission({ activeList, setActiveList, setLists }) {
   const [active, setActive] = useState(null)
@@ -14,7 +15,7 @@ function ManagePermission({ activeList, setActiveList, setLists }) {
   }, [activeList])
 
   return (
-    <>
+    <Box>
       <div className='flex flex-col grow max-h-min -m-5 p-5 overflow-hidden'>
         <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
           Jogosultságok
@@ -27,8 +28,8 @@ function ManagePermission({ activeList, setActiveList, setLists }) {
         </div>
       </div>
 
-      {active ? <EditPermission activeList={activeList} setActiveList={setActiveList} setLists={setLists} active={active} setActive={setActive} /> : <></>}
-    </>
+      {active && <EditPermission activeList={activeList} setActiveList={setActiveList} setLists={setLists} active={active} setActive={setActive} />}
+    </Box>
   )
 }
 

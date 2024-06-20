@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire, faEye, faEyeSlash, faXmark, faUpRightFromSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+import Box from '../../ui/Box'
 
 function ManageList({ history, activeList, setActiveList, setLists }) {
   const [name, setName] = useState('')
@@ -65,7 +66,7 @@ function ManageList({ history, activeList, setActiveList, setLists }) {
   }, [activeList])
 
   return (
-    <>
+    <Box>
       <div className='flex justify-between gap-3 mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
         <div className='relative flex items-center grow'>
           <input type='text' name="name" id="name" value={name} onChange={e => setName(e.target.value)} placeholder='Lista neve' className='w-full max-w-80 px-2 -mx-2 rounded-lg placeholder:text-neutral-500 bg-neutral-700/50 outline-none resize-none' />
@@ -97,7 +98,7 @@ function ManageList({ history, activeList, setActiveList, setLists }) {
         <button onClick={() => activeList ? updateList() : createList()} className='w-full sm:w-2/5 xl:w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>{activeList ? 'Mentés' : 'Létrehozás'}</button>
         {activeList ? <button onClick={() => setActiveList(null)} className='w-full sm:w-2/5 xl:w-1/5 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button> : <></>}
       </div>
-    </>
+    </Box>
   )
 }
 
