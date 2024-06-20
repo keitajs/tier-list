@@ -69,10 +69,13 @@ export const getUserList = async (req, res) => {
 
 export const getUserLists = async (req, res) => {
   try {
+    const { q: query } = req.query
+
     // Felhasználó összes listája
     const results = await lists.findAll({
       where: {
-        userId: req.id
+        userId: req.id,
+        name: { [Op.like]: query ? `%${query}%` : '%' }
       },
       include: {
         model: permissions,
@@ -128,8 +131,13 @@ export const getSidebarLists = async (req, res) => {
 
 export const getSharedLists = async (req, res) => {
   try {
+    const { q: query } = req.query
+
     // Megosztott / listák amikhez jogosultságot kapott
     const results = await lists.findAll({
+      where: {
+        name: { [Op.like]: query ? `%${query}%` : '%' }
+      },
       include: [
         {
           model: permissions,
