@@ -3,7 +3,7 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire, faEye, faEyeSlash, faXmark, faUpRightFromSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-function ManageList(props) {
+function ManageList({ history, activeList, setActiveList, setLists }) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [status, setStatus] = useState(1)
@@ -14,23 +14,23 @@ function ManageList(props) {
       const { data } = await axios.post('/lists/create', { name, description, status, visible })
 
       // Hozzáadja és beállítja aktívnak az új listát
-      props.setLists(lists => { return [...lists, { ...data, permissions: [] }] })
-      props.setActiveList({ ...data, permissions: [] })
+      setLists(lists => { return [...lists, { ...data, permissions: [] }] })
+      setActiveList({ ...data, permissions: [] })
     } catch (err) { alert('Server error'); console.log(err) }
   }
 
   const updateList = async () => {
     try {
-      await axios.patch(`/lists/${props.activeList.id}/update`, { name, description, status, visible })
+      await axios.patch(`/lists/${activeList.id}/update`, { name, description, status, visible })
 
       // Módosítja az adatokat a változókban
-      props.setLists(lists => {
-        const list = lists.find(list => list.id === props.activeList.id)
+      setLists(lists => {
+        const list = lists.find(list => list.id === activeList.id)
         list.name = name
         list.description = description
         list.status = status
         list.private = !visible
-        props.setActiveList({ ...list })
+        setActiveList({ ...list })
         return lists
       })
     } catch (err) { alert('Server error'); console.log(err) }
@@ -38,31 +38,31 @@ function ManageList(props) {
 
   const removeList = async () => {
     try {
-      await axios.delete(`/lists/${props.activeList.id}/remove`)
+      await axios.delete(`/lists/${activeList.id}/remove`)
 
       // Törli a listát a többi közül
-      props.setLists(lists => {
-        lists.splice(lists.findIndex(list => list.id === props.activeList.id), 1)
+      setLists(lists => {
+        lists.splice(lists.findIndex(list => list.id === activeList.id), 1)
         return lists
       })
-      props.setActiveList(null)
+      setActiveList(null)
     } catch (err) { alert('Server error'); console.log(err) }
   }
 
   useEffect(() => {
     // Aktív lista esetén annak az adatait írja be a mezőkbe
-    if (props.activeList) {
-      setName(props.activeList.name)
-      setDescription(props.activeList.description)
-      setStatus(props.activeList.status)
-      setVisible(!props.activeList.private)
+    if (activeList) {
+      setName(activeList.name)
+      setDescription(activeList.description)
+      setStatus(activeList.status)
+      setVisible(!activeList.private)
     } else {
       setName('Új lista')
       setDescription('')
       setStatus(1)
       setVisible(false)
     }
-  }, [props.activeList])
+  }, [activeList])
 
   return (
     <>
@@ -71,8 +71,8 @@ function ManageList(props) {
           <input type='text' name="name" id="name" value={name} onChange={e => setName(e.target.value)} placeholder='Lista neve' className='w-full max-w-80 px-2 -mx-2 rounded-lg placeholder:text-neutral-500 bg-neutral-700/50 outline-none resize-none' />
           {!name ? <div className='absolute top-1/2 right-0 -translate-y-1/2 flex items-center'><FontAwesomeIcon icon={faXmark} className='text-rose-500 h-5 input-error-anim' /></div> : <></>}
         </div>
-        <div className={`flex items-center gap-3 text-sm w-max ${props.activeList ? 'opacity-1 pointer-events-auto' : 'opacity-0 pointer-events-none'} transition-opacity`}>
-          <button onClick={() => props.history(`/list/editor?id=${props.activeList.id}`)} className='flex items-center gap-2 opacity-75 hover:opacity-90 transition-opacity'><span className='hidden sm:inline'>Megnyitás</span><FontAwesomeIcon icon={faUpRightFromSquare} /></button>
+        <div className={`flex items-center gap-3 text-sm w-max ${activeList ? 'opacity-1 pointer-events-auto' : 'opacity-0 pointer-events-none'} transition-opacity`}>
+          <button onClick={() => history(`/list/editor?id=${activeList.id}`)} className='flex items-center gap-2 opacity-75 hover:opacity-90 transition-opacity'><span className='hidden sm:inline'>Megnyitás</span><FontAwesomeIcon icon={faUpRightFromSquare} /></button>
           <button onClick={removeList} className='flex items-center gap-2 group text-rose-600 hover:text-rose-500 ml-0 sm:hover:ml-2 transition-all'><div className='hidden sm:inline sm:w-0 sm:group-hover:w-32 sm:max-w-max overflow-hidden transition-all'>Törlés</div><FontAwesomeIcon icon={faTrash} /></button>
         </div>
       </div>
@@ -94,8 +94,8 @@ function ManageList(props) {
       </div>
 
       <div className='flex gap-2 justify-center mt-2'>
-        <button onClick={() => props.activeList ? updateList() : createList()} className='w-full sm:w-2/5 xl:w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>{props.activeList ? 'Mentés' : 'Létrehozás'}</button>
-        {props.activeList ? <button onClick={() => props.setActiveList(null)} className='w-full sm:w-2/5 xl:w-1/5 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button> : <></>}
+        <button onClick={() => activeList ? updateList() : createList()} className='w-full sm:w-2/5 xl:w-1/5 py-0.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors'>{activeList ? 'Mentés' : 'Létrehozás'}</button>
+        {activeList ? <button onClick={() => setActiveList(null)} className='w-full sm:w-2/5 xl:w-1/5 py-0.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-colors'>Mégsem</button> : <></>}
       </div>
     </>
   )

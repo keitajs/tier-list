@@ -7,8 +7,8 @@ import Button from '../components/ui/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome } from '@fortawesome/free-solid-svg-icons'
 
-function Home(props) {
-  const [active, setActive] = useState(props.active)
+function Home({ history, active: defaultActive }) {
+  const [active, setActive] = useState(defaultActive)
   const [logged, setLogged] = useState(false)
   
   // Bejelentkezési állapot lekérése
@@ -26,15 +26,15 @@ function Home(props) {
 
     if (logged || active <= 0) {
       document.title = 'Tier List'
-      props.history('/' + window.location.search)
+      history('/' + window.location.search)
     }
     else if (active === 1) {
       document.title = 'Bejelentkezés | Tier List'
-      props.history('/login' + window.location.search)
+      history('/login' + window.location.search)
     }
     else if (active === 2) {
       document.title = 'Regisztráció | Tier List'
-      props.history('/register' + window.location.search)
+      history('/register' + window.location.search)
     }
   }, [active, logged])
 
@@ -54,8 +54,8 @@ function Home(props) {
         </div>
       </div>
       <div className='relative w-full lg:w-1/2 h-full lg:h-screen flex items-center justify-center'>
-        <Index active={active <= 0} setActive={setActive} history={props.history} logged={logged} />
-        <Login active={active === 1} setActive={setActive} history={props.history} />
+        <Index active={active <= 0} setActive={setActive} history={history} logged={logged} />
+        <Login active={active === 1} setActive={setActive} history={history} />
         <Register active={active === 2} setActive={setActive} />
       </div>
     </div>

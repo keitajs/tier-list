@@ -5,13 +5,13 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import EditPermission from './ManagePermission/EditPermission'
 import PermissionItem from './ManagePermission/PermissionItem'
 
-function ManagePermission(props) {
+function ManagePermission({ activeList, setActiveList, setLists }) {
   const [active, setActive] = useState(null)
 
   useEffect(() => {
     // Bezárja a módosítást / hozzáadást, ha vált a listák között
     setActive(null)
-  }, [props.activeList])
+  }, [activeList])
 
   return (
     <>
@@ -23,11 +23,11 @@ function ManagePermission(props) {
         </div>
 
         <div className='flex flex-col grow gap-2.5 min-h-0 -mr-2 pr-2 overflow-y-auto'>
-          {props.activeList.permissions.length > 0 ? props.activeList.permissions.map((permission, i) => <PermissionItem key={i} user={permission.user} permission={permission} active={active} setActive={setActive} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található jogosultság.</div>}
+          {activeList.permissions.length > 0 ? activeList.permissions.map((permission, i) => <PermissionItem key={i} user={permission.user} permission={permission} active={active} setActive={setActive} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található jogosultság.</div>}
         </div>
       </div>
 
-      {active ? <EditPermission activeList={props.activeList} setActiveList={props.setActiveList} setLists={props.setLists} active={active} setActive={setActive} /> : <></>}
+      {active ? <EditPermission activeList={activeList} setActiveList={setActiveList} setLists={setLists} active={active} setActive={setActive} /> : <></>}
     </>
   )
 }

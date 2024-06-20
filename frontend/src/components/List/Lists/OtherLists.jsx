@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShare, faEye } from '@fortawesome/free-solid-svg-icons'
 import ListItem from './ListItem'
 
-function OtherLists(props) {
+function OtherLists({ history, loaded }) {
   const [query, setQuery] = useState('')
   const [queryValue] = useDebounce(query, 500)
   const [lists, setLists] = useState([])
@@ -19,11 +19,11 @@ function OtherLists(props) {
   }
 
   useEffect(() => {
-    if (!props.loaded) return
+    if (!loaded) return
 
     setQuery('')
     getLists(shared).catch((e) => console.log(e))
-  }, [shared, props.loaded])
+  }, [shared, loaded])
 
   useEffect(() => {
     if (!shared) getLists(shared, queryValue.toLowerCase().trim()).catch((e) => console.log(e))
@@ -51,7 +51,7 @@ function OtherLists(props) {
         <Tooltip anchorSelect='#public' place='top' className='!text-sm !rounded-lg !bg-neutral-950'>Publikus listák</Tooltip>
       </div>
       <div className='flex flex-col grow gap-2.5 -mr-2 pr-2 overflow-y-auto'>
-        {lists.length > 0 ? lists.filter(list => shared ? list.name.toLowerCase().includes(query.toLowerCase().trim()) : true).map(list => <ListItem key={list.id} onClick={() => props.history(`/list/editor?id=${list.id}`)} list={list} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található lista.</div>}
+        {lists.length > 0 ? lists.filter(list => shared ? list.name.toLowerCase().includes(query.toLowerCase().trim()) : true).map(list => <ListItem key={list.id} onClick={() => history(`/list/editor?id=${list.id}`)} list={list} />) : <div className='flex items-center justify-center h-full opacity-50'>Nem található lista.</div>}
       </div>
     </>
   )
