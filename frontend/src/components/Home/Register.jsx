@@ -1,5 +1,7 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { register, sendVerificationCode, verifyEmail } from '../../user'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPen } from '@fortawesome/free-solid-svg-icons'
 import Email from '../ui/Email'
 import Code from '../ui/Code'
 import Username from '../ui/Username'
@@ -7,7 +9,7 @@ import Password from '../ui/Password'
 import Button from '../ui/Button'
 import SuccessMsg from './SuccessMsg'
 
-export default function Register(props) {
+export default function Register({ active, setActive }) {
   const [step, setStep] = useState(0)
   const [msg, setMsg] = useState('')
   const [text, setText] = useState('')
@@ -52,6 +54,18 @@ export default function Register(props) {
     }, 1000)
   }
 
+  const backStep = async (s) => {
+    if (s >= step) return
+    setErrors({})
+    setStep(s && step - 1)
+    setEmail('')
+    setEmailId(0)
+    setCode(new Array(6).fill(''))
+    setUsername('')
+    setPassword('')
+    setPasswor2('')
+  }
+
   const nextStep = async () => {
     if (Object.values(errors).find(x => !!x)) return
 
@@ -61,7 +75,7 @@ export default function Register(props) {
       if (data.errors) return setErrors(data.errors)
       
       startNewCodeTimer()
-      return setStep(step + 1)
+      return setStep(1)
     }
 
     // Felhasználónév és jelszó megadása
@@ -70,7 +84,7 @@ export default function Register(props) {
       if (data.errors) return setErrors(data.errors)
 
       setEmailId(data.emailId)
-      return setStep(step + 1)
+      return setStep(2)
     }
 
     // Regisztráció
@@ -80,12 +94,19 @@ export default function Register(props) {
 
       setMsg(data.message)
       setText('Másodperceken belül átirányítunk a bejelentkezéshez')
-      setTimeout(() => props.setActive(1), 2500)
+      setTimeout(() => setActive(1), 2500)
     }
   }
 
+  useEffect(() => {
+    if (active) {
+      setEmail('')
+      backStep(0)
+    }
+  }, [active])
+
   return (
-    <div className={`absolute flex flex-col items-center mr-0 lg:mr-12 px-12 py-12 lg:py-16 rounded-3xl bg-neutral-900/50 ${props.active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
+    <div className={`absolute flex flex-col items-center mr-0 lg:mr-12 px-12 py-12 lg:py-16 rounded-3xl bg-neutral-900/50 ${active ? '' : 'opacity-0 pointer-events-none select-none translate-y-4'} transition-all`}>
       <h3 className='text-center text-3xl font-bold tracking-wide w-full lg:w-72 pb-2 mb-2 lg:mb-10 border-b-[3px] border-blue-500'>REGISZTRÁCIÓ</h3>
 
       <div className="form flex flex-col items-center max-w-64">
@@ -95,14 +116,18 @@ export default function Register(props) {
         </>
         : step === 1 ?
         <>
-          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} />
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} className='pr-12'>
+            <button onClick={backStep} className='flex items-center justify-center absolute top-0 right-0 h-full w-auto aspect-square rounded-e-lg bg-neutral-600 hover:bg-neutral-500 transition-colors'>
+              <FontAwesomeIcon icon={faPen} />
+            </button>
+          </Email>
           <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} />
         </>
         :
         <>
           <Username value={username} setValue={setUsername} error={errors.username} setError={(e) => setError('username', e)} validation={true} />
-          <Password name='pass1' type='pwc' value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={props.active} />
-          <Password label='Jelszó újra' name='pass2' type='pc' value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={props.active} />
+          <Password name='pass1' type='pwc' value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={active} />
+          <Password label='Jelszó újra' name='pass2' type='pc' value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={active} />
         </>}
 
         <p className='mt-6 opacity-60 text-sm'>
@@ -126,8 +151,8 @@ export default function Register(props) {
         </p>
 
         <Button onClick={nextStep} text='lg' className='mt-4 lg:mt-16' disabled={Object.values(errors).find(x => !!x)}>{step === 2 ? 'Regisztráció befejezése' : 'Tovább'}</Button>
-        <button onClick={() => props.setActive(1)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Már van felhasználód? Jelentkezz be itt.</button>
-        <button onClick={() => props.setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
+        <button onClick={() => setActive(1)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Már van felhasználód? Jelentkezz be itt.</button>
+        <button onClick={() => setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
       </div>
       
       {msg === '' ? <></> : <SuccessMsg msg={msg} text={text} />}
