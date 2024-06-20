@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { getLoginStatus } from '../user'
-import Sidebar from './Navigation/Sidebar'
-import ListNavbar from './Navigation/ListNavbar'
-import MobileNavbar from './Navigation/MobileNavbar'
+import Sidebar from './navigation/Sidebar'
+import ListNavbar from './navigation/ListNavbar'
+import MobileNavbar from './navigation/MobileNavbar'
 
 function Navigation({ history, selectedList, loading }) {
   const [logged, setLogged] = useState(false)
