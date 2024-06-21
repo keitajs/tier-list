@@ -8,7 +8,7 @@ export default {
     extend: {},
   },
   safelist: [
-    'w-max', 'w-min', 'w-full',
+    'w-max', 'w-min', 'w-full', 'w-1/3',
     'text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-2xl', 'text-3xl'
   ],
   plugins: []

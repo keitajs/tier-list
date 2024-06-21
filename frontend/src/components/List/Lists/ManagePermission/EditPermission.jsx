@@ -3,7 +3,7 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faArrowsUpDownLeftRight, faPen, faXmark, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-function EditPermission({ activeList, setActiveList, active, setActive, setLists }) {
+function EditPermission({ active, setActive, activeList, setActiveList }) {
   const [name, setName] = useState('')
   const [nameMsg, setNameMsg] = useState('Írj be egy felhasználónevet!')
   const [permission, setPermission] = useState(1)
@@ -17,12 +17,7 @@ function EditPermission({ activeList, setActiveList, active, setActive, setLists
 
       // Hozzáadja az activeListához a jogosultságot, majd lementi a listákban is
       activeList.permissions.push(data)
-      setActiveList({...activeList})
-      setLists(lists => {
-        const list = lists.find(list => list.id === activeList.id)
-        list.permissions = activeList.permissions
-        return [...lists]
-      })
+      setActiveList({ ...activeList })
     } catch (error) {
       // Megjeleníti a felhasználónévnél a hibaüzenetet
       setNameMsg(error.response.data.message)
@@ -39,12 +34,7 @@ function EditPermission({ activeList, setActiveList, active, setActive, setLists
       // Módosítja az activeListában a jogosultságot, majd átírja a listákban is
       const _ = activeList.permissions.find(permission => permission.id === active.id)
       _.value = permission
-      setActiveList({...activeList})
-      setLists(lists => {
-        const list = lists.find(list => list.id === activeList.id)
-        list.permissions = activeList.permissions
-        return [...lists]
-      })
+      setActiveList({ ...activeList })
     } catch (error) { alert('Server error'); console.log(error) }
   }
 
@@ -57,12 +47,7 @@ function EditPermission({ activeList, setActiveList, active, setActive, setLists
 
       // Kiveszi a jogosultságot és átírja a listákban is
       activeList.permissions.splice(activeList.permissions.find(permission => permission.id === active.id), 1)
-      setActiveList({...activeList})
-      setLists(lists => {
-        const list = lists.find(list => list.id === activeList.id)
-        list.permissions = activeList.permissions
-        return [...lists]
-      })
+      setActiveList({ ...activeList })
     } catch (error) { alert('Server error'); console.log(error) }
   }
 
