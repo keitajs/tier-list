@@ -5,7 +5,7 @@ import Navigation from '../components/Navigation'
 import Lists from './List/Lists'
 import TierList from './List/TierList'
 
-function List({ history }) {
+export default function List({ history }) {
   const [selectedList, setSelectedList] = useState(null)
   const [logged, setLogged] = useState(null)
 
@@ -32,5 +32,3 @@ function List({ history }) {
     </div>
   )
 }
-
-export default List
