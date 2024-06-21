@@ -15,7 +15,7 @@ export default function ListItem({ list, activeList, onClick, onDoubleClick }) {
           <div className={' px-2.5 py-1 rounded-xl ' + ['bg-blue-500', 'bg-emerald-500', 'bg-red-500'][list.status - 1]}>
             {['Folyamatban', 'Kész', 'Dobott'][list.status - 1]}
           </div>
-          <FontAwesomeIcon icon={[faEllipsis, faCheck, faDumpsterFire][list.status - 1]} className={'h-3.5 px-2 ' + ['text-blue-500', 'text-emerald-500', 'text-red-500'][list.status - 1]} />
+          <FontAwesomeIcon icon={[faEllipsis, faCheck, faDumpsterFire][list.status - 1]} className={'h-3.5 px-2 ' + ['text-blue-400', 'text-emerald-500', 'text-red-500'][list.status - 1]} />
         </div>
       </div>
       <div className={`flex items-center justify-end text-sm ${list?.updates ? 'w-0 grow sm:w-auto' : ''}`}>

@@ -65,7 +65,7 @@ function ManageList({ history, activeList, setActiveList }) {
 
       <label className='mb-0.5 ml-1.5'>Státusz</label>
       <Select value={status} setValue={setStatus} startIndex={1} className='w-full mb-3'>
-        <SelectButton icon={faEllipsis} iconClassName='text-white'>
+        <SelectButton icon={faEllipsis} iconClassName='text-blue-400'>
           Folyamatban
         </SelectButton>
         <SelectButton icon={faCheck} iconClassName='text-emerald-500'>
