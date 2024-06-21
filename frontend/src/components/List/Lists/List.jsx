@@ -6,7 +6,6 @@ import { faPlus, faList, faShare, faEye } from '@fortawesome/free-solid-svg-icon
 import { Switch, SwitchButton } from "../../ui/SwitchButton"
 import ListItem from './ListItem'
 import Tooltip from "../../ui/Tooltip"
-import Box from "../../ui/Box"
 
 export default function List({ history, loaded, activeList, setActiveList }) {
   const [type, setType] = useState(0)
@@ -27,7 +26,7 @@ export default function List({ history, loaded, activeList, setActiveList }) {
   }, [activeList, type, queryValue, loaded])
 
   return (
-    <Box>
+    <>
       <div className='flex items-center justify-between mb-5 px-3 pb-2 text-xl border-b-2 border-blue-500'>
         {['Saját listák', 'Megosztott listák', 'Publikus listák'][type]}
 
@@ -62,11 +61,13 @@ export default function List({ history, loaded, activeList, setActiveList }) {
           />
         )}
         
-        <button onClick={() => setActiveList(null)} className='group flex items-center justify-center mx-2 mt-2 py-2.5 rounded-xl bg-neutral-950/30 hover:bg-neutral-950/20 transition-all'>
-          <FontAwesomeIcon icon={faPlus} className='mx-2 group-hover:ml-0' />
-          <span className='text-xl w-0 max-w-max group-hover:w-32 text-nowrap whitespace-nowrap overflow-hidden transition-[width]'>Új lista</span>
-        </button>
+        {type === 0 &&
+          <button onClick={() => setActiveList(null)} className='group flex items-center justify-center mx-2 mt-2 py-2.5 rounded-xl bg-neutral-950/30 hover:bg-neutral-950/20 transition-all'>
+            <FontAwesomeIcon icon={faPlus} className='mx-2 group-hover:ml-0' />
+            <span className='text-xl w-0 max-w-max group-hover:w-32 text-nowrap whitespace-nowrap overflow-hidden transition-[width]'>Új lista</span>
+          </button>
+        }
       </div>
-    </Box>
+    </>
   )
 }
