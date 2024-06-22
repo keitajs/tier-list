@@ -28,5 +28,5 @@ export default function Button({ children, width, padding, text, color, hover, h
     ${className ?? ''}
   `
 
-  return href ? (<Link to={href} target={target} className={btnClass} onClick={onClick}>{children}</Link>) : (<button className={btnClass} onClick={onClick}>{children}</button>)
+  return href ? (<Link to={href} target={target} className={btnClass}>{children}</Link>) : (<button className={btnClass} onClick={onClick} disabled={disabled}>{children}</button>)
 }
