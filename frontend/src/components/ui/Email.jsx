@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Input from './Input'
 
-export default function Email({ children, label, value, setValue, error, setError, validation, errors, disabled, className }) {
+export default function Email({ children, label, value, setValue, error, setError, validation, errors, mainClass, className, disabled }) {
   const onChange = (e) => {
     const { value } = e.target
     setValue(value)
@@ -18,6 +18,6 @@ export default function Email({ children, label, value, setValue, error, setErro
   }, [value])
 
   return (
-    <Input name='email' label={label || 'Email'} type='email' value={value} message={error} onChange={onChange} disabled={disabled} children={children} className={className} />
+    <Input name='email' label={label || 'Email'} type='email' value={value} message={error} onChange={onChange} disabled={disabled} children={children} mainClass={mainClass} className={className} />
   )
 }

@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 
-export default function Code({ label, value, setValue, error, setError, errors }) {
+export default function Code({ label, value, setValue, error, setError, errors, mainClass }) {
   const inputRefs = useRef([])
 
   const onChange = (i, value) => {
@@ -41,7 +41,7 @@ export default function Code({ label, value, setValue, error, setError, errors }
   }, [value])
 
   return (
-    <div className="w-64 mt-1.5 lg:mt-6 flex flex-col">
+    <div className={`w-64 flex flex-col ${mainClass ?? ''}`}>
       <div className='flex'>
         <label className='ml-1 mb-0.5 text-lg'>{label || 'Hitelesítő kód'}</label>
       </div>

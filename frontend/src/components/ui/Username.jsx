@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Input from './Input'
 
-export default function Username({ label, value, setValue, error, setError, validation, errors, disabled }) {
+export default function Username({ label, value, setValue, error, setError, validation, errors, mainClass, className, disabled }) {
   const onChange = (e) => {
     const { value } = e.target
     setValue(value)
@@ -18,6 +18,6 @@ export default function Username({ label, value, setValue, error, setError, vali
   }, [value])
 
   return (
-    <Input name='username' label={label || 'Felhasználónév'} type='text' value={value} message={error} onChange={onChange} disabled={disabled} />
+    <Input name='username' label={label || 'Felhasználónév'} type='text' value={value} message={error} onChange={onChange} mainClass={mainClass} className={className} disabled={disabled} />
   )
 }

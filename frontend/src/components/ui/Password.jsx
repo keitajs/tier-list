@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Input from './Input'
 
-export default function Password({ label, name, type, value, value2, setValue, error, setError, setError2, errors, reset, disabled }) {
+export default function Password({ label, name, type, value, value2, setValue, error, setError, setError2, errors, mainClass, className, reset, disabled }) {
   const onChange = (e) => {
     const { value } = e.target
     setValue(value)
@@ -33,6 +33,6 @@ export default function Password({ label, name, type, value, value2, setValue, e
   }, [value])
 
   return (
-    <Input name={name ? name : 'password'} label={label || 'Jelszó'} type='password' value={value} message={error} onChange={onChange} reset={reset} disabled={disabled} />
+    <Input name={name ? name : 'password'} label={label || 'Jelszó'} type='password' value={value} message={error} onChange={onChange} mainClass={mainClass} className={className} reset={reset} disabled={disabled} />
   )
 }
