@@ -48,7 +48,7 @@ export default function Login({ history, active, setActive }) {
 
       <div className="form flex flex-col items-center">
         <Username label='Felhasználónév vagy email' value={username} setValue={setUsername} error={errors.username} setError={(e) => setError('username', e)} validation={false} errors={{ empty: 'Add meg felhasználóneved vagy email címed!' }} />
-        <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} reset={active} />
+        <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} reset={active} mainClass={'mt-1.5 lg:mt-6'} />
 
         <Button onClick={Login} text='lg' className='mt-4 lg:mt-16' disabled={Object.values(errors).find(x => !!x)}>Bejelentkezés</Button>
         <button onClick={() => setActive(2)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Még nincs felhasználód? Regisztrálj most!</button>

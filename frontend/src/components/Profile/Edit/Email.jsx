@@ -90,13 +90,13 @@ export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
 
         {step === 0 ?
         <>
-          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} validation={true} />
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} validation={true} mainClass={'mt-6'} />
         </>
         :
         <>
-          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} />
-          <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} />
-          <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} />
+          <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} mainClass={'mt-6'} />
+          <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} mainClass={'mt-6'} />
+          <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} mainClass={'mt-6'} />
         </>}
 
         <p className='w-64 mt-6 opacity-60 text-sm'>
