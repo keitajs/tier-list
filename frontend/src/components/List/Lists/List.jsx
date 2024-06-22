@@ -23,7 +23,13 @@ export default function List({ history, loaded, activeList, setActiveList }) {
   useEffect(() => {
     if (!loaded) return
     getListsByType(type, queryValue)
-  }, [activeList, type, queryValue, loaded])
+  }, [type, queryValue, loaded])
+
+  useEffect(() => {
+    if (type !== 0 && activeList) return setType(0)
+
+    getListsByType(type, queryValue)
+  }, [activeList])
 
   return (
     <>
@@ -61,7 +67,7 @@ export default function List({ history, loaded, activeList, setActiveList }) {
           />
         )}
         
-        {type === 0 &&
+        {(type === 0 && activeList) &&
           <button onClick={() => setActiveList(null)} className='group flex items-center justify-center mx-2 mt-2 py-2.5 rounded-xl bg-neutral-950/30 hover:bg-neutral-950/20 transition-all'>
             <FontAwesomeIcon icon={faPlus} className='mx-2 group-hover:ml-0' />
             <span className='text-xl w-0 max-w-max group-hover:w-32 text-nowrap whitespace-nowrap overflow-hidden transition-[width]'>Új lista</span>
