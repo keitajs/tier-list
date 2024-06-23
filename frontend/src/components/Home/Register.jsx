@@ -41,7 +41,7 @@ export default function Register({ active, setActive }) {
   }
 
   const startNewCodeTimer = () => {
-    if (newCodeRef.current !== null) return
+    if (newCodeRef.current !== null) clearInterval(newCodeRef.current)
     setNewCode(60)
 
     newCodeRef.current = setInterval(() => {
@@ -64,6 +64,7 @@ export default function Register({ active, setActive }) {
     setUsername('')
     setPassword('')
     setPasswor2('')
+    startNewCodeTimer()
   }
 
   const nextStep = async () => {
