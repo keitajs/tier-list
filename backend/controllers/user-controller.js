@@ -37,7 +37,7 @@ export const registerEmail = async (req, res) => {
     if (errors.check) return res.send({ errors: errors.get() })
 
     // Ellenőrzés, hogy az email cím már foglalt-e
-    const _email = await emails.findOne({ where: { email } })
+    const _email = await emails.findOne({ where: { address: email } })
     if (_email) {
       const _user = await users.findOne({ where: { emailId: _email.id } })
       if (_user) return res.send({ errors: { email: 'A megadott email cím már foglalt!' } })
@@ -49,7 +49,7 @@ export const registerEmail = async (req, res) => {
     const expDate = moment().add(process.env.MAILCODE_MINS, 'minutes').toDate()
 
     // Email kód adatok frissítése
-    if (!_email) await emails.create({ email, code, expDate })
+    if (!_email) await emails.create({ address: email, code, expDate })
     else {
       _email.code = code
       _email.expDate = expDate
@@ -71,7 +71,7 @@ export const verifyEmail = async (req, res) => {
     // Email hitelesítés
     const { email, code } = req.body
     
-    const _email = await emails.findOne({ where: { email } })
+    const _email = await emails.findOne({ where: { address: email } })
     if (_email.code === null) return res.send({ errors: { code: 'Az email címhez nem tartozik kód!' } })
     if (_email.code !== code) return res.send({ errors: { code: 'Az email címhez nem ez a kód tartozik!' } })
     if (moment().isAfter(_email.expDate)) return res.send({ errrors: { code: 'Az email címhez tartozó kód lejárt!' } })
@@ -79,6 +79,8 @@ export const verifyEmail = async (req, res) => {
     _email.code = null
     await _email.save()
 
+    const registerToken = jwt.sign({ address: email }, process.env.REGISTER_SECRET, { expiresIn: '15m' })
+    res.cookie('registerToken', registerToken, { maxAge: 15*60*1000, httpOnly: true, sameSite: 'None', secure: true })
     res.send({ message: 'Sikeresen hitelesítetted az email címedet!', emailId: _email.id })
   } catch (err) {
     if (!err) return
@@ -89,7 +91,7 @@ export const verifyEmail = async (req, res) => {
 
 export const Register = async (req, res) => {
   try {
-    const { username, password, emailId } = req.body
+    const { username, password } = req.body
     const errors = new Errors()
 
     // Adatok ellenőrzése
@@ -103,18 +105,32 @@ export const Register = async (req, res) => {
     }
     if (errors.check) return res.send({ errors: errors.get() })
 
+    // Regisztrációs token lekérése
+    const token = req.cookies.registerToken
+    if (!token) return res.send({ errors: { username: 'Regisztrációs token nem található!' } })
+
+    // Tokenből email address kinyerése
+    let address = ''
+    jwt.verify(token, process.env.REGISTER_SECRET, (err, decoded) => {
+      if (err) res.send({ errors: { username: ["Hiba történt a token feldolgozása közben!"] } })
+      address = decoded.address
+    })
+    if (!address) return res.send({ errors: { username: 'Regisztrációs email nem található!' } })
+
     // Email ellenőrzések
-    const email = await emails.findOne({ where: { id: emailId } })
-    if (!email) return res.send({ errors: { email: 'Az email cím nem található!' } })
-    if (email.code) return res.send({ errors: { email: 'Az email cím nincs hitelesítve!' } })
+    const email = await emails.findOne({ where: { address } })
+    if (!email) return res.send({ errors: { username: 'Az email cím nem található!' } })
+    if (email.code) return res.send({ errors: { username: 'Az email cím nincs hitelesítve!' } })
+    if (moment().isAfter(email.expDate)) return res.send({ errrors: { username: 'Az email cím regisztrációs ideje lejárt!' } })
     
     // Ellenőrzés, hogy nem-e lett regisztrálva az email címmel
     const user = await users.findOne({ where: { emailId: email.id } })
-    if (user) return res.send({ errors: { email: 'A megadott email cím már foglalt!' } })
+    if (user) return res.send({ errors: { username: 'A megadott email cím már foglalt!' } })
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    await users.create({ username, password: hashedPassword, emailId })
+    await users.create({ username, password: hashedPassword, emailId: email.id })
 
+    res.clearCookie('registerToken', { sameSite: 'None', secure: true })
     res.send({ message: 'Sikeres regisztráció!' })
   } catch (err) {
     if (!err) return
@@ -136,13 +152,13 @@ export const Login = async (req, res) => {
       attributes: ['id', 'username', 'password'],
       include: {
         model: emails,
-        attributes: ['email'],
+        attributes: ['address'],
         required: false
       },
       where: {
         [Op.or]: [
           { username },
-          { '$email.email$': username }
+          { '$email.address$': username }
         ]
       }
     })
@@ -344,7 +360,7 @@ const getUserProfileData = async (_user) => {
     if (!user) return { error: 'A keresett felhasználó nem található!' }
 
     const email = await emails.findOne({ where: { id: user.emailId } })
-    user.dataValues.email = email && !username ? email.email : 'hiddenmail@tl.hu'
+    user.dataValues.email = email && !username ? email.address : 'hiddenmail@tl.hu'
 
     // A felhasználó heti aktivitása
     const activities = await updates.findAll({ where: { userId: user.id, date: { [Op.gte]: moment().subtract(7, 'days').toDate() } }, include: { model: lists, attributes: ['name'] }})
