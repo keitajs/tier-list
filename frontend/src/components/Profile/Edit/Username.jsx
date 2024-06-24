@@ -38,7 +38,7 @@ export default function UsernameForm({ hide, currentUsername, setUser, setEdit }
           Felhasználónév módosítás
         </div>
 
-        <Username label='Új felhasználónév' value={username} setValue={setUsername} error={error} setError={setError} validation={true} mainClass={'mt-6'} />
+        <Username label='Új felhasználónév' value={username} setValue={setUsername} error={error} setError={setError} validation={true} margin='mt-6' />
 
         <div className='flex gap-2 mt-7'>
           <Button onClick={update} color='success' disabled={error}>Módosítás</Button>

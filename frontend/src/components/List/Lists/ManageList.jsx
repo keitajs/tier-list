@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faEllipsis, faDumpsterFire, faEye, faEyeSlash, faXmark, faUpRightFromSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faEllipsis, faDumpsterFire, faEye, faEyeSlash, faUpRightFromSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { InputContainer, Label, Input, Textarea } from '../../ui/Input'
 import { Select, SelectButton } from '../../ui/Select'
 import Button from '../../ui/Button'
-import Input from '../../ui/Input'
-import Textarea from '../../ui/Textarea'
 
 function ManageList({ history, activeList, setActiveList }) {
   const [name, setName] = useState('')
@@ -58,10 +57,16 @@ function ManageList({ history, activeList, setActiveList }) {
           <button onClick={removeList} className='flex items-center gap-2 group text-rose-600 hover:text-rose-500 ml-0 sm:hover:ml-2 transition-all'><div className='hidden sm:inline sm:w-0 sm:group-hover:w-32 sm:max-w-max overflow-hidden transition-all'>Törlés</div><FontAwesomeIcon icon={faTrash} /></button>
         </div>
       </div>
-
-      <Input label='Megnevezés' name='name' type='text' maxLength={128} value={name} onChange={e => setName(e.target.value)} message={!name} hideMessage={true} onlyMessage={true} mainClass='!w-full mb-3' labelClass='!text-base' className='!w-full' />
       
-      <Textarea label='Leírás' name="description" id="description" rows="2" maxLength={256} value={description} onChange={e => setDescription(e.target.value)} hideMessage={true} onlyMessage={true} mainClass='!w-full mb-3' labelClass='!text-base' className='!w-full' />
+      <InputContainer className='!w-full !mb-3'>
+        <Label htmlFor='name' className='!text-base'>Megnevezés</Label>
+        <Input type='text' id='name' name='name' maxLength={128} value={name} setValue={setName} error={!name} onlyError={true} className='!w-full' />
+      </InputContainer>
+
+      <InputContainer className='!w-full mb-3'>
+        <Label htmlFor='description' className='!text-base'>Leírás</Label>
+        <Textarea id='description' name='description' rows='2' maxLength={256} value={description} setValue={setDescription} onlyError={true} className='!w-full' />
+      </InputContainer>
 
       <label className='mb-0.5 ml-1'>Státusz</label>
       <Select value={status} setValue={setStatus} startIndex={1} className='w-full mb-3'>

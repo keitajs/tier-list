@@ -55,14 +55,15 @@ export default function Register({ active, setActive }) {
 
   const backStep = async (s) => {
     if (s >= step) return
+    const newStep = s && step - 1
+
     setErrors({})
-    setStep(s && step - 1)
-    setEmail('')
+    setStep(newStep)
+    if (newStep !== 0) setEmail('')
     setCode(new Array(6).fill(''))
     setUsername('')
     setPassword('')
     setPasswor2('')
-    startNewCodeTimer()
   }
 
   const nextStep = async () => {
@@ -119,13 +120,13 @@ export default function Register({ active, setActive }) {
               <FontAwesomeIcon icon={faPen} />
             </button>
           </Email>
-          <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} mainClass={'mt-1.5 lg:mt-6'} />
+          <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} className='mt-1.5 lg:mt-6' />
         </>
         :
         <>
           <Username value={username} setValue={setUsername} error={errors.username} setError={(e) => setError('username', e)} validation={true} />
-          <Password name='pass1' type='pwc' value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={active}  mainClass={'mt-1.5 lg:mt-6'} />
-          <Password label='Jelszó újra' name='pass2' type='pc' value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={active}  mainClass={'mt-1.5 lg:mt-6'} />
+          <Password name='pass1' type='pwc' value={password} value2={passwor2} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} setError2={(e) => setError('passwor2', e)} reset={active} margin='mt-1.5 lg:mt-6' />
+          <Password label='Jelszó újra' name='pass2' type='pc' value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={active} margin='mt-1.5 lg:mt-6' />
         </>}
 
         <p className='mt-6 opacity-60 text-sm'>

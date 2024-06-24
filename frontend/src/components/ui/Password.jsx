@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import Input from './Input'
+import { InputContainer, Label, Input, Error } from './Input'
 
-export default function Password({ label, name, type, value, value2, setValue, error, setError, setError2, errors, mainClass, className, reset, disabled }) {
+export default function Password({ label, name, type, value, value2, setValue, error, setError, setError2, errors, margin, className, reset, disabled }) {
   const onChange = (e) => {
     const { value } = e.target
     setValue(value)
@@ -33,6 +33,10 @@ export default function Password({ label, name, type, value, value2, setValue, e
   }, [value])
 
   return (
-    <Input name={name ? name : 'password'} label={label || 'Jelszó'} type='password' value={value} message={error} onChange={onChange} mainClass={mainClass} className={className} reset={reset} disabled={disabled} />
+    <InputContainer className={margin}>
+      <Label htmlFor={name || 'password'}>{label || 'Jelszó'}</Label>
+      <Input type='password' id={name || 'password'} name={name || 'password'} maxLength={128} value={value} onChange={onChange} error={error} className={className} reset={reset} disabled={disabled} />
+      <Error>{error}</Error>
+    </InputContainer>
   )
 }
