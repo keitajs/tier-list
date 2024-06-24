@@ -68,20 +68,20 @@ function ManageList({ history, activeList, setActiveList }) {
         <Textarea id='description' name='description' rows='2' maxLength={256} value={description} setValue={setDescription} onlyError={true} className='!w-full' />
       </InputContainer>
 
-      <label className='mb-0.5 ml-1'>Státusz</label>
+      <Label className='!text-base'>Státusz</Label>
       <Select value={status} setValue={setStatus} startIndex={1} className='w-full mb-3'>
         <SelectButton icon={faEllipsis} iconClassName='text-blue-400'>
           Folyamatban
         </SelectButton>
-        <SelectButton icon={faCheck} iconClassName='text-emerald-500'>
+        <SelectButton color='bg-emerald-600' icon={faCheck} iconClassName='text-emerald-500'>
           Kész
         </SelectButton>
-        <SelectButton icon={faDumpsterFire} iconClassName='text-red-500'>
+        <SelectButton color='bg-rose-600' icon={faDumpsterFire} iconClassName='text-red-500'>
           Dobott
         </SelectButton>
       </Select>
 
-      <label className='mb-0.5 ml-1'>Láthatóság</label>
+      <Label className='!text-base'>Láthatóság</Label>
       <Select value={visible} setValue={setVisible} values={[true, false]} className='w-full mb-3'>
         <SelectButton icon={faEye}>
           Publikus
