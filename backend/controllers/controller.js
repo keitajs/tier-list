@@ -260,15 +260,15 @@ export const createPermission = async (req, res) => {
   try {
     const { id: listId } = req.params
     const { username, permission } = req.body
-    if (username === req.username) return res.status(400).send({ message: 'Saját magadnak nem adhatsz jogosultságot!' })
+    if (username === req.username) return res.send({ error: 'Saját magadnak nem adhatsz jogosultságot!' })
 
     // Ellenőrzi, hogy az adott felhasználónév létezik-e
     const user = await users.findOne({ where: { username }, attributes: ['id', 'username', 'avatar'] })
-    if (!user) return res.status(400).send({ message: 'Nem található felhasználó!' })
+    if (!user) return res.send({ error: 'Nem található felhasználó!' })
 
     // Ellenőrzi, hogy kapott-e már jogosultságot
     const checkPermission = await permissions.findOne({ where: { userId: user.id, listId }})
-    if (checkPermission) return res.status(400).send({ message: 'A felhasználó már rendelkezik jogosultsággal!' })
+    if (checkPermission) return res.send({ error: 'A felhasználó már rendelkezik jogosultsággal!' })
 
     const result = await permissions.create({ value: permission, userId: user.id, listId })
 
@@ -277,7 +277,7 @@ export const createPermission = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -293,7 +293,7 @@ export const updatePermission = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
   }
 }
 
@@ -307,7 +307,7 @@ export const removePermission = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
   }
 }
 
