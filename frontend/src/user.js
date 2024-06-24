@@ -37,9 +37,9 @@ export const login = async (username, password) => {
   }
 }
 
-export const register = async (username, password, emailId) => {
+export const register = async (username, password) => {
   try {
-    const { data } = await axios.post('/register', { username, password, emailId })
+    const { data } = await axios.post('/register', { username, password })
     if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
@@ -70,9 +70,9 @@ export const verifyEmail = async (email, code) => {
   }
 }
 
-export const updateEmail = async (emailId, password) => {
+export const updateEmail = async () => {
   try {
-    const { data } = await axios.patch('/user/email', { emailId, password })
+    const { data } = await axios.patch('/user/email')
     if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
