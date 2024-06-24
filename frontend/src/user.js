@@ -40,7 +40,6 @@ export const login = async (username, password) => {
 export const register = async (username, password) => {
   try {
     const { data } = await axios.post('/register', { username, password })
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -51,7 +50,6 @@ export const register = async (username, password) => {
 export const sendVerificationCode = async (email) => {
   try {
     const { data } = await axios.post('/register/email', { email })
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -62,7 +60,6 @@ export const sendVerificationCode = async (email) => {
 export const verifyEmail = async (email, code) => {
   try {
     const { data } = await axios.post('/register/email/verify', { email, code })
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -73,7 +70,6 @@ export const verifyEmail = async (email, code) => {
 export const updateEmail = async () => {
   try {
     const { data } = await axios.patch('/user/email')
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -84,7 +80,6 @@ export const updateEmail = async () => {
 export const updateUsername = async (username) => {
   try {
     const { data } = await axios.patch('/user/username', { username })
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -95,7 +90,6 @@ export const updateUsername = async (username) => {
 export const updatePassword = async (password, currentPassword) => {
   try {
     const { data } = await axios.patch('/user/password', { password, currentPassword })
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -109,7 +103,6 @@ export const updateAvatar = async (image) => {
     formData.append('avatar', image)
 
     const { data } = await axios.patch('/user/avatar', formData)
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -120,7 +113,6 @@ export const updateAvatar = async (image) => {
 export const deleteAvatar = async () => {
   try {
     const { data } = await axios.delete('/user/avatar')
-    if (data.errors) return { errors: data.errors }
     return data
   } catch (error) {
     console.error(error)
@@ -142,7 +134,6 @@ export const logout = async ({ redirect, history }) => {
 export const getList = async (listId) => {
   try {
     const { data } = await axios.get(`/user/lists/${listId}`)
-    if (data.error) return { error: data.error }
     return data
   } catch (error) {
     console.error(error)
@@ -155,7 +146,6 @@ export const getLists = async (query) => {
     const q = query ? `?q=${query}` : ''
 
     const { data } = await axios.get('/user/lists' + q)
-    if (data.error) return { error: data.error }
     return data
   } catch (error) {
     console.error(error)
@@ -168,7 +158,6 @@ export const getSharedLists = async (query) => {
     const q = query ? `?q=${query}` : ''
 
     const { data } = await axios.get('/lists/shared' + q)
-    if (data.error) return { error: data.error }
     return data
   } catch (error) {
     console.error(error)
@@ -181,7 +170,36 @@ export const getPublicLists = async (query) => {
     const q = query ? `?q=${query}` : ''
 
     const { data } = await axios.get('/lists/public' + q)
-    if (data.error) return { error: data.error }
+    return data
+  } catch (error) {
+    console.error(error)
+    return { error: 'Ismeretlen hiba' }
+  }
+}
+
+export const createPermission = async (listId, username, permission) => {
+  try {
+    const { data } = await axios.post(`/lists/${listId}/permissions/create`, { username, permission })
+    return data
+  } catch (error) {
+    console.error(error)
+    return { error: 'Ismeretlen hiba' }
+  }
+}
+
+export const updatePermission = async (listId, userId, permission) => {
+  try {
+    const { data } = await axios.patch(`/lists/${listId}/permissions/update/${userId}`, { value: permission })
+    return data
+  } catch (error) {
+    console.error(error)
+    return { error: 'Ismeretlen hiba' }
+  }
+}
+
+export const removePermission = async (listId, userId) => {
+  try {
+    const { data } = await axios.delete(`/lists/${listId}/permissions/remove/${userId}`)
     return data
   } catch (error) {
     console.error(error)
