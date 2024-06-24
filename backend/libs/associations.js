@@ -1,7 +1,7 @@
 import { db, checkDatabase } from '../libs/database.js'
 import users from '../models/user.js'
 import emails from '../models/emails.js'
-import tokens from '../models/token.js'
+import sessions from '../models/sessions.js'
 import lists from '../models/list.js'
 import permissions from '../models/permission.js'
 import categories from '../models/category.js'
@@ -15,8 +15,8 @@ import logger from './logger.js'
         // Adatbázis kapcsolatok
 
         // Felhasználók - Tokenek | 1:M
-        users.hasMany(tokens, { foreignKey: { name: 'userId', allowNull: false }, onDelete: 'CASCADE' })
-        tokens.belongsTo(users)
+        users.hasMany(sessions, { foreignKey: { name: 'userId', allowNull: false }, onDelete: 'CASCADE' })
+        sessions.belongsTo(users)
 
         // Felhasználók - Emailek | 1:1
         emails.hasMany(users, { foreignKey: { name: 'emailId', allowNull: false }, onDelete: 'CASCADE' })
