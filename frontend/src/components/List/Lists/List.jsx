@@ -3,7 +3,7 @@ import { useDebounce } from 'use-debounce'
 import { getLists, getSharedLists, getPublicLists } from '../../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faList, faShare, faEye } from '@fortawesome/free-solid-svg-icons'
-import { Switch, SwitchButton } from "../../ui/SwitchButton"
+import { Switch, SwitchButton } from "../../ui/Switch"
 import ListItem from './ListItem'
 import Tooltip from "../../ui/Tooltip"
 
@@ -57,15 +57,21 @@ export default function List({ history, loaded, activeList, setActiveList }) {
         </div>
       </div>
       <div className='flex flex-col gap-2.5 grow -mr-2 pr-2 overflow-y-auto'>
-        {lists !== null && lists.map(list =>
-          <ListItem
-            key={list.id}
-            list={list}
-            activeList={activeList}
-            onClick={type === 0 ? (() => activeList?.id === list.id ? setActiveList(null) : setActiveList(list)) : (() => history(`/list/editor?id=${list.id}`))}
-            onDoubleClick={() => history(`/list/editor?id=${list.id}`)}
-          />
-        )}
+        {lists && lists.length > 0 ?
+          lists.map(list =>
+            <ListItem
+              key={list.id}
+              list={list}
+              activeList={activeList}
+              onClick={type === 0 ? (() => activeList?.id === list.id ? setActiveList(null) : setActiveList(list)) : (() => history(`/list/editor?id=${list.id}`))}
+              onDoubleClick={() => history(`/list/editor?id=${list.id}`)}
+            />
+          )
+        :
+          <div className='flex items-center justify-center h-full opacity-50'>
+            Nem található lista.
+          </div>
+        }
         
         {(type === 0 && activeList) &&
           <button onClick={() => setActiveList(null)} className='group flex items-center justify-center mx-2 mt-2 py-2.5 rounded-xl bg-neutral-950/30 hover:bg-neutral-950/20 transition-all'>
