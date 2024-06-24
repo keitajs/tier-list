@@ -14,7 +14,7 @@ export function Select({ children, value, setValue, values, startIndex, classNam
   )
 }
 
-export function SelectButton({ children, id, onClick, selected, className, icon, iconClassName }) {
+export function SelectButton({ children, onClick, selected, color, className, icon, iconClassName }) {
   return (
     <button
       onClick={onClick}
@@ -26,7 +26,7 @@ export function SelectButton({ children, id, onClick, selected, className, icon,
         </div>
       }
 
-      <div className={`w-full py-1.5 rounded-lg ${selected ? 'bg-blue-500' : 'bg-neutral-700/65'} transition-all`}>
+      <div className={`w-full py-1.5 rounded-lg ${selected ? (color || 'bg-blue-500') : 'bg-neutral-700/65'} transition-all`}>
         {children}
       </div>
     </button>
