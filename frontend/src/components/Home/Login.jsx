@@ -19,7 +19,7 @@ export default function Login({ history, active, setActive }) {
 
   const handleErrors = (errors) => {
     setPassword('')
-    setTimeout(() => setErrors(errors), 0)
+    setTimeout(() => setErrors(e => ({ ...e, ...errors })), 0)
   }
 
   const Login = async (e) => {

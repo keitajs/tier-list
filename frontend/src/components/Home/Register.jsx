@@ -15,7 +15,6 @@ export default function Register({ active, setActive }) {
   const [text, setText] = useState('')
 
   const [email, setEmail] = useState('')
-  const [emailId, setEmailId] = useState(0)
   const [code, setCode] = useState(new Array(6).fill(''))
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -30,7 +29,7 @@ export default function Register({ active, setActive }) {
   const handleErrors = (errors) => {
     setPassword('')
     setPasswor2('')
-    setTimeout(() => setErrors(errors), 0)
+    setTimeout(() => setErrors(e => ({ ...e, ...errors })), 0)
   }
 
   const getNewCode = async () => {
@@ -59,7 +58,6 @@ export default function Register({ active, setActive }) {
     setErrors({})
     setStep(s && step - 1)
     setEmail('')
-    setEmailId(0)
     setCode(new Array(6).fill(''))
     setUsername('')
     setPassword('')
@@ -84,13 +82,12 @@ export default function Register({ active, setActive }) {
       const data = await verifyEmail(email, code.join(''))
       if (data.errors) return setErrors(data.errors)
 
-      setEmailId(data.emailId)
       return setStep(2)
     }
 
     // Regisztráció
     if (step === 2) {
-      const data = await register(username, password, emailId)
+      const data = await register(username, password)
       if (data.errors) return handleErrors(data.errors)
 
       setMsg(data.message)
