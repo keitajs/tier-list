@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 import { updateEmail, sendVerificationCode, verifyEmail } from '../../../user'
 import Email from '../../ui/Email'
 import Code from '../../ui/Code'
-import Password from '../../ui/Password'
 import Button from '../../ui/Button'
 
 export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
@@ -10,7 +9,6 @@ export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
 
   const [email, setEmail] = useState('')
   const [code, setCode] = useState(new Array(6).fill(''))
-  const [password, setPassword] = useState('')
 
   const [newCode, setNewCode] = useState(0)
   const newCodeRef = useRef(null)
@@ -54,7 +52,7 @@ export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
       const data = await verifyEmail(email, code.join(''))
       if (data.errors) return setErrors(data.errors)
 
-      const result = await updateEmail(data.emailId, password)
+      const result = await updateEmail()
       if (result.errors) return setErrors(result.errors)
 
       setEdit(null)
@@ -75,9 +73,7 @@ export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
       setStep(0)
       setEmail('')
       setCode(new Array(6).fill(''))
-      setPassword('')
       setError('code', '')
-      setError('password', '')
     }
   }, [hide])
 
@@ -96,7 +92,6 @@ export default function EmailForm({ hide, currentEmail, setUser, setEdit }) {
         <>
           <Email value={email} setValue={setEmail} error={errors.email} setError={(e) => setError('email', e)} disabled={true} mainClass={'mt-6'} />
           <Code value={code} setValue={setCode} error={errors.code} setError={(e) => setError('code', e)} mainClass={'mt-6'} />
-          <Password value={password} setValue={setPassword} error={errors.password} setError={(e) => setError('password', e)} mainClass={'mt-6'} />
         </>}
 
         <p className='w-64 mt-6 opacity-60 text-sm'>
