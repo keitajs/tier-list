@@ -1,9 +1,8 @@
-import React from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faArrowsUpDownLeftRight, faPen, faUserPen, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
-function PermissionItem({ user, active, permission, setActive }) {
+export default function userItem({ user, active, permission, setActive }) {
   return (
     <button onClick={() => setActive(active => active?.edit ? null : { edit: true, ...permission })} className='flex items-center justify-between gap-2 px-4 py-3 rounded-xl even:bg-neutral-950/70 odd:bg-neutral-950/85 hover:bg-neutral-950/40 transition-all'>
       <div className='flex items-center gap-3 overflow-hidden text-xl'>
@@ -23,5 +22,3 @@ function PermissionItem({ user, active, permission, setActive }) {
     </button>
   )
 }
-
-export default PermissionItem
