@@ -37,6 +37,8 @@ export default function Login({ history, active, setActive }) {
 
   useEffect(() => {
     if (active) {
+      setMsg('')
+      setText('')
       setUsername('')
       setPassword('')
     }

@@ -32,6 +32,17 @@ export default function Register({ active, setActive }) {
     setTimeout(() => setErrors(e => ({ ...e, ...errors })), 0)
   }
 
+  const hasErrors = () => {
+    let error = false
+
+    Object.keys(errors).forEach(key => {
+      if (key === 'message') return
+      if (errors[key]) error = true
+    })
+
+    return error
+  }
+
   const getNewCode = async () => {
     const data = await sendVerificationCode(email)
     if (data.errors) return console.log(data.errors)
@@ -67,7 +78,7 @@ export default function Register({ active, setActive }) {
   }
 
   const nextStep = async () => {
-    if (Object.values(errors).find(x => !!x)) return
+    if (hasErrors()) return
 
     // Emailben kapott kód beírása
     if (step === 0) {
@@ -99,6 +110,8 @@ export default function Register({ active, setActive }) {
 
   useEffect(() => {
     if (active) {
+      setMsg('')
+      setText('')
       setEmail('')
       backStep(0)
     }
@@ -129,27 +142,33 @@ export default function Register({ active, setActive }) {
           <Password label='Jelszó újra' name='pass2' type='pc' value={passwor2} value2={password} setValue={setPasswor2} error={errors.passwor2} setError={(e) => setError('passwor2', e)} reset={active} margin='mt-1.5 lg:mt-6' />
         </>}
 
-        <p className='mt-6 opacity-60 text-sm'>
-          <b>Tipp: </b>
-          {step === 0 ?
-          <>
-            A regisztrációhoz szükséges egy email cím, amelybe be tudsz jelentkezni.
-          </>
-          : step === 1 ? 
-          <>
-            A megadott címre küldtünk egy hitelesítő kódot.
-            Ha nem kaptad meg, 
-            {" "}{newCode === 0 ? <b onClick={getNewCode} className='cursor-pointer hover:underline'>ide kattintva</b> : <><b>{newCode}</b> másodperc múlva</>}{" "}
-            kérhetsz egy újat.
-          </>
-          :
-          <>
-            A regisztráció véglegesítéséhez válassz magadnak egy felhasználónevet és jelszót.
-          </>
-          }
-        </p>
+        {errors?.message ? 
+          <p className='mt-6 text-sm text-rose-600'>
+            {errors.message}
+          </p>
+        :
+          <p className='mt-6 opacity-60 text-sm'>
+            <b>Tipp: </b>
+            {step === 0 ?
+            <>
+              A regisztrációhoz szükséges egy email cím, amelybe be tudsz jelentkezni.
+            </>
+            : step === 1 ? 
+            <>
+              A megadott címre küldtünk egy hitelesítő kódot.
+              Ha nem kaptad meg, 
+              {" "}{newCode === 0 ? <b onClick={getNewCode} className='cursor-pointer hover:underline'>ide kattintva</b> : <><b>{newCode}</b> másodperc múlva</>}{" "}
+              kérhetsz egy újat.
+            </>
+            :
+            <>
+              A regisztráció véglegesítéséhez válassz magadnak egy felhasználónevet és jelszót.
+            </>
+            }
+          </p>
+        }
 
-        <Button onClick={nextStep} text='lg' className='mt-4 lg:mt-16' disabled={Object.values(errors).find(x => !!x)}>{step === 2 ? 'Regisztráció befejezése' : 'Tovább'}</Button>
+        <Button onClick={nextStep} text='lg' className='mt-4 lg:mt-16' disabled={hasErrors()}>{step === 2 ? 'Regisztráció befejezése' : 'Tovább'}</Button>
         <button onClick={() => setActive(1)} className='inline lg:hidden mt-2.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Már van felhasználód? Jelentkezz be itt.</button>
         <button onClick={() => setActive(0)} className='inline lg:hidden mt-0.5 text-sm opacity-60 hover:opacity-75 transition-opacity'>Vissza a főoldalra</button>
       </div>
