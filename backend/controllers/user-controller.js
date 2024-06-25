@@ -41,7 +41,9 @@ export const registerEmail = async (req, res) => {
     if (checkEmail) {
       const user = await users.findOne({ where: { emailId: checkEmail.id } })
       if (user) return res.send({ errors: { email: 'A megadott email cím már foglalt!' } })
-      if (!moment().isAfter(moment(checkEmail.expDate).subtract(process.env.MAILCODE_MINS - 1, 'minutes'))) return res.send({ errors: { email: 'Percenként csak egy hitelesítő kódot kérhetsz!' } })
+
+      const diff = (moment(checkEmail.expDate).subtract(process.env.MAILCODE_MINS - 1, 'minutes')).diff(moment(), 'seconds')
+      if (diff > 0) return res.send({ errors: { email: `A következő hitelesítő kódot ${diff} másodperc múlva kérheted!` } })
     }
 
     // Hitelesítő kód és lejárati idő
@@ -62,7 +64,7 @@ export const registerEmail = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ errors: { email: 'Ismeretlen hiba történt!' } })
+    res.status(500).send({ errors: { message: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -74,7 +76,7 @@ export const verifyEmail = async (req, res) => {
     const checkEmail = await emails.findOne({ where: { address: email } })
     if (checkEmail.code === null) return res.send({ errors: { code: 'Az email címhez nem tartozik kód!' } })
     if (checkEmail.code !== code) return res.send({ errors: { code: 'Az email címhez nem ez a kód tartozik!' } })
-    if (moment().isAfter(checkEmail.expDate)) return res.send({ errrors: { code: 'Az email címhez tartozó kód lejárt!' } })
+    if (moment().isAfter(checkEmail.expDate)) return res.send({ errors: { code: 'Az email címhez tartozó kód lejárt!' } })
     
     checkEmail.code = null
     await checkEmail.save()
@@ -85,7 +87,7 @@ export const verifyEmail = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ errors: { code: 'Ismeretlen hiba történt!' } })
+    res.status(500).send({ errors: { message: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -107,25 +109,25 @@ export const Register = async (req, res) => {
 
     // Regisztrációs token lekérése
     const token = req.cookies.registerToken
-    if (!token) return res.send({ errors: { username: 'Regisztrációs token nem található!' } })
+    if (!token) return res.send({ errors: { message: 'Regisztrációs token nem található!' } })
 
     // Tokenből email address kinyerése
     let address = ''
     jwt.verify(token, process.env.REGISTER_SECRET, (err, decoded) => {
-      if (err) res.send({ errors: { username: ["Hiba történt a token feldolgozása közben!"] } })
+      if (err) res.send({ errors: { message: 'Hiba történt a token feldolgozása közben!' } })
       address = decoded.address
     })
-    if (!address) return res.send({ errors: { username: 'Regisztrációs email nem található!' } })
+    if (!address) return res.send({ errors: { message: 'Regisztrációs email nem található!' } })
 
     // Email ellenőrzések
     const email = await emails.findOne({ where: { address } })
-    if (!email) return res.send({ errors: { username: 'Az email cím nem található!' } })
-    if (email.code) return res.send({ errors: { username: 'Az email cím nincs hitelesítve!' } })
-    if (moment().isAfter(email.expDate)) return res.send({ errrors: { username: 'Az email cím regisztrációs ideje lejárt!' } })
+    if (!email) return res.send({ errors: { message: 'Az email cím nem található!' } })
+    if (email.code) return res.send({ errors: { message: 'Az email cím nincs hitelesítve!' } })
+    if (moment().isAfter(email.expDate)) return res.send({ errors: { message: 'Az email cím regisztrációs ideje lejárt!' } })
     
     // Ellenőrzés, hogy nem-e lett regisztrálva az email címmel
     const user = await users.findOne({ where: { emailId: email.id } })
-    if (user) return res.send({ errors: { username: 'A megadott email cím már foglalt!' } })
+    if (user) return res.send({ errors: { message: 'A megadott email cím már foglalt!' } })
 
     const hashedPassword = await bcrypt.hash(password, 10)
     await users.create({ username, password: hashedPassword, emailId: email.id })
@@ -135,7 +137,7 @@ export const Register = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ errors: { username: 'Ismeretlen hiba történt!' } })
+    res.status(500).send({ errors: { message: 'Ismeretlen hiba történt!' } })
   }
 }
 
@@ -179,7 +181,7 @@ export const Login = async (req, res) => {
   } catch (err) {
     if (!err) return
     logger.error(err)
-    res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
+    res.status(500).send({ errors: { username: 'Ismeretlen hiba történt!' } })
   }
 }
 
