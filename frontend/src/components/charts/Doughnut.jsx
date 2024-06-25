@@ -1,4 +1,4 @@
-const DoughnutChart = ({ size = 200, strokeWidth = 20, totalPercentage = 100, gap = 2, segments = [], className }) => {
+const DoughnutChart = ({ hover, setHover, size = 200, strokeWidth = 20, totalPercentage = 100, gap = 2, segments = [], className }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -8,41 +8,34 @@ const DoughnutChart = ({ size = 200, strokeWidth = 20, totalPercentage = 100, ga
     percentage: (segment.percentage / 100) * totalPercentage,
   }));
 
-  // Calculate the final segments array including gaps
-  const finalSegments = adjustedSegments.reduce((acc, segment, index) => {
-    const length = adjustedSegments.length;
-    const adjustedPercentage = segment.percentage - (gap * (length - 1) / length);
-    acc.push({ ...segment, percentage: adjustedPercentage });
-    if (index < length - 1) {
-      acc.push({ percentage: gap, color: 'transparent', gap: true });
-    }
-    return acc;
-  }, []);
-
   // Calculate the initial offset to center the gap at the bottom
   const initialOffset = circumference * ((100 - totalPercentage) / 100) / 2;
-
   let offset = initialOffset;
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={`rotate-180 ${className ?? ''}`}>
-      {finalSegments.map((segment, index) => {
-        const segmentLength = (segment.percentage / 100) * circumference;
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={className ?? ''}>
+      {adjustedSegments.map((segment, index) => {
+        const length = adjustedSegments.length;
+        const finalPercentage = segment.percentage - (gap * (length - 1) / length);
+        const segmentLength = (finalPercentage / 100) * circumference;
+        const gapLength = (gap / 100) * circumference;
         const segmentOffset = offset;
-        offset += segmentLength;
+        offset += segmentLength + gapLength;
         return (
           <circle
             key={index}
+            onMouseEnter={() => setHover(segment.name)}
+            onMouseLeave={() => setHover(null)}
+            className={`[pointer-events:stroke] ${hover === segment.name ? 'brightness-150' : ''} transition-all`}
             cx={size / 2}
             cy={size / 2}
             r={radius}
             fill="transparent"
             stroke={segment.color}
             strokeWidth={strokeWidth}
-            strokeLinecap="butt"
             strokeDasharray={`${segmentLength} ${circumference}`}
             strokeDashoffset={-segmentOffset}
-            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+            transform={`rotate(90 ${size / 2} ${size / 2})`}
           />
         );
       })}
