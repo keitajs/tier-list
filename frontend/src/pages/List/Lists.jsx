@@ -39,7 +39,7 @@ export default function Lists({ history, logged, setSelectedList }) {
         </div>
 
         <Box className='flex xl:hidden 2xl:flex w-full h-full'>
-          <Statistics loaded={logged !== null} activeList={activeList} />
+          <Statistics loaded={logged !== null} update={activeList} />
         </Box>
       </div>
     </div>

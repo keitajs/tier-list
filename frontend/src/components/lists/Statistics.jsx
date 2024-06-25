@@ -31,7 +31,7 @@ function Doughnut({ segments, count, label, hover, setHover }) {
   )
 }
 
-export default function Statistics({ loaded, activeList }) {
+export default function Statistics({ loaded, update }) {
   const [statistics, setStatistics] = useState(null)
   const [hover, setHover] = useState(null)
 
@@ -74,7 +74,7 @@ export default function Statistics({ loaded, activeList }) {
   useEffect(() => {
     if (!loaded) return
     updateStatistics().catch(() => history('/'))
-  }, [loaded, activeList])
+  }, [loaded, update])
 
   return (
     <>
