@@ -34,7 +34,7 @@ export default function Password({ label, name, type, value, value2, setValue, e
 
   return (
     <InputContainer className={margin}>
-      <Label htmlFor={name || 'password'}>{label || 'Jelszó'}</Label>
+      <Label htmlFor={name || 'password'} password>{label || 'Jelszó'}</Label>
       <Input type='password' id={name || 'password'} name={name || 'password'} maxLength={128} value={value} onChange={onChange} error={error} className={className} reset={reset} disabled={disabled} />
       <Error>{error}</Error>
     </InputContainer>
