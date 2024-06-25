@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { getList } from '../../user'
 import { socket, connect } from '../../socket'
@@ -6,7 +6,7 @@ import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotateRight, faShare } from '@fortawesome/free-solid-svg-icons'
 import { arrayMove } from "@dnd-kit/sortable"
-import List from '../../components/List/TierList/List'
+import List from '../../components/tier-list/List'
 
 function TierList({ logged, selectedList, setSelectedList, history }) {
   const [searchParams] = useSearchParams()

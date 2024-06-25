@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { createPermission, updatePermission, removePermission } from '../../../user'
+import { useEffect, useState } from 'react'
+import { createPermission, updatePermission, removePermission } from '../../user'
 import { Tooltip } from 'react-tooltip'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus, faTrash } from '@fortawesome/free-solid-svg-icons'

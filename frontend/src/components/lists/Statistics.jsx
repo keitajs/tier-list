@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { getLists } from '../../../user'
-import DoughnutChart from '../../charts/Doughnut'
+import { getLists } from '../../user'
+import DoughnutChart from '../charts/Doughnut'
 
 function Doughnut({ segments, count, label, hover, setHover }) {
   return (

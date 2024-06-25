@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"
 import { useDebounce } from 'use-debounce'
-import { getLists, getSharedLists, getPublicLists } from '../../../user'
+import { getLists, getSharedLists, getPublicLists } from '../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faList, faShare, faEye } from '@fortawesome/free-solid-svg-icons'
-import { Switch, SwitchButton } from "../../ui/Switch"
+import { Switch, SwitchButton } from "../ui/Switch"
+import Tooltip from "../ui/Tooltip"
 import ListItem from './ListItem'
-import Tooltip from "../../ui/Tooltip"
 
 export default function List({ history, loaded, activeList, setActiveList }) {
   const [type, setType] = useState(0)

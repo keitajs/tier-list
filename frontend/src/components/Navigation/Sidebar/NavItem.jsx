@@ -1,8 +1,7 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-function NavItem({ text, pathname, icon, disabled }) {
+export default function NavItem({ text, pathname, icon, disabled }) {
   const isCurrent = window.location.pathname.slice(0, window.location.pathname.split('/', 2).join('/').length) === pathname
 
   return (
@@ -13,5 +12,3 @@ function NavItem({ text, pathname, icon, disabled }) {
     </Link>
   )
 }
-
-export default NavItem

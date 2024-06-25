@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faEllipsis, faDumpsterFire, faEye, faEyeSlash, faUpRightFromSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { InputContainer, Label, Input, Textarea } from '../../ui/Input'
-import { Select, SelectButton } from '../../ui/Select'
-import Button from '../../ui/Button'
+import { InputContainer, Label, Input, Textarea } from '../ui/Input'
+import { Select, SelectButton } from '../ui/Select'
+import Button from '../ui/Button'
 
 function ManageList({ history, activeList, setActiveList }) {
   const [name, setName] = useState('')

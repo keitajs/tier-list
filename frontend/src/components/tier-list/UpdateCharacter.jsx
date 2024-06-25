@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
-import { socket } from '../../../socket'
+import { socket } from '../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrash, faXmark, faFileArrowUp, faFileExcel } from '@fortawesome/free-solid-svg-icons'
 

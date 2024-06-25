@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import axios from 'axios'
-import { socket } from '../../../socket'
+import { socket } from '../../socket'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { useSensors, useSensor, MouseSensor, TouchSensor, KeyboardSensor, DndContext, DragOverlay } from "@dnd-kit/core"

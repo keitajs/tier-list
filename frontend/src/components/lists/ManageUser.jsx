@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { faEye, faArrowsUpDownLeftRight, faPen } from '@fortawesome/free-solid-svg-icons'
-import { InputContainer, Label, Input } from '../../ui/Input'
-import { Select, SelectButton } from '../../ui/Select'
-import Button from '../../ui/Button'
+import { InputContainer, Label, Input } from '../ui/Input'
+import { Select, SelectButton } from '../ui/Select'
+import Button from '../ui/Button'
 
 export default function ManageUser({ newPermission, editPermission, active, setActive, activeList, setActiveList }) {
   const [name, setName] = useState('')

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { logout, getLoginStatus } from '../../user'
+import { logout } from '../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faHome, faUser, faList, faRightFromBracket, faRightToBracket } from '@fortawesome/free-solid-svg-icons'
-import NavItem from './Sidebar/NavItem'
-import ListItem from './Sidebar/ListItem'
+import NavItem from './sidebar/NavItem'
+import ListItem from './sidebar/ListItem'
 
-function Sidebar({ logged, history, loading }) {
+export default function Sidebar({ logged, history, loading }) {
   const [lists, setLists] = useState([])
 
   // Sidebar listák lekérése
@@ -48,5 +48,3 @@ function Sidebar({ logged, history, loading }) {
     </div>
   )
 }
-
-export default Sidebar

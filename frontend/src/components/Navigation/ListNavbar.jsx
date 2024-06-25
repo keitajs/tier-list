@@ -1,9 +1,8 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faGears } from '@fortawesome/free-solid-svg-icons'
 
-function ListNavbar({ logged, selectedList }) {
+export default function ListNavbar({ logged, selectedList }) {
   return (
     <div className={`fixed right-5 bottom-5 p-1.5 rounded-2xl bg-neutral-900/85 z-50 hidden sm:inline ${selectedList && logged ? 'sm:inline' : 'sm:!hidden'}`}>
       <div className='relative flex rounded-xl bg-neutral-800/50'>
@@ -18,5 +17,3 @@ function ListNavbar({ logged, selectedList }) {
     </div>
   )
 }
-
-export default ListNavbar
