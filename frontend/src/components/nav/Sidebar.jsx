@@ -3,8 +3,8 @@ import axios from 'axios'
 import { logout } from '../../user'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faHome, faUser, faList, faRightFromBracket, faRightToBracket } from '@fortawesome/free-solid-svg-icons'
-import NavItem from './sidebar/NavItem'
-import ListItem from './sidebar/ListItem'
+import NavItem from './side/NavItem'
+import ListItem from './side/ListItem'
 
 export default function Sidebar({ logged, history, loading }) {
   const [lists, setLists] = useState([])

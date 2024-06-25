@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { getLoginStatus } from '../user'
-import Sidebar from './navigation/Sidebar'
-import ListNavbar from './navigation/ListNavbar'
-import MobileNavbar from './navigation/MobileNavbar'
+import { getLoginStatus } from '../../user'
+import Sidebar from './Sidebar'
+import ListNavbar from './ListNavbar'
+import MobileNavbar from './MobileNavbar'
 
-function Navigation({ history, selectedList, loading }) {
+export default function Navigation({ history, selectedList, loading }) {
   const [logged, setLogged] = useState(false)
 
   const getLogged = async () => {
@@ -23,5 +23,3 @@ function Navigation({ history, selectedList, loading }) {
     </>
   )
 }
-
-export default Navigation
