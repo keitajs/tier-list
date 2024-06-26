@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import Box from '../../components/ui/Box'
-import ManageList from '../../components/lists/ManageList'
-import ManagePermission from '../../components/lists/ManagePermission'
-import List from '../../components/lists/List'
-import Statistics from '../../components/lists/Statistics'
+import ManageList from '../../components/list/ManageList'
+import ManagePermission from '../../components/list/ManagePermission'
+import List from '../../components/list/List'
+import Statistics from '../../components/list/Statistics'
 
 export default function Lists({ history, logged, setSelectedList }) {
   const [activeList, setActiveList] = useState(null)
