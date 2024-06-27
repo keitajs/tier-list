@@ -8,6 +8,7 @@ import Tooltip from "../ui/Tooltip"
 import ListItem from './ListItem'
 
 export default function List({ history, loaded, activeList, setActiveList }) {
+  const [prevActiveId, setPrevActiveId] = useState(0)
   const [type, setType] = useState(0)
   const [query, setQuery] = useState('')
   const [queryValue] = useDebounce(query, 500)
@@ -27,6 +28,9 @@ export default function List({ history, loaded, activeList, setActiveList }) {
 
   useEffect(() => {
     if (type !== 0 && activeList) return setType(0)
+
+    setPrevActiveId(activeList?.id)
+    if (prevActiveId !== activeList?.id) return
 
     getListsByType(type, queryValue)
   }, [activeList])
@@ -56,7 +60,7 @@ export default function List({ history, loaded, activeList, setActiveList }) {
           <Tooltip id='public' place='bottom'>Publikus listák</Tooltip>
         </div>
       </div>
-      <div className='flex flex-col gap-2.5 grow -mr-2 pr-2 overflow-y-auto'>
+      <div className='flex flex-col gap-2.5 grow -mr-2 pr-2 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#737373_#262626]'>
         {lists && lists.length > 0 ?
           lists.map(list =>
             <ListItem
