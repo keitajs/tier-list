@@ -66,7 +66,7 @@ export function Input({ children, id, name, type, maxLength, defaultValue, value
       
       {!(onlyError && !error) &&
         <div className='absolute top-1/2 right-3 -translate-y-1/2 flex items-center'>
-          <FontAwesomeIcon icon={error ? faXmark : faCheck} className={error ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} />
+          <FontAwesomeIcon icon={error ? faXmark : faCheck} className={error ? 'text-rose-500 h-5 animate-input-error' : 'text-emerald-500 h-5 animate-input-check'} />
         </div>
       }
 
@@ -92,7 +92,7 @@ export function Textarea({ children, id, name, rows, maxLength, defaultValue, va
       
       {!(onlyError && !error) &&
         <div className='absolute top-1/2 right-3 -translate-y-1/2 flex items-center'>
-          <FontAwesomeIcon icon={error ? faXmark : faCheck} className={error ? 'text-rose-500 h-5 input-error-anim' : 'text-emerald-500 h-5 input-check-anim'} />
+          <FontAwesomeIcon icon={error ? faXmark : faCheck} className={error ? 'text-rose-500 h-5 animate-input-error' : 'text-emerald-500 h-5 animate-input-check'} />
         </div>
       }
 

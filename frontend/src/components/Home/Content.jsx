@@ -18,7 +18,7 @@ export function Content({ title, paragraphs, link, center, left, right, logged, 
   return (
     <div ref={ref} className={`absolute flex flex-col mx-6 ${left ? 'translate-x-[60%]' : right ? '-translate-x-[60%]' : ''} transition-all ${!center ? 'scale-50 opacity-0 pointer-events-none select-none' : ''}`}>
       <h2
-        className={`relative text-xl lg:text-3xl font-semibold w-max mb-5 pb-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:rounded-lg after:bg-blue-500 ${center ? 'home-content-anim' : ''}`}
+        className={`relative text-xl lg:text-3xl font-semibold w-max mb-5 pb-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:w-full after:h-0.5 after:rounded-lg after:bg-blue-500 ${center ? 'after:animate-width-load' : ''}`}
         style={{"--time": `${time}ms`}}
       >
         {title}
