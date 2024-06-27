@@ -17,16 +17,16 @@ export default function DoughnutChart({ hover, setHover, size = 200, strokeWidth
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className={className ?? ''}>
       {adjustedSegments.map(segment => {
         const finalPercentage = segment.percentage - (gap * (length - 1) / length)
-        const segmentLength = (finalPercentage / 100) * circumference
+        const segmentLength = ((finalPercentage >= 0 ? finalPercentage : 0) / 100) * circumference
         const gapLength = (gap / 100) * circumference
         const segmentOffset = offset
         offset += segmentLength + gapLength
         return (
           <circle
-            key={segment.name}
+            key={segment.name ?? segment.color}
             onMouseEnter={() => setHover(segment.name)}
             onMouseLeave={() => setHover(null)}
-            className={`[pointer-events:stroke] ${hover === segment.name ? 'brightness-150' : ''} transition-all`}
+            className={`[pointer-events:stroke] ${hover === segment.name ? 'brightness-150' : ''} transition-all duration-200`}
             cx={size / 2}
             cy={size / 2}
             r={radius}
