@@ -6,11 +6,9 @@ import categories from '../models/category.js'
 import characters from '../models/character.js'
 import animes from '../models/anime.js'
 import updates from '../models/update.js'
-import path from 'path'
-import fs from 'fs'
 import { Op, fn } from 'sequelize'
 
-const updateActivity = async (userId, listId) => {
+export const updateActivity = async (userId, listId) => {
   try {
     // A felhasználó mai napi lista updateját megkeresi, ha nincs létrehozza, ha van frissíti a countot és a timeot
     const update = await updates.findOne({ where: { date: new Date(), userId, listId } })
@@ -27,14 +25,6 @@ const updateActivity = async (userId, listId) => {
     logger.error(err)
     return err
   }
-}
-
-export const getCharacterImage = async (req, res) => {
-  // Karakter képek lekérése
-  const filePath = `${path.resolve()}/images/characters/${req.params.filename}`
-  if (!fs.existsSync(filePath)) res.status(404).send({ message: 'Nem található kép!' })
-
-  res.sendFile(`${path.resolve()}/images/characters/${req.params.filename}`)
 }
 
 export const getUserList = async (req, res) => {
@@ -253,61 +243,6 @@ export const removeList = async (req, res) => {
     if (!err) return
     logger.error(err)
     res.status(500).send({ error: err, message: 'Ismeretlen hiba történt!' })
-  }
-}
-
-export const createPermission = async (req, res) => {
-  try {
-    const { id: listId } = req.params
-    const { username, permission } = req.body
-    if (username === req.username) return res.send({ error: 'Saját magadnak nem adhatsz jogosultságot!' })
-
-    // Ellenőrzi, hogy az adott felhasználónév létezik-e
-    const user = await users.findOne({ where: { username }, attributes: ['id', 'username', 'avatar'] })
-    if (!user) return res.send({ error: 'Nem található felhasználó!' })
-
-    // Ellenőrzi, hogy kapott-e már jogosultságot
-    const checkPermission = await permissions.findOne({ where: { userId: user.id, listId }})
-    if (checkPermission) return res.send({ error: 'A felhasználó már rendelkezik jogosultsággal!' })
-
-    const result = await permissions.create({ value: permission, userId: user.id, listId })
-
-    await updateActivity(req.id, listId)
-    res.send({ ...result.dataValues, user })
-  } catch (err) {
-    if (!err) return
-    logger.error(err)
-    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
-  }
-}
-
-export const updatePermission = async (req, res) => {
-  try {
-    const { id: listId, userId } = req.params
-    const { value } = req.body
-
-    await permissions.update({ value }, { where: { userId, listId } })
-    
-    await updateActivity(req.id, listId)
-    res.send({ message: 'Sikeresen módosítottad a jogosultságot!' })
-  } catch (err) {
-    if (!err) return
-    logger.error(err)
-    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
-  }
-}
-
-export const removePermission = async (req, res) => {
-  try {
-    const { id: listId, userId } = req.params
-    await permissions.destroy({ where: { userId, listId } })
-
-    await updateActivity(req.id, listId)
-    res.send({ message: 'Sikeresen törölted a jogosultságot!' })
-  } catch (err) {
-    if (!err) return
-    logger.error(err)
-    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
   }
 }
 

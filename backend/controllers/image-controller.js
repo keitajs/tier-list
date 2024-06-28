@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { unlink } from 'fs/promises'
 
+// Feltöltött kép ellenőrzése
 export const checkImage = (req, res, next) => {
   const returnError = async (message) => {
     const filePath = path.resolve() + '/' + req.file?.path
@@ -19,4 +20,20 @@ export const checkImage = (req, res, next) => {
   if (!mimeType || !extName) return returnError('A fájl nem kép!')
 
   next()
+}
+
+// Felhasználó profilképek lekérése
+export const getAvatarImage = async (req, res) => {
+  let filePath = `${path.resolve()}/images/avatars/${req.params.filename}`
+  if (!fs.existsSync(filePath)) filePath = `${path.resolve()}/images/avatars/dummy.png`
+
+  res.sendFile(filePath)
+}
+
+// Karakter képek lekérése
+export const getCharacterImage = async (req, res) => {
+  const filePath = `${path.resolve()}/images/characters/${req.params.filename}`
+  if (!fs.existsSync(filePath)) res.status(404).send({ message: 'Nem található kép!' })
+
+  res.sendFile(`${path.resolve()}/images/characters/${req.params.filename}`)
 }

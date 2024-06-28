@@ -1,5 +1,5 @@
 import logger from '../libs/logger.js'
-import { hasEditPermission, hasMovePermission, hasAnyPermission } from './checkPermission.js'
+import { hasEditPermission, hasMovePermission, hasAnyPermission } from './permission-controller.js'
 
 // Az eredeti permission függvények router middlewarek, ezért át kell adni bizonyos adatokat, amiket ez a három változó helyettesít
 const req = (userId, listId) => { return { id: userId, params: { id: listId } } }

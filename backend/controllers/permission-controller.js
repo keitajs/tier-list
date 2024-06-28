@@ -1,7 +1,65 @@
+import logger from '../libs/logger.js'
+import users from '../models/user.js'
 import lists from '../models/list.js'
 import permissions from '../models/permission.js'
 import categories from '../models/category.js'
 import characters from '../models/character.js'
+import { updateActivity } from './list-controller.js'
+
+export const createPermission = async (req, res) => {
+  try {
+    const { id: listId } = req.params
+    const { username, permission } = req.body
+    if (username === req.username) return res.send({ error: 'Saját magadnak nem adhatsz jogosultságot!' })
+
+    // Ellenőrzi, hogy az adott felhasználónév létezik-e
+    const user = await users.findOne({ where: { username }, attributes: ['id', 'username', 'avatar'] })
+    if (!user) return res.send({ error: 'Nem található felhasználó!' })
+
+    // Ellenőrzi, hogy kapott-e már jogosultságot
+    const checkPermission = await permissions.findOne({ where: { userId: user.id, listId }})
+    if (checkPermission) return res.send({ error: 'A felhasználó már rendelkezik jogosultsággal!' })
+
+    const result = await permissions.create({ value: permission, userId: user.id, listId })
+
+    await updateActivity(req.id, listId)
+    res.send({ ...result.dataValues, user })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const updatePermission = async (req, res) => {
+  try {
+    const { id: listId, userId } = req.params
+    const { value } = req.body
+
+    await permissions.update({ value }, { where: { userId, listId } })
+    
+    await updateActivity(req.id, listId)
+    res.send({ message: 'Sikeresen módosítottad a jogosultságot!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
+  }
+}
+
+export const removePermission = async (req, res) => {
+  try {
+    const { id: listId, userId } = req.params
+    await permissions.destroy({ where: { userId, listId } })
+
+    await updateActivity(req.id, listId)
+    res.send({ message: 'Sikeresen törölted a jogosultságot!' })
+  } catch (err) {
+    if (!err) return
+    logger.error(err)
+    res.status(500).send({ error: 'Ismeretlen hiba történt!' })
+  }
+}
 
 export const isAdmin = async (req, res, next) => {
   try {
