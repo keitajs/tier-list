@@ -29,12 +29,7 @@ export default function Lists({ history, logged, setSelectedList }) {
             <ManageList history={history} setSelectedList={setSelectedList} activeList={activeList} setActiveList={setActiveList} />
           </Box>
           <Box className='w-full h-full'>
-            {activeList && <ManagePermission activeList={activeList} setActiveList={setActiveList} />}
-            {!activeList &&
-              <div className='flex items-center justify-center h-full w-full'>
-                <span className='text-lg text-center text-orange-500'>Tartalom a jogosultságok helyére</span>
-              </div>
-            }
+            <ManagePermission activeList={activeList} setActiveList={setActiveList} />
           </Box>
         </div>
 

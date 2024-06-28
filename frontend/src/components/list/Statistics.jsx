@@ -6,7 +6,7 @@ function Doughnut({ segments, count, label, hover, setHover }) {
   const zeros = segments.every(d => d.percentage === 0)
 
   return (
-    <div className='flex flex-col items-center justify-around h-full'>
+    <div className='flex flex-col items-center justify-center h-full'>
       <div className='relative flex items-center justify-center'>
         <DoughnutChart
           hover={zeros ? undefined : hover}
