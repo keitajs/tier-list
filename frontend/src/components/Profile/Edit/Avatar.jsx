@@ -12,7 +12,7 @@ export default function AvatarForm({ hide, avatar, setUser, setEdit }) {
   const fileInput = useRef(null)
 
   // Profilkép módosítás / eltávolítása
-  const update = async ({ remove }) => {
+  const update = async (remove) => {
     if (!remove && (!file || !image)) return
 
     const result = (remove ? await deleteAvatar() : await updateAvatar(image))
@@ -25,7 +25,7 @@ export default function AvatarForm({ hide, avatar, setUser, setEdit }) {
     })
   }
 
-  const remove = () => update({ remove: true })
+  const remove = async () => await update(true)
 
   // Képfeltöltés és törlés
   const fileUpload = () => {
@@ -59,13 +59,19 @@ export default function AvatarForm({ hide, avatar, setUser, setEdit }) {
 
         <div className='flex flex-col gap-2 text-lg mt-2.5'>
           <input type="file" ref={fileInput} value={file} onChange={(e) => {setFile(e.target.value); setImage(e.target.files[0])}} accept='.jpg, .jpeg, .png, .webp, .avif, .gif, .svg' className='hidden' />
-          <button onClick={fileUpload} className='flex items-center justify-between gap-3 w-64 px-3.5 py-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 transition-colors'>
-            Feltöltés {file ? 'törlése' : ''} <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
-          </button>
+          <Button onClick={fileUpload} color={'bg-neutral-700'} hover={'hover:bg-neutral-600'}>
+            <div className='flex items-center justify-between gap-3 w-full px-3.5'>
+              Feltöltés {file ? 'törlése' : ''}
+              <FontAwesomeIcon icon={file ? faFileExcel : faFileArrowUp} />
+            </div>
+          </Button>
 
-          <button onClick={remove} className='flex items-center justify-between gap-3 w-64 px-3.5 py-1.5 rounded-lg bg-neutral-700 hover:bg-rose-700 transition-colors'>
-            Törlés <FontAwesomeIcon icon={faTrash} />
-          </button>
+          <Button onClick={remove} color={'bg-neutral-700'} hover={'hover:bg-rose-700'}>
+            <div className='flex items-center justify-between gap-3 w-full px-3.5'>
+              Törlés
+              <FontAwesomeIcon icon={faTrash} />
+            </div>
+          </Button>
         </div>
 
         {error ? <p className='w-64 mt-4 text-center text-rose-600'>{error}</p> : <></>}
