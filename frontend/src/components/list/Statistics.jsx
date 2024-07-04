@@ -53,7 +53,6 @@ export default function Statistics({ loaded, update }) {
     { count: 0, percentage: 0, color: '#ef4444', name: 'private', label: 'privát' }
   ]
 
-  const [prevActiveId, setPrevActiveId] = useState(0)
   const [statistics, setStatistics] = useState(null)
   const [hover, setHover] = useState(null)
 
@@ -88,10 +87,6 @@ export default function Statistics({ loaded, update }) {
 
   useEffect(() => {
     if (!loaded) return
-
-    setPrevActiveId(update?.id)
-    if (prevActiveId !== update?.id) return
-
     updateStatistics().catch(() => history('/'))
   }, [loaded, update])
 

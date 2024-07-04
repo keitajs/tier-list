@@ -8,7 +8,6 @@ import Tooltip from "../ui/Tooltip"
 import ListItem from './ListItem'
 
 export default function List({ history, loaded, activeList, setActiveList }) {
-  const [prevActiveId, setPrevActiveId] = useState(0)
   const [type, setType] = useState(0)
   const [query, setQuery] = useState('')
   const [queryValue] = useDebounce(query, 500)
@@ -28,10 +27,6 @@ export default function List({ history, loaded, activeList, setActiveList }) {
 
   useEffect(() => {
     if (type !== 0 && activeList) return setType(0)
-
-    setPrevActiveId(activeList?.id)
-    if (prevActiveId !== activeList?.id) return
-
     getListsByType(type, queryValue)
   }, [activeList])
 
