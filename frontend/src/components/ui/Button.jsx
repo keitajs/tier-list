@@ -33,25 +33,27 @@ export default function Button({ children, width, padding, text, color, hover, h
     }
   }
 
+  const btnClass = `
+    relative
+    ${width ? `w-${width}` : 'w-full'}
+    ${width === 'max' || width === 'min' ? 'px-8' : 'px-0'}
+    ${padding === 1 ? 'py-1' : 'py-1.5'}
+    ${text ? `text-${text}` : 'text-base'}
+    rounded-lg
+    ${color || 'bg-blue-500'}
+    ${disabled ? 'cursor-not-allowed' : hover || 'hover:bg-blue-400'}
+    ${!disabled ? 'active:scale-95' : ''}
+    ${loading ? 'cursor-not-allowed' : ''}
+    transition-[transform_colors]
+    ${className ?? ''}
+  `
+
   return (<>{
     href ? 
       <Link to={href} target={target} className={btnClass}>{children}</Link>
     :
       <button
-        className={`
-          relative
-          ${width ? `w-${width}` : 'w-full'}
-          ${width === 'max' || width === 'min' ? 'px-8' : 'px-0'}
-          ${padding === 1 ? 'py-1' : 'py-1.5'}
-          ${text ? `text-${text}` : 'text-base'}
-          rounded-lg
-          ${color || 'bg-blue-500'}
-          ${disabled ? 'cursor-not-allowed' : hover || 'hover:bg-blue-400'}
-          ${!disabled ? 'active:scale-95' : ''}
-          ${loading ? 'cursor-not-allowed' : ''}
-          transition-[transform_colors]
-          ${className ?? ''}
-        `}
+        className={btnClass}
         onClick={clickEvent}
         disabled={disabled || loading}
       >
